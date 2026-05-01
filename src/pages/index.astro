@@ -62,8 +62,45 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
     </div>
   </section>
 
+  <!-- ======== SELECCIÓN DE CATEGORÍAS ======== -->
+  <section class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Opción Remeras -->
+        <a href="#remeras-section" class="group relative aspect-[16/9] md:aspect-auto md:h-[400px] overflow-hidden rounded-3xl border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
+          <img 
+            src="/images/parte de frente de la remera.jpg" 
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+            alt="Sección Remeras"
+          />
+          <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+            <div class="text-center">
+              <h3 class="text-white text-5xl md:text-7xl font-black italic tracking-tighter uppercase">Remeras</h3>
+              <span class="inline-block mt-4 bg-celeste-500 text-white px-6 py-2 font-display text-sm uppercase">Ver colección</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Opción Libros (Featured Argentina Humana) -->
+        <a href="#libros" class="group relative aspect-[16/9] md:aspect-auto md:h-[400px] overflow-hidden rounded-3xl border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
+          <img 
+            src="/images/libro_argentina_humana.jpg" 
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+            alt="Sección Libros"
+          />
+          <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+            <div class="text-center">
+              <h3 class="text-white text-5xl md:text-7xl font-black italic tracking-tighter uppercase">Libros</h3>
+              <span class="inline-block mt-4 bg-white text-black px-6 py-2 font-display text-sm uppercase">Cultura y lucha</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ======== REMERAS (PRODUCTO ESTRELLA) ======== -->
-  <section class="py-12 bg-gray-50 border-y-8 border-black">
+  <section id="remeras-section" class="py-12 bg-gray-50 border-y-8 border-black scroll-mt-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="mb-8">
         <h2 class="section-title">Nuestras Remeras</h2>
@@ -128,10 +165,41 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
 
   <!-- ======== LIBROS Y OTROS ======== -->
   {librosYOtros.length > 0 && (
-    <section class="py-20 bg-white">
+    <section id="libros" class="py-24 bg-white scroll-mt-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Featured Book Header (Argentina Humana) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20 bg-gray-50 p-8 md:p-16 border-8 border-black shadow-[20px_20px_0px_0px_rgba(0,174,239,0.2)]">
+          <div class="relative group">
+            <img 
+              src="/images/libro_argentina_humana.jpg" 
+              alt="Libro Argentina Humana" 
+              class="w-full h-auto rounded-lg shadow-2xl border-4 border-black group-hover:-rotate-2 transition-transform duration-500"
+            />
+            <div class="absolute -top-6 -right-6 bg-celeste-500 text-white w-24 h-24 rounded-full flex items-center justify-center font-black text-xl rotate-12 border-4 border-black shadow-lg">
+              INFO
+            </div>
+          </div>
+          <div class="space-y-6">
+            <span class="inline-block bg-black text-white px-4 py-1 font-display text-sm uppercase tracking-widest">Destacado</span>
+            <h2 class="text-5xl md:text-6xl font-black italic leading-[0.9] text-black">ARGENTINA HUMANA</h2>
+            <div class="h-2 w-24 bg-celeste-500 font-bold"></div>
+            <p class="text-lg md:text-xl text-gray-800 leading-relaxed font-sans italic">
+              En 'Argentina humana', Juan Grabois nos invita a explorar una visión transformadora de la justicia social en el siglo XXI. A través de un enfoque contracultural, el autor desafía las estructuras políticas y sociales tradicionales, proponiendo un modelo más inclusivo y humano para la sociedad argentina.
+            </p>
+            <p class="text-gray-600 leading-relaxed">
+              Grabois, conocido por su activismo y compromiso con los derechos humanos, ofrece un análisis profundo y crítico de las desigualdades actuales, mientras presenta soluciones prácticas y esperanzadoras. Este ensayo se convierte en un llamado a la acción para construir un futuro más justo y equitativo, donde la dignidad y el bienestar de cada individuo sean el centro de las políticas públicas.
+            </p>
+            <div class="pt-4">
+              <a href="/producto/argentina-humana-grabois" class="btn-primary">
+                Ver detalles del libro
+              </a>
+            </div>
+          </div>
+        </div>
+
         <div class="mb-12 text-right">
-          <h2 class="section-title">Libros y Cultura</h2>
+          <h2 class="section-title">Más títulos</h2>
           <p class="text-lg text-gray-800 font-sans font-semibold max-w-2xl border-r-4 border-black pr-4 my-6 ml-auto">
             Herramientas para el pensamiento crítico y la acción popular.
           </p>

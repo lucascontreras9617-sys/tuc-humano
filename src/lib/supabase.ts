@@ -127,7 +127,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     slug: 'argentina-humana-grabois',
     price: 35000.00,
     old_price: 40000.00,
-    description: 'Obra fundamental que expone la visión de una Argentina desde la dignidad, con desarrollo humano integral y protagonismo de los movimientos populares.',
+    description: "En 'Argentina humana', Juan Grabois nos invita a explorar una visión transformadora de la justicia social en el siglo XXI. A través de un enfoque contracultural, el autor desafía las estructuras políticas y sociales tradicionales, proponiendo un modelo más inclusivo y humano para la sociedad argentina. Grabois, conocido por su activismo y compromiso con los derechos humanos, ofrece un análisis profundo y crítico de las desigualdades actuales, mientras presenta soluciones prácticas y esperanzadoras. Este ensayo se convierte en un llamado a la acción para construir un futuro más justo y equitativo, donde la dignidad y el bienestar de cada individuo sean el centro de las políticas públicas.",
     image_url: '/images/libro_argentina_humana.jpg',
     image_back_url: null,
     stock_s: 0, stock_m: 0, stock_l: 0, stock_xl: 0, stock_unico: 15,
