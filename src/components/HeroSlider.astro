@@ -13,7 +13,7 @@ const slides = [
         class={`hero-slide absolute inset-0 h-full w-full opacity-0 transition-opacity duration-[2000ms] ease-in-out ${index === 0 ? 'active' : ''}`}
         data-index={index}
       >
-        <div class="absolute inset-0 bg-black/40 z-10" />
+
         <img 
           src={slide.url} 
           alt={slide.title}
@@ -27,7 +27,7 @@ const slides = [
   <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex gap-4">
     {slides.map((_, i) => (
       <button 
-        class={`w-12 h-2 border-2 border-white transition-all duration-300 slider-dot ${i === 0 ? 'bg-white' : 'bg-transparent'}`}
+        class={`w-12 h-2 border-2 border-black/50 transition-all duration-300 shadow-sm slider-dot ${i === 0 ? 'bg-white' : 'bg-transparent'}`}
         data-index={i}
         aria-label={`Ir a slide ${i + 1}`}
       ></button>

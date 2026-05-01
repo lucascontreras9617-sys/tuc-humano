@@ -34,58 +34,40 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
   <section id="valores" class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-        <!-- Image collage Brutalista -->
-        <div class="relative h-96 md:h-[600px] border-8 border-black p-2 bg-gray-100 shadow-[20px_20px_0px_0px_rgba(0,174,239,0.2)]">
-          <div class="absolute top-4 left-4 w-4/5 h-3/4 rounded-sm overflow-hidden border-4 border-black rotate-1 z-20">
-            <img src="/images/parte de frente de la remera.jpg" alt="TUC-HUMANO valores" class="w-full h-full object-cover" />
-          </div>
-          <div class="absolute bottom-4 right-4 w-3/5 h-1/2 rounded-sm overflow-hidden border-4 border-black -rotate-2 z-30 shadow-xl">
-            <img src="/images/parte de atras de la remeras.jpg" alt="TUC-HUMANO diseño" class="w-full h-full object-cover" />
-          </div>
-          <div class="absolute top-1/2 -left-8 w-32 h-32 rounded-none bg-celeste-500 flex items-center justify-center shadow-2xl border-4 border-black z-40 -rotate-12 transition-transform hover:rotate-0 cursor-default">
-            <span class="text-white font-display font-black text-4xl italic uppercase tracking-tighter">AH!</span>
-          </div>
-        </div>
-
-        <!-- Text -->
-        <div class="space-y-6">
-          <span class="inline-block bg-celeste-50 text-celeste-600 text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="space-y-8">
+          <span class="inline-block bg-celeste-50 text-celeste-600 text-xs font-bold px-6 py-2 rounded-full uppercase tracking-widest">
             Nuestros valores
           </span>
-          <h2 class="section-title">
+          <h2 class="section-title !-rotate-0">
             Más que una remera:<br/>
-            <span class="text-celeste-500">una bandera</span>
+            <span class="text-celeste-500 underline decoration-8 underline-offset-[12px]">una bandera</span>
           </h2>
 
-
-
-          <div class="grid grid-cols-2 gap-4 pt-4">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
             {[
               { title: 'Algodón premium', desc: 'Suave, resistente y confortable' },
               { title: 'Arte propio', desc: 'Diseños únicos con mensaje' },
               { title: 'Fit oversize', desc: 'Para todos los cuerpos' },
               { title: 'Militante', desc: 'Cada remera es una bandera' },
             ].map(item => (
-              <div class="bg-gray-50 rounded-xl p-6 hover:bg-celeste-50 transition-colors border border-gray-100 shadow-sm">
-                <p class="font-display uppercase tracking-tight text-gray-900 text-lg">{item.title}</p>
-                <p class="text-gray-500 text-sm mt-1">{item.desc}</p>
+              <div class="bg-gray-50 rounded-2xl p-6 hover:bg-celeste-50 transition-all duration-300 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1">
+                <p class="font-display uppercase tracking-tight text-gray-900 text-xl leading-tight">{item.title}</p>
+                <p class="text-gray-500 text-xs mt-2 leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
   <!-- ======== REMERAS (PRODUCTO ESTRELLA) ======== -->
-  <section class="py-20 bg-gray-50 border-y-8 border-black">
+  <section class="py-12 bg-gray-50 border-y-8 border-black">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="mb-12">
+      <div class="mb-8">
         <h2 class="section-title">Nuestras Remeras</h2>
-        <div class="mt-12 bg-black text-white p-8 md:p-14 border-l-[16px] border-celeste-500 shadow-[20px_20px_0px_0px_rgba(0,174,239,0.25)] reveal-text">
+        <div class="mt-8 bg-black text-white p-6 md:p-12 border-l-[16px] border-celeste-500 shadow-[20px_20px_0px_0px_rgba(0,174,239,0.25)] reveal-text">
           <div class="space-y-12">
             <p class="text-2xl md:text-4xl font-display uppercase tracking-[-0.04em] leading-[0.9] italic">
               Nuestras remeras oversize no son solo prendas, son una declaración de identidad y valores. Hechas con algodón de primera calidad, combinan suavidad, durabilidad y un ajuste cómodo que abraza todos los cuerpos, acompañándote con estilo y confort día tras día.
@@ -99,34 +81,25 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
           </div>
         </div>
 
-        <!-- Galería Horizontal (Oversize Grid) con 3 imágenes -->
-        <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 reveal-text-delay">
+        <!-- Galería Dúo (Equilibrio Brutalista) -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 reveal-text-delay">
           <!-- Frente -->
-          <div class="group aspect-[3/4] overflow-hidden border-4 border-black shadow-lg bg-white">
+          <div class="group aspect-[4/5] overflow-hidden border-8 border-black shadow-lg bg-black">
             <img 
               src="/images/parte de frente de la remera.jpg" 
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
               alt="Vista Frontal" 
             />
-            <div class="absolute bottom-0 left-0 right-0 bg-black/80 text-white p-2 font-display text-xs uppercase text-center opacity-0 group-hover:opacity-100 transition-opacity">Vista Frontal</div>
+            <div class="absolute bottom-4 left-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase -rotate-2">Identidad</div>
           </div>
           <!-- Espalda -->
-          <div class="group aspect-[3/4] overflow-hidden border-4 border-black shadow-lg bg-white">
+          <div class="group aspect-[4/5] overflow-hidden border-8 border-black shadow-lg bg-black">
             <img 
               src="/images/parte de atras de la remeras.jpg" 
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
               alt="Vista Dorsal" 
             />
-            <div class="absolute bottom-0 left-0 right-0 bg-black/80 text-white p-2 font-display text-xs uppercase text-center opacity-0 group-hover:opacity-100 transition-opacity">Vista Dorsal</div>
-          </div>
-          <!-- Detalle / Lifestyle -->
-          <div class="group aspect-[3/4] overflow-hidden border-4 border-black shadow-lg bg-gray-50">
-            <img 
-              src="/images/foto 1.jpeg" 
-              class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700" 
-              alt="Detalle" 
-            />
-            <div class="absolute bottom-0 left-0 right-0 bg-black/80 text-white p-2 font-display text-xs uppercase text-center opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Calce y Textura</div>
+            <div class="absolute bottom-4 right-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase rotate-2">Resistencia</div>
           </div>
         </div>
       </div>
@@ -159,7 +132,7 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-12 text-right">
           <h2 class="section-title">Libros y Cultura</h2>
-          <p class="section-subtitle ml-auto">
+          <p class="text-lg text-gray-800 font-sans font-semibold max-w-2xl border-r-4 border-black pr-4 my-6 ml-auto">
             Herramientas para el pensamiento crítico y la acción popular.
           </p>
         </div>
