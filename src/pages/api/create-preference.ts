@@ -1,16 +1,9 @@
 import type { APIRoute } from 'astro';
-import { MercadoPagoConfig, Preference } from 'mercadopago';
+import { mpPreference } from '../../lib/mercadopago';
 
 export const POST: APIRoute = async ({ request }) => {
-  const token = (import.meta.env.MERCADOPAGO_ACCESS_TOKEN || '').trim();
   const siteUrl = (import.meta.env.PUBLIC_SITE_URL || 'http://localhost:4321').trim();
 
-  if (!token) {
-    return new Response(
-      JSON.stringify({ error: 'Mercado Pago access token not configured' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
 
   let body: any;
   try {
@@ -32,8 +25,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    const client = new MercadoPagoConfig({ accessToken: token });
-    const preferenceClient = new Preference(client);
+    const preferenceClient = mpPreference;
 
     // Build MP items from cart
     const mpItems = items.map((item: any) => ({

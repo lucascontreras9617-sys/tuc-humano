@@ -1,14 +1,13 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
-import { MercadoPagoConfig, Payment } from 'mercadopago';
+import { mpPayment } from '../../lib/mercadopago';
 
 // Mercado Pago webhook — updates stock and saves order on payment approval
 export const POST: APIRoute = async ({ request }) => {
-  const mpToken = import.meta.env.MERCADOPAGO_ACCESS_TOKEN;
   const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
   const supabaseKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!mpToken || !supabaseUrl || !supabaseKey) {
+  if (!supabaseUrl || !supabaseKey) {
     return jsonResponse({ error: 'Server not configured' }, 500);
   }
 
@@ -28,9 +27,7 @@ export const POST: APIRoute = async ({ request }) => {
   const paymentId = String(data.id);
 
   try {
-    const client = new MercadoPagoConfig({ accessToken: mpToken });
-    const paymentClient = new Payment(client);
-    const payment = await paymentClient.get({ id: paymentId });
+    const payment = await mpPayment.get({ id: paymentId });
 
     if (payment.status !== 'approved') {
       return jsonResponse({ ok: true, status: payment.status });

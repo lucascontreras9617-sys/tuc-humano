@@ -1,0 +1,213 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSlider from '../components/HeroSlider.astro';
+import LookbookGallery from '../components/LookbookGallery.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getProducts, FALLBACK_PRODUCTS } from '../lib/supabase';
+
+let featuredProducts: any[] = [];
+try {
+  featuredProducts = await getProducts();
+  if (!featuredProducts || featuredProducts.length === 0) {
+    featuredProducts = FALLBACK_PRODUCTS;
+  }
+} catch (e) {
+  featuredProducts = FALLBACK_PRODUCTS;
+}
+
+const heroProduct = featuredProducts[0] || null;
+
+// Separar libros de remeras (has_sizes indica si es textil o producto unico)
+const remeras = featuredProducts.filter(p => p.has_sizes);
+const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
+---
+
+<Layout
+  title="TUC-HUMANO | Remeras Oversize desde Tucumán"
+  description="Remeras oversize con diseño artístico y conciencia social. Nacidas en Tucumán, para quienes caminan cada lucha con identidad y estilo."
+>
+
+  <!-- ======== HERO SLIDER ======== -->
+  <HeroSlider />
+
+  <!-- ======== VALORES ======== -->
+  <section id="valores" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="space-y-8">
+          <span class="inline-block bg-celeste-50 text-celeste-600 text-xs font-bold px-6 py-2 rounded-full uppercase tracking-widest">
+            Nuestros valores
+          </span>
+          <h2 class="section-title !-rotate-0">
+            Más que una remera:<br/>
+            <span class="text-celeste-500 underline decoration-8 underline-offset-[12px]">una bandera</span>
+          </h2>
+
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
+            {[
+              { title: 'Algodón premium', desc: 'Suave, resistente y confortable' },
+              { title: 'Arte propio', desc: 'Diseños únicos con mensaje' },
+              { title: 'Fit oversize', desc: 'Para todos los cuerpos' },
+              { title: 'Militante', desc: 'Cada remera es una bandera' },
+            ].map(item => (
+              <div class="bg-gray-50 rounded-2xl p-6 hover:bg-celeste-50 transition-all duration-300 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1">
+                <p class="font-display uppercase tracking-tight text-gray-900 text-xl leading-tight">{item.title}</p>
+                <p class="text-gray-500 text-xs mt-2 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== REMERAS (PRODUCTO ESTRELLA) ======== -->
+  <section class="py-12 bg-gray-50 border-y-8 border-black">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mb-8">
+        <h2 class="section-title">Nuestras Remeras</h2>
+        <div class="mt-8 bg-black text-white p-6 md:p-12 border-l-[16px] border-celeste-500 shadow-[20px_20px_0px_0px_rgba(0,174,239,0.25)] reveal-text">
+          <div class="space-y-12">
+            <p class="text-2xl md:text-4xl font-display uppercase tracking-[-0.04em] leading-[0.9] italic">
+              Nuestras remeras oversize no son solo prendas, son una declaración de identidad y valores. Hechas con algodón de primera calidad, combinan suavidad, durabilidad y un ajuste cómodo que abraza todos los cuerpos, acompañándote con estilo y confort día tras día.
+            </p>
+            
+            <div class="h-1 w-32 bg-celeste-500 mb-8"></div>
+
+            <p class="text-xl md:text-3xl font-display uppercase tracking-[-0.02em] leading-tight italic text-gray-400">
+              Cada diseño es una pieza artística repleta de significado. Rinde homenaje a los grandes símbolos de <span class="text-celeste-400">la lucha popular</span> y a quienes soñaron —y siguen soñando— con una <span class="text-celeste-500 underline decoration-4 underline-offset-8">¡Argentina más justa, libre y soberana!</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Galería Dúo (Equilibrio Brutalista) -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 reveal-text-delay">
+          <!-- Frente -->
+          <div class="group aspect-[4/5] overflow-hidden border-8 border-black shadow-lg bg-black">
+            <img 
+              src="/images/parte de frente de la remera.jpg" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+              alt="Vista Frontal" 
+            />
+            <div class="absolute bottom-4 left-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase -rotate-2">Identidad</div>
+          </div>
+          <!-- Espalda -->
+          <div class="group aspect-[4/5] overflow-hidden border-8 border-black shadow-lg bg-black">
+            <img 
+              src="/images/parte de atras de la remeras.jpg" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+              alt="Vista Dorsal" 
+            />
+            <div class="absolute bottom-4 right-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase rotate-2">Resistencia</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {remeras.map(p => (
+          <ProductCard
+            id={p.id}
+            name={p.name}
+            slug={p.slug}
+            price={p.price}
+            old_price={p.old_price}
+            image_url={p.image_url}
+            image_back_url={p.image_back_url}
+            stock_s={p.stock_s}
+            stock_m={p.stock_m}
+            stock_l={p.stock_l}
+            stock_xl={p.stock_xl}
+            stock_unico={p.stock_unico}
+            has_sizes={p.has_sizes}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== LIBROS Y OTROS ======== -->
+  {librosYOtros.length > 0 && (
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-12 text-right">
+          <h2 class="section-title">Libros y Cultura</h2>
+          <p class="text-lg text-gray-800 font-sans font-semibold max-w-2xl border-r-4 border-black pr-4 my-6 ml-auto">
+            Herramientas para el pensamiento crítico y la acción popular.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-end">
+          {librosYOtros.map(p => (
+            <ProductCard
+              id={p.id}
+              name={p.name}
+              slug={p.slug}
+              price={p.price}
+              old_price={p.old_price}
+              image_url={p.image_url}
+              image_back_url={p.image_back_url}
+              stock_s={p.stock_s}
+              stock_m={p.stock_m}
+              stock_l={p.stock_l}
+              stock_xl={p.stock_xl}
+              stock_unico={p.stock_unico}
+              has_sizes={p.has_sizes}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ======== LOOKBOOK ======== -->
+  <LookbookGallery
+    images={[
+      { src: '/images/parte de frente de la remera.jpg', alt: 'TUC-HUMANO campaña - frente' },
+      { src: '/images/parte de atras de la remeras.jpg', alt: 'TUC-HUMANO campaña - espalda' },
+      { src: '/images/foto 1.jpeg', alt: 'TUC-HUMANO - detalle' },
+      { src: '/images/foto 2.jpeg', alt: 'TUC-HUMANO - estilo' },
+    ]}
+  />
+
+  <!-- ======== ENVÍO BANNER ======== -->
+  <section class="py-16 bg-celeste-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-white text-center">
+          <!-- Envío -->
+          <div class="flex flex-col items-center gap-6 group">
+            <div class="h-20 w-auto flex items-center justify-center p-2">
+              <img src="/images/enviado.png" alt="Envío" class="h-full w-auto object-contain brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-300" />
+            </div>
+            <div class="text-center">
+              <p class="font-display text-2xl uppercase tracking-tighter leading-none mb-2">Envíos Nacionales</p>
+              <p class="text-celeste-100 text-xs font-technical uppercase tracking-widest opacity-80">Logística Andreani</p>
+            </div>
+          </div>
+          
+          <!-- Pago -->
+          <div class="flex flex-col items-center gap-6 group">
+            <div class="h-20 w-auto flex items-center justify-center p-2">
+              <img src="/images/Mercado_Pago.svg.png" alt="Mercado Pago" class="h-full w-auto object-contain brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-300" />
+            </div>
+            <div class="text-center">
+              <p class="font-display text-2xl uppercase tracking-tighter leading-none mb-2">Pago Garantizado</p>
+              <p class="text-celeste-100 text-xs font-technical uppercase tracking-widest opacity-80">Mercado Pago Protegido</p>
+            </div>
+          </div>
+
+          <!-- WhatsApp -->
+          <div class="flex flex-col items-center gap-6 group">
+            <div class="h-20 w-auto flex items-center justify-center p-2">
+              <img src="/images/whatsapp.png" alt="WhatsApp" class="h-full w-auto object-contain brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-300" />
+            </div>
+            <div class="text-center">
+              <p class="font-display text-2xl uppercase tracking-tighter leading-none mb-2">Consultas Directas</p>
+              <p class="text-celeste-100 text-xs font-technical uppercase tracking-widest opacity-80">WhatsApp 24/7</p>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+
+</Layout>
