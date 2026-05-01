@@ -35,18 +35,20 @@ const discountPercent = old_price ? Math.round(((old_price - price) / old_price)
     <div class="relative aspect-[3/4] overflow-hidden bg-black border-b-4 border-black">
       <!-- Foto Principal -->
       <img
-        src={image_url || '/images/parte de frente de la remera.jpg'}
+        src={image_url}
         alt={name}
-        class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
+        class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${image_back_url ? 'group-hover:opacity-0' : ''}`}
         loading="lazy"
       />
-      <!-- Foto Secundaria (Espalda / Detalle) -->
-      <img
-        src={image_back_url || '/images/foto 1.jpeg'}
-        alt={`${name} - Vista alternativa`}
-        class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        loading="lazy"
-      />
+      <!-- Foto Secundaria (Solo si existe) -->
+      {image_back_url && (
+        <img
+          src={image_back_url}
+          alt={`${name} - Vista alternativa`}
+          class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          loading="lazy"
+        />
+      )}
       {!hasStock && (
         <div class="absolute inset-0 bg-white/70 flex items-center justify-center">
           <span class="bg-gray-900 text-white text-xs font-semibold px-4 py-2 rounded-full">Sin stock</span>

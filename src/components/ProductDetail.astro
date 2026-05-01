@@ -50,7 +50,7 @@ const hasStock = product.has_sizes
     <div class="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gray-50 group">
       <img
         id="main-product-img"
-        src={product.image_url || '/images/remera-frente.jpg'}
+        src={product.image_url || '/images/parte de frente de la remera.jpg'}
         alt={product.name}
         class="w-full h-full object-cover object-center transition-opacity duration-300"
       />
@@ -67,9 +67,9 @@ const hasStock = product.has_sizes
       <div class="flex gap-3">
         <button
           class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-2 border-celeste-500"
-          data-src={product.image_url || '/images/remera-frente.jpg'}
+          data-src={product.image_url || '/images/parte de frente de la remera.jpg'}
         >
-          <img src={product.image_url || '/images/remera-frente.jpg'} alt="Frente" class="w-full h-full object-cover" />
+          <img src={product.image_url || '/images/parte de frente de la remera.jpg'} alt="Frente" class="w-full h-full object-cover" />
         </button>
         <button
           class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-2 border-transparent hover:border-celeste-300 transition-colors"
@@ -279,7 +279,7 @@ const hasStock = product.has_sizes
           name: product.name,
           size: (selectedSize || 'UNICO') as any,
           price: product.price,
-          image: product.image_url || '/images/remera-frente.jpg',
+          image: product.image_url || '/images/parte de frente de la remera.jpg',
         });
       }
       openCart();
