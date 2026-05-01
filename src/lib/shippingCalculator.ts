@@ -181,8 +181,16 @@ export function calcularEnvio(
   const pesoFacturado = Math.max(pesoReal, pesoVolumetrico);
   const zona = getZonaAndreani(cpDestino);
 
-  const precioSucursal = interpolarTarifa(pesoFacturado, zona, 'suc');
-  const precioDomicilio = interpolarTarifa(pesoFacturado, zona, 'dom');
+  let precioSucursal = interpolarTarifa(pesoFacturado, zona, 'suc');
+  let precioDomicilio = interpolarTarifa(pesoFacturado, zona, 'dom');
+
+  // EXCEPCIÓN TUCUMÁN (Tarifa Local Especial)
+  // Si el destino es Tucumán (CP 4000-4199), aplicamos tarifa fija preferencial
+  const cpNum = parseInt(cpDestino);
+  if (cpNum >= 4000 && cpNum <= 4199) {
+    precioSucursal = 11385.17;
+    precioDomicilio = 17120.21;
+  }
 
   return {
     zona, pesoReal, pesoVolumetrico, pesoFacturado,
