@@ -6,6 +6,7 @@ interface Props {
   price: number;
   old_price?: number | null;
   image_url: string;
+  image_back_url?: string | null;
   stock_s?: number;
   stock_m?: number;
   stock_l?: number;
@@ -14,7 +15,7 @@ interface Props {
   has_sizes?: boolean;
 }
 
-const { id, name, slug, price, old_price, image_url, stock_s = 0, stock_m = 0, stock_l = 0, stock_xl = 0, stock_unico = 0, has_sizes = true } = Astro.props;
+const { id, name, slug, price, old_price, image_url, image_back_url, stock_s = 0, stock_m = 0, stock_l = 0, stock_xl = 0, stock_unico = 0, has_sizes = true } = Astro.props;
 const hasStock = has_sizes ? (stock_s > 0 || stock_m > 0 || stock_l > 0 || stock_xl > 0) : stock_unico > 0;
 
 const formatPrice = (p: number) => new Intl.NumberFormat('es-AR', {
@@ -31,11 +32,19 @@ const discountPercent = old_price ? Math.round(((old_price - price) / old_price)
 <article class="product-card group" data-product-id={id}>
   <a href={`/producto/${slug}`} class="block">
     <!-- Image -->
-    <div class="relative aspect-[3/4] overflow-hidden bg-gray-50">
+    <div class="relative aspect-[3/4] overflow-hidden bg-black border-b-4 border-black">
+      <!-- Foto Principal -->
       <img
-        src={image_url || '/images/remera-frente.jpg'}
+        src={image_url || '/images/parte de frente de la remera.jpg'}
         alt={name}
-        class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+        class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
+        loading="lazy"
+      />
+      <!-- Foto Secundaria (Espalda / Detalle) -->
+      <img
+        src={image_back_url || '/images/foto 1.jpeg'}
+        alt={`${name} - Vista alternativa`}
+        class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         loading="lazy"
       />
       {!hasStock && (
