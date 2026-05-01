@@ -1,0 +1,301 @@
+---
+interface Props {
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    old_price: number | null;
+    description: string;
+    image_url: string;
+    image_back_url: string | null;
+    stock_s: number;
+    stock_m: number;
+    stock_l: number;
+    stock_xl: number;
+    stock_unico: number;
+    has_sizes: boolean;
+  };
+}
+
+const { product } = Astro.props;
+
+const formatPrice = (p: number) => new Intl.NumberFormat('es-AR', {
+  style: 'currency',
+  currency: 'ARS',
+  minimumFractionDigits: 0,
+}).format(p);
+
+const formatted = formatPrice(product.price);
+const formattedOld = product.old_price ? formatPrice(product.old_price) : null;
+const discountPercent = product.old_price ? Math.round(((product.old_price - product.price) / product.old_price) * 100) : 0;
+
+const sizes = product.has_sizes ? [
+  { label: 'S',  stock: product.stock_s  },
+  { label: 'M',  stock: product.stock_m  },
+  { label: 'L',  stock: product.stock_l  },
+  { label: 'XL', stock: product.stock_xl },
+] : [];
+
+const hasStock = product.has_sizes 
+  ? (product.stock_s > 0 || product.stock_m > 0 || product.stock_l > 0 || product.stock_xl > 0)
+  : (product.stock_unico > 0);
+---
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+  
+  <div id="product-ctx" data-product={JSON.stringify(product)} class="hidden"></div>
+
+  <!-- Gallery -->
+  <div class="space-y-3">
+    <div class="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gray-50 group">
+      <img
+        id="main-product-img"
+        src={product.image_url || '/images/remera-frente.jpg'}
+        alt={product.name}
+        class="w-full h-full object-cover object-center transition-opacity duration-300"
+      />
+      {discountPercent > 0 && (
+        <div class="absolute top-4 left-4 z-10">
+          <span class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg">
+            -{discountPercent}% OFF
+          </span>
+        </div>
+      )}
+    </div>
+    <!-- Thumbnails -->
+    {product.image_back_url && (
+      <div class="flex gap-3">
+        <button
+          class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-2 border-celeste-500"
+          data-src={product.image_url || '/images/remera-frente.jpg'}
+        >
+          <img src={product.image_url || '/images/remera-frente.jpg'} alt="Frente" class="w-full h-full object-cover" />
+        </button>
+        <button
+          class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-2 border-transparent hover:border-celeste-300 transition-colors"
+          data-src={product.image_back_url}
+        >
+          <img src={product.image_back_url} alt="Espalda" class="w-full h-full object-cover" />
+        </button>
+      </div>
+    )}
+  </div>
+
+  <!-- Info -->
+  <div class="space-y-6 lg:sticky lg:top-24">
+    <div>
+      {product.has_sizes && (
+        <span class="inline-block bg-celeste-100 text-celeste-700 text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">
+          Remera Oversize
+        </span>
+      )}
+      <h1 class="text-3xl font-bold text-gray-900 leading-tight">{product.name}</h1>
+      
+      <div class="flex items-center gap-4 mt-3">
+        <p class="text-4xl font-black text-celeste-500">{formatted}</p>
+        {formattedOld && (
+          <p class="text-xl text-gray-400 line-through decoration-red-400/50">{formattedOld}</p>
+        )}
+      </div>
+      <p class="text-gray-400 text-sm mt-1">+ costo de envío (calcular en el carrito)</p>
+    </div>
+
+    <!-- Description -->
+    <p class="text-gray-600 leading-relaxed text-sm border-l-4 border-celeste-200 pl-4">
+      {product.description}
+    </p>
+
+    {hasStock ? (
+      <>
+        <!-- Size Selector -->
+        {product.has_sizes ? (
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <p class="font-semibold text-gray-900 text-sm">Elegí tu talle</p>
+              <span id="size-error" class="text-red-400 text-xs hidden">Seleccioná un talle</span>
+            </div>
+            <div class="flex gap-3">
+              {sizes.map(({ label, stock }) => (
+                <button
+                  class={'size-btn ' + (stock === 0 ? 'out-of-stock' : '')}
+                  data-size={label}
+                  data-stock={stock}
+                  disabled={stock === 0}
+                  title={stock === 0 ? 'Sin stock' : 'Stock: ' + stock}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <p id="stock-indicator" class="text-xs text-gray-400 mt-2"></p>
+          </div>
+        ) : (
+          <div>
+             <span class="inline-block bg-gray-100 text-gray-600 text-sm px-4 py-2 rounded-lg font-medium border border-gray-200">
+               Talle/Tamaño Único
+             </span>
+             <p id="stock-indicator" class="text-xs text-gray-400 mt-2">
+               {product.stock_unico <= 5 && product.stock_unico > 0 ? '⚠️ Últimas ' + product.stock_unico + ' unidades' : 'Stock disponible'}
+             </p>
+          </div>
+        )}
+
+        <!-- Quantity -->
+        <div>
+          <p class="font-semibold text-gray-900 text-sm mb-3">Cantidad</p>
+          <div class="flex items-center gap-4">
+            <button id="qty-dec" class="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-celeste-500 hover:text-celeste-500 transition-colors font-bold text-lg">−</button>
+            <span id="qty-display" class="text-lg font-bold w-8 text-center text-gray-900">1</span>
+            <button id="qty-inc" class="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-celeste-500 hover:text-celeste-500 transition-colors font-bold text-lg">+</button>
+          </div>
+        </div>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col gap-3 pt-2">
+          <button id="add-to-cart-btn" class="btn-primary w-full py-4 text-base">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            Agregar al carrito
+          </button>
+          <button id="buy-now-btn" class="btn-outline w-full py-4 text-base">
+            Comprar ahora
+          </button>
+        </div>
+      </>
+    ) : (
+      <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center mt-6">
+        <p class="text-gray-900 font-bold text-lg mb-2">Producto sin stock</p>
+        <p class="text-gray-500 text-sm mb-4">Dejanos tu email y te avisamos cuando vuelva a ingresar.</p>
+        <div class="flex gap-2">
+          <input type="email" placeholder="Tu email..." class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-celeste-500 focus:ring-celeste-500" />
+          <button class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">Avisarme</button>
+        </div>
+      </div>
+    )}
+
+    <!-- Features -->
+    {product.has_sizes ? (
+      <div class="grid grid-cols-2 gap-3 pt-4 border-t border-gray-100">
+        <div class="flex items-center gap-2 text-sm text-gray-500"><span class="text-celeste-500">✓</span> Algodón premium</div>
+        <div class="flex items-center gap-2 text-sm text-gray-500"><span class="text-celeste-500">✓</span> Fit oversize</div>
+        <div class="flex items-center gap-2 text-sm text-gray-500"><span class="text-celeste-500">✓</span> Diseño único</div>
+        <div class="flex items-center gap-2 text-sm text-gray-500"><span class="text-celeste-500">✓</span> Todos los cuerpos</div>
+      </div>
+    ) : (
+      <div class="grid grid-cols-2 gap-3 pt-4 border-t border-gray-100">
+        <div class="flex items-center gap-2 text-sm text-gray-500"><span class="text-celeste-500">✓</span> Calidad garantizada</div>
+        <div class="flex items-center gap-2 text-sm text-gray-500"><span class="text-celeste-500">✓</span> Envíos a todo el país</div>
+      </div>
+    )}
+  </div>
+</div>
+
+<script>
+  import { addToCart as addFn, openCart } from '../lib/cart';
+
+  const ctxEl = document.getElementById('product-ctx');
+  if (ctxEl) {
+    const product = JSON.parse(ctxEl.dataset.product || '{}');
+    const hasSizes = product.has_sizes;
+    let selectedSize: string | null = hasSizes ? null : 'UNICO';
+    let quantity = 1;
+    let maxStock = hasSizes ? 0 : product.stock_unico;
+
+    const stockMap: Record<string, number> = {
+      S:  product.stock_s,
+      M:  product.stock_m,
+      L:  product.stock_l,
+      XL: product.stock_xl,
+    };
+
+    // Thumbnail switcher
+    document.querySelectorAll('.thumb-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        const src = target.dataset.src;
+        const mainImg = document.getElementById('main-product-img') as HTMLImageElement;
+        if (mainImg && src) mainImg.src = src;
+        document.querySelectorAll('.thumb-btn').forEach(b => b.classList.remove('border-celeste-500'));
+        target.classList.add('border-celeste-500');
+      });
+    });
+
+    // Size selection
+    if (hasSizes) {
+      document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const b = e.currentTarget as HTMLButtonElement;
+          if (b.disabled) return;
+          
+          document.querySelectorAll('.size-btn').forEach(oldBtn => oldBtn.classList.remove('selected'));
+          b.classList.add('selected');
+          
+          selectedSize = b.dataset.size || null;
+          if (selectedSize) {
+            maxStock = stockMap[selectedSize] || 0;
+          }
+          quantity = 1;
+          
+          const qtyDisp = document.getElementById('qty-display');
+          if (qtyDisp) qtyDisp.textContent = '1';
+          
+          const sizeErr = document.getElementById('size-error');
+          if (sizeErr) sizeErr.classList.add('hidden');
+          
+          const stockInd = document.getElementById('stock-indicator');
+          if (stockInd) stockInd.textContent = maxStock <= 3 ? `⚠️ Últimas ${maxStock} unidades` : '';
+        });
+      });
+    }
+
+    // Quantity
+    document.getElementById('qty-dec')?.addEventListener('click', () => {
+      if (quantity > 1) {
+        quantity--;
+        const disp = document.getElementById('qty-display');
+        if (disp) disp.textContent = String(quantity);
+      }
+    });
+
+    document.getElementById('qty-inc')?.addEventListener('click', () => {
+      if (quantity < maxStock) {
+        quantity++;
+        const disp = document.getElementById('qty-display');
+        if (disp) disp.textContent = String(quantity);
+      }
+    });
+
+    function addToCart() {
+      if (hasSizes && !selectedSize) {
+        const errEl = document.getElementById('size-error');
+        if (errEl) errEl.classList.remove('hidden');
+        return;
+      }
+
+      for (let i = 0; i < quantity; i++) {
+        addFn({
+          productId: product.id,
+          name: product.name,
+          size: (selectedSize || 'UNICO') as any,
+          price: product.price,
+          image: product.image_url || '/images/remera-frente.jpg',
+        });
+      }
+      openCart();
+    }
+
+    document.getElementById('add-to-cart-btn')?.addEventListener('click', addToCart);
+
+    document.getElementById('buy-now-btn')?.addEventListener('click', () => {
+      if (hasSizes && !selectedSize) {
+        const errEl = document.getElementById('size-error');
+        if (errEl) errEl.classList.remove('hidden');
+        return;
+      }
+      addToCart();
+      const btn = document.getElementById('buy-now-btn');
+      if (btn) btn.textContent = '¡Listo! Cerrá el carrito y pagá';
+    });
+  }
+</script>

@@ -1,0 +1,142 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  old_price?: number | null;
+  image_url: string;
+  stock_s?: number;
+  stock_m?: number;
+  stock_l?: number;
+  stock_xl?: number;
+  stock_unico?: number;
+  has_sizes?: boolean;
+}
+
+const { id, name, slug, price, old_price, image_url, stock_s = 0, stock_m = 0, stock_l = 0, stock_xl = 0, stock_unico = 0, has_sizes = true } = Astro.props;
+const hasStock = has_sizes ? (stock_s > 0 || stock_m > 0 || stock_l > 0 || stock_xl > 0) : stock_unico > 0;
+
+const formatPrice = (p: number) => new Intl.NumberFormat('es-AR', {
+  style: 'currency',
+  currency: 'ARS',
+  minimumFractionDigits: 0,
+}).format(p);
+
+const formatted = formatPrice(price);
+const formattedOld = old_price ? formatPrice(old_price) : null;
+const discountPercent = old_price ? Math.round(((old_price - price) / old_price) * 100) : 0;
+---
+
+<article class="product-card group" data-product-id={id}>
+  <a href={`/producto/${slug}`} class="block">
+    <!-- Image -->
+    <div class="relative aspect-[3/4] overflow-hidden bg-gray-50">
+      <img
+        src={image_url || '/images/remera-frente.jpg'}
+        alt={name}
+        class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+        loading="lazy"
+      />
+      {!hasStock && (
+        <div class="absolute inset-0 bg-white/70 flex items-center justify-center">
+          <span class="bg-gray-900 text-white text-xs font-semibold px-4 py-2 rounded-full">Sin stock</span>
+        </div>
+      )}
+      
+      <!-- Badges -->
+      <div class="absolute top-3 left-3 flex flex-col gap-2">
+        {has_sizes && (
+          <span class="bg-celeste-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+            OVERSIZE
+          </span>
+        )}
+        {discountPercent > 0 && (
+          <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm w-fit">
+            -{discountPercent}%
+          </span>
+        )}
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="p-4">
+      <h3 class="font-semibold text-gray-900 text-sm leading-tight mb-1">{name}</h3>
+      <div class="flex items-center gap-2 mt-1">
+        <p class="text-celeste-600 font-bold text-lg">{formatted}</p>
+        {formattedOld && (
+          <p class="text-gray-400 text-sm line-through">{formattedOld}</p>
+        )}
+      </div>
+    </div>
+  </a>
+
+  <!-- Quick Add (shows on hover) -->
+  {hasStock && (
+    <div class="px-4 pb-4 flex flex-col gap-2 relative z-20" onclick="event.preventDefault();">
+      {has_sizes && (
+        <select class="quick-add-size w-full text-sm border border-gray-200 rounded-lg py-2 px-3 focus:ring-celeste-500 focus:border-celeste-500 bg-white text-gray-900 cursor-pointer">
+           <option value="">Elegí tu talle</option>
+           {stock_s && stock_s > 0 ? <option value="S">Talle S</option> : null}
+           {stock_m && stock_m > 0 ? <option value="M">Talle M</option> : null}
+           {stock_l && stock_l > 0 ? <option value="L">Talle L</option> : null}
+           {stock_xl && stock_xl > 0 ? <option value="XL">Talle XL</option> : null}
+        </select>
+      )}
+
+      <div class="flex gap-2">
+        <a href={`/producto/${slug}`} class="btn-outline flex-1 text-xs py-2 px-0 text-center" onclick="window.location.href=this.href;">
+          Detalles
+        </a>
+        <button
+          class="btn-primary flex-1 text-xs py-2 px-0 add-to-cart-quick"
+          data-product={JSON.stringify({id, name, price, image_url, has_sizes})}
+        >
+          Sumar
+        </button>
+      </div>
+      <p class="quick-add-error text-red-500 text-xs hidden text-center mt-1">⚠️ Seleccioná un talle</p>
+    </div>
+  )}
+</article>
+
+<script>
+  import { addToCart as addFn, openCart } from '../lib/cart';
+
+  document.querySelectorAll('.add-to-cart-quick').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const button = e.currentTarget as HTMLButtonElement;
+      const card = button.closest('.product-card');
+      if (!card) return;
+
+      const product = JSON.parse(button.dataset.product || '{}');
+      let size = 'UNICO';
+
+      if (product.has_sizes) {
+         const select = card.querySelector('.quick-add-size') as HTMLSelectElement;
+         if (!select || !select.value) {
+            const err = card.querySelector('.quick-add-error');
+            if (err) err.classList.remove('hidden');
+            return;
+         }
+         size = select.value;
+      }
+
+      addFn({
+        productId: product.id,
+        name: product.name,
+        size: size as any,
+        price: product.price,
+        image: product.image_url || '/images/remera-frente.jpg',
+      });
+      
+      const err = card.querySelector('.quick-add-error');
+      if (err) err.classList.add('hidden');
+      
+      openCart();
+    });
+  });
+</script>

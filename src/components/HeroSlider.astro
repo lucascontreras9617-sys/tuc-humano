@@ -1,0 +1,97 @@
+---
+// src/components/HeroSlider.astro
+const slides = [
+  { url: '/images/foto_portada_slide_lateral.jpg', title: 'RESISTENCIA URBANA' },
+  { url: '/images/foto dedo en v.webp', title: 'RESISTENCIA Y CULTURA' }
+];
+---
+
+<section class="relative h-[90vh] w-full overflow-hidden bg-black border-b-8 border-black">
+  <div id="hero-slider" class="absolute inset-0 h-full w-full">
+    {slides.map((slide, index) => (
+      <div 
+        class={`hero-slide absolute inset-0 h-full w-full opacity-0 transition-opacity duration-[2000ms] ease-in-out ${index === 0 ? 'active' : ''}`}
+        data-index={index}
+      >
+        <div class="absolute inset-0 bg-black/40 z-10" />
+        <img 
+          src={slide.url} 
+          alt={slide.title}
+          class="h-full w-full object-cover"
+        />
+      </div>
+    ))}
+  </div>
+
+  <!-- Controles Brutalistas -->
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex gap-4">
+    {slides.map((_, i) => (
+      <button 
+        class={`w-12 h-2 border-2 border-white transition-all duration-300 slider-dot ${i === 0 ? 'bg-white' : 'bg-transparent'}`}
+        data-index={i}
+        aria-label={`Ir a slide ${i + 1}`}
+      ></button>
+    ))}
+  </div>
+</section>
+
+<style>
+  .hero-slide.active {
+    opacity: 1;
+    z-index: 10;
+  }
+
+  .hero-slide img {
+    transform: scale(1) !important;
+    transition: none !important;
+  }
+
+  /* Textura de ruido aplicada al slider */
+  #hero-slider::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 15;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Cfilter id='noiseFilter'%3%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3%3C/filter%3%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3%3C/svg%3");
+  }
+</style>
+
+<script>
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.slider-dot');
+  let current = 0;
+  const interval = 7000;
+
+  function nextSlide() {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('bg-white');
+    dots[current].classList.add('bg-transparent');
+    
+    current = (current + 1) % slides.length;
+    
+    slides[current].classList.add('active');
+    dots[current].classList.add('bg-white');
+    dots[current].classList.remove('bg-transparent');
+  }
+
+  setInterval(nextSlide, interval);
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const index = parseInt(dot.getAttribute('data-index') || '0');
+      if (index === current) return;
+      
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('bg-white');
+      dots[current].classList.add('bg-transparent');
+      
+      current = index;
+      
+      slides[current].classList.add('active');
+      dots[current].classList.add('bg-white');
+      dots[current].classList.remove('bg-transparent');
+    });
+  });
+</script>
