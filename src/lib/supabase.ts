@@ -59,8 +59,7 @@ export async function getProducts(): Promise<Product[]> {
   const { data, error } = await supabase
     .from('products')
     .select('*')
-    .eq('active', true)
-    .order('created_at', { ascending: true });
+    .eq('active', true);
 
   if (error) {
     console.error('Error fetching products:', error);
@@ -104,8 +103,8 @@ export const FALLBACK_PRODUCTS: Product[] = [
     price: 27500.00,
     old_price: 35000.00,
     description: 'Remera oversize de algodón premium con estampado artístico del escudo tucumano. Una declaración de identidad, de lucha y de amor por Tucumán. Hecha con algodón de primera calidad, suave, duradera y con un ajuste cómodo que abraza todos los cuerpos.',
-    image_url: '/images/parte de frente de la remera.jpg',
-    image_back_url: '/images/parte de atras de la remeras.jpg',
+    image_url: '/images/parte de frente de la remera.webp',
+    image_back_url: '/images/parte de atras de la remeras.webp',
     stock_s: 10, stock_m: 15, stock_l: 15, stock_xl: 10, stock_unico: 0,
     has_sizes: true, active: true
   },
@@ -116,7 +115,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     price: 15000.00,
     old_price: 20000.00,
     description: 'Ensayo político donde Juan Grabois analiza las problemáticas estructurales de la Argentina y propone caminos orientados a la justicia social y el bien común.',
-    image_url: '/images/libro_los_siete_pecados_capitales.jpg',
+    image_url: '/images/libro_los_siete_pecados_capitales.webp',
     image_back_url: null,
     stock_s: 0, stock_m: 0, stock_l: 0, stock_xl: 0, stock_unico: 20,
     has_sizes: false, active: true
@@ -128,7 +127,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     price: 35000.00,
     old_price: 40000.00,
     description: "En 'Argentina humana', Juan Grabois nos invita a explorar una visión transformadora de la justicia social en el siglo XXI. A través de un enfoque contracultural, el autor desafía las estructuras políticas y sociales tradicionales, proponiendo un modelo más inclusivo y humano para la sociedad argentina. Grabois, conocido por su activismo y compromiso con los derechos humanos, ofrece un análisis profundo y crítico de las desigualdades actuales, mientras presenta soluciones prácticas y esperanzadoras. Este ensayo se convierte en un llamado a la acción para construir un futuro más justo y equitativo, donde la dignidad y el bienestar de cada individuo sean el centro de las políticas públicas.",
-    image_url: '/images/libro_argentina_humana.jpg',
+    image_url: '/images/libro_argentina_humana.webp',
     image_back_url: null,
     stock_s: 0, stock_m: 0, stock_l: 0, stock_xl: 0, stock_unico: 15,
     has_sizes: false, active: true
@@ -140,7 +139,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     price: 8000.00,
     old_price: 12000.00,
     description: 'Pin metálico esmaltado de máxima calidad. Llevá la militancia y tus valores siempre con vos. Perfecto para la mochila, campera o morral.',
-    image_url: '/images/pin_argentina_humana.jpg',
+    image_url: '/images/pin_argentina_humana.webp',
     image_back_url: null,
     stock_s: 0, stock_m: 0, stock_l: 0, stock_xl: 0, stock_unico: 50,
     has_sizes: false, active: true

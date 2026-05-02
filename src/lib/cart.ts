@@ -4,7 +4,7 @@ import { persistentAtom } from '@nanostores/persistent';
 export interface CartItem {
   productId: string;
   name: string;
-  size: 'S' | 'M' | 'L' | 'XL';
+  size: 'S' | 'M' | 'L' | 'XL' | 'UNICO';
   price: number;
   quantity: number;
   image: string;

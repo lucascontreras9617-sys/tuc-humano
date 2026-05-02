@@ -1,5 +1,5 @@
 ---
-// Lookbook gallery - masonry style
+// Lookbook gallery - editorial full-width
 interface Props {
   images?: { src: string; alt: string }[];
 }
@@ -14,54 +14,138 @@ const defaultImages = [
 const { images = defaultImages } = Astro.props;
 ---
 
-<section id="lookbook" class="py-20 bg-gray-950">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section id="lookbook" class="bg-gray-950">
+  <!-- Header -->
+  <div class="py-14 text-center">
+    <span class="inline-block bg-celeste-500/20 text-celeste-400 text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest mb-4">
+      Lookbook
+    </span>
+    <h2 class="text-4xl md:text-6xl font-sans font-bold text-white not-italic tracking-tight leading-none uppercase">
+      La remera en acción
+    </h2>
+    <p class="text-gray-400 mt-3 text-lg max-w-xl mx-auto">
+      Identidad, calle y actitud. Así se ve TUC-HUMANO puesto.
+    </p>
+  </div>
 
-    <!-- Header -->
-    <div class="text-center mb-12">
-      <span class="inline-block bg-celeste-500/20 text-celeste-400 text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest mb-4">
-        Lookbook
-      </span>
-      <h2 class="text-4xl md:text-5xl font-black text-white">
-        La remera en acción
-      </h2>
-      <p class="text-gray-400 mt-3 text-lg max-w-xl mx-auto">
-        Identidad, calle y actitud. Así se ve TUC-HUMANO puesto.
-      </p>
-    </div>
-
-    <!-- Masonry Grid -->
-    <div class="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-      {images.map((img, i) => (
-        <div
-          class="lookbook-item break-inside-avoid rounded-2xl overflow-hidden cursor-pointer group relative"
-          style={`animation-delay: ${i * 100}ms`}
-        >
-          <img
-            src={img.src}
-            alt={img.alt}
-            loading="lazy"
-            class="w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            onerror="this.parentElement.style.display='none'"
-          />
-          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-end p-4">
-            <span class="text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              TUC-HUMANO ✦
-            </span>
-          </div>
+  <!-- Grid editorial full-width -->
+  <div class="lookbook-grid">
+    {images[0] && (
+      <div class="lookbook-cell group">
+        <img
+          src={images[0].src}
+          alt={images[0].alt}
+          loading="lazy"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          onerror="this.parentElement.style.display='none'"
+        />
+        <div class="lookbook-overlay">
+          <span class="lookbook-label">TUC-HUMANO ✦</span>
         </div>
-      ))}
-    </div>
+      </div>
+    )}
+    {images[1] && (
+      <div class="lookbook-cell group">
+        <img
+          src={images[1].src}
+          alt={images[1].alt}
+          loading="lazy"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          onerror="this.parentElement.style.display='none'"
+        />
+        <div class="lookbook-overlay">
+          <span class="lookbook-label">TUC-HUMANO ✦</span>
+        </div>
+      </div>
+    )}
+    {images[2] && (
+      <div class="lookbook-cell group">
+        <img
+          src={images[2].src}
+          alt={images[2].alt}
+          loading="lazy"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          onerror="this.parentElement.style.display='none'"
+        />
+        <div class="lookbook-overlay">
+          <span class="lookbook-label">TUC-HUMANO ✦</span>
+        </div>
+      </div>
+    )}
+    {images[3] && (
+      <div class="lookbook-cell group">
+        <img
+          src={images[3].src}
+          alt={images[3].alt}
+          loading="lazy"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          onerror="this.parentElement.style.display='none'"
+        />
+        <div class="lookbook-overlay">
+          <span class="lookbook-label">TUC-HUMANO ✦</span>
+        </div>
+      </div>
+    )}
+  </div>
 
-    <!-- CTA -->
-    <div class="text-center mt-12">
-      <a href="/tienda" class="btn-primary inline-flex">
-        Conseguí la tuya
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </a>
-    </div>
-
+  <!-- CTA -->
+  <div class="text-center py-12">
+    <a href="/tienda" class="btn-primary inline-flex">
+      Conseguí la tuya
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
+    </a>
   </div>
 </section>
+
+<style>
+  .lookbook-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+    gap: 4px;
+  }
+
+  .lookbook-cell {
+    overflow: hidden;
+    position: relative;
+    line-height: 0;
+  }
+
+  .lookbook-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .lookbook-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 40%);
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .group:hover .lookbook-overlay {
+    opacity: 1;
+  }
+
+  .lookbook-label {
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  /* Mobile: 1 columna */
+  @media (max-width: 640px) {
+    .lookbook-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(4, 70vw);
+    }
+  }
+</style>

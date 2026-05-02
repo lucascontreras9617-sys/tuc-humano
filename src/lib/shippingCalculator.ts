@@ -51,11 +51,11 @@ export function getZonaAndreani(cpDestino: string): ZonaAndreani {
 
   // ZONA C — Patagonia extrema
   // Neuquén está en Zona B pero limita con Río Negro
-  // Santa Cruz
-  if (cp >= 9000 && cp <= 9299) return 'C';
-  // Chubut
-  if (cp >= 9000 && cp <= 9099) return 'C';
+  // Chubut (evaluar antes de Santa Cruz para evitar solapamiento 9000-9099)
   if (cp >= 8500 && cp <= 8899) return 'C';
+  if (cp >= 9000 && cp <= 9099) return 'C';
+  // Santa Cruz (9100-9299, ya que 9000-9099 es Chubut)
+  if (cp >= 9100 && cp <= 9299) return 'C';
   // Tierra del Fuego
   if (cp >= 9400 && cp <= 9499) return 'C';
 
@@ -74,10 +74,10 @@ export function getZonaAndreani(cpDestino: string): ZonaAndreani {
   if (cp >= 8300 && cp <= 8399) return 'B';
   // Formosa
   if (cp >= 3600 && cp <= 3799) return 'B';
-  // Misiones
-  if (cp >= 3300 && cp <= 3499) return 'B';
-  // Corrientes
+  // Corrientes (evaluar antes de Misiones para evitar solapamiento 3400-3499)
   if (cp >= 3400 && cp <= 3499) return 'B';
+  // Misiones (3300-3399, ya que 3400-3499 es Corrientes)
+  if (cp >= 3300 && cp <= 3399) return 'B';
 
   return 'B'; // valor conservador para CP no reconocidos
 }
@@ -91,10 +91,11 @@ export function getProvinciaPorCP(cpDestino: string): string | null {
   if ((cp >= 1700 && cp <= 1999) || (cp >= 6000 && cp <= 8199)) return 'Buenos Aires';
   if (cp >= 2000 && cp <= 3099) return 'Santa Fe';
   if (cp >= 3100 && cp <= 3299) return 'Entre Ríos';
-  if (cp >= 3300 && cp <= 3499) return 'Misiones';
-  if (cp >= 3400 && cp <= 3499) return 'Corrientes'; // Ojo solapamiento, típicamente Corrientes es 3400
-  if (cp >= 3500 && cp <= 3699) return 'Chaco';
-  if (cp >= 3600 && cp <= 3799) return 'Formosa'; 
+  // Corrientes antes de Misiones para evitar solapamiento
+  if (cp >= 3400 && cp <= 3499) return 'Corrientes';
+  if (cp >= 3300 && cp <= 3399) return 'Misiones';
+  if (cp >= 3500 && cp <= 3599) return 'Chaco';
+  if (cp >= 3600 && cp <= 3799) return 'Formosa';
   if (cp >= 4000 && cp <= 4199) return 'Tucumán';
   if (cp >= 4200 && cp <= 4299) return 'Santiago del Estero';
   if (cp >= 4400 && cp <= 4599) return 'Salta';
@@ -106,11 +107,13 @@ export function getProvinciaPorCP(cpDestino: string): string | null {
   if (cp >= 5500 && cp <= 5599) return 'Mendoza';
   if (cp >= 5700 && cp <= 5799) return 'San Luis';
   if (cp >= 6300 && cp <= 6399) return 'La Pampa';
-  if (cp >= 8300 && cp <= 8399) return 'Neuquén'; // o Rio Negro
-  if (cp >= 8300 && cp <= 8499) return 'Río Negro'; 
+  // Neuquén antes de Río Negro para evitar solapamiento
+  if (cp >= 8300 && cp <= 8399) return 'Neuquén';
+  if (cp >= 8400 && cp <= 8499) return 'Río Negro';
   if (cp >= 8500 && cp <= 8899) return 'Chubut';
+  // Chubut 9000-9099 antes de Santa Cruz
   if (cp >= 9000 && cp <= 9099) return 'Chubut';
-  if (cp >= 9000 && cp <= 9299) return 'Santa Cruz';
+  if (cp >= 9100 && cp <= 9299) return 'Santa Cruz';
   if (cp >= 9400 && cp <= 9499) return 'Tierra del Fuego';
 
   return null;

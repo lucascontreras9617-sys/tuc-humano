@@ -47,12 +47,12 @@ const hasStock = product.has_sizes
 
   <!-- Gallery -->
   <div class="space-y-3">
-    <div class="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gray-50 group">
+    <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-50 group border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
       <img
         id="main-product-img"
-        src={product.image_url || '/images/parte de frente de la remera.jpg'}
+        src={product.image_url || '/images/parte de frente de la remera.webp'}
         alt={product.name}
-        class="w-full h-full object-cover object-center transition-opacity duration-300"
+        class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
       />
       {discountPercent > 0 && (
         <div class="absolute top-4 left-4 z-10">
@@ -66,16 +66,16 @@ const hasStock = product.has_sizes
     {product.image_back_url && (
       <div class="flex gap-3">
         <button
-          class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-2 border-celeste-500"
-          data-src={product.image_url || '/images/parte de frente de la remera.jpg'}
+          class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+          data-src={product.image_url || '/images/parte de frente de la remera.webp'}
         >
-          <img src={product.image_url || '/images/parte de frente de la remera.jpg'} alt="Frente" class="w-full h-full object-cover" />
+          <img src={product.image_url || '/images/parte de frente de la remera.webp'} alt="Frente" class="w-full h-full object-cover" />
         </button>
         <button
-          class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-2 border-transparent hover:border-celeste-300 transition-colors"
+          class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-4 border-transparent hover:border-black transition-colors"
           data-src={product.image_back_url}
         >
-          <img src={product.image_back_url} alt="Espalda" class="w-full h-full object-cover" />
+          <img src={product.image_back_url} alt="Espalda" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
         </button>
       </div>
     )}
@@ -216,8 +216,12 @@ const hasStock = product.has_sizes
         const src = target.dataset.src;
         const mainImg = document.getElementById('main-product-img') as HTMLImageElement;
         if (mainImg && src) mainImg.src = src;
-        document.querySelectorAll('.thumb-btn').forEach(b => b.classList.remove('border-celeste-500'));
-        target.classList.add('border-celeste-500');
+        document.querySelectorAll('.thumb-btn').forEach(b => {
+          b.classList.remove('border-black', 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]');
+          b.classList.add('border-transparent');
+        });
+        target.classList.remove('border-transparent');
+        target.classList.add('border-black', 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]');
       });
     });
 
@@ -279,10 +283,21 @@ const hasStock = product.has_sizes
           name: product.name,
           size: (selectedSize || 'UNICO') as any,
           price: product.price,
-          image: product.image_url || '/images/parte de frente de la remera.jpg',
+          image: product.image_url || '/images/parte de frente de la remera.webp',
         });
       }
       openCart();
+      
+      const btn = document.getElementById('add-to-cart-btn');
+      if (btn) {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '¡Agregado al carrito!';
+        btn.classList.add('bg-celeste-500', 'border-celeste-500', 'text-white');
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('bg-celeste-500', 'border-celeste-500', 'text-white');
+        }, 1500);
+      }
     }
 
     document.getElementById('add-to-cart-btn')?.addEventListener('click', addToCart);
@@ -294,8 +309,15 @@ const hasStock = product.has_sizes
         return;
       }
       addToCart();
-      const btn = document.getElementById('buy-now-btn');
-      if (btn) btn.textContent = '¡Listo! Cerrá el carrito y pagá';
+      // Auto-navigate to step 2 (shipping form) after a brief delay for drawer to open
+      setTimeout(() => {
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        if (step1 && step2) {
+          step1.classList.add('hidden');
+          step2.classList.remove('hidden');
+        }
+      }, 350);
     });
   }
 </script>

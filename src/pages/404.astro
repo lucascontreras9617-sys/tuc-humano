@@ -1,0 +1,36 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Página no encontrada | TUC-HUMANO"
+  description="La página que buscás no existe o fue movida."
+  noindex={true}
+>
+  <div class="min-h-[80vh] flex items-center justify-center px-4 py-16">
+    <div class="max-w-md w-full text-center space-y-6">
+
+      <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto">
+        <span class="text-5xl">🔍</span>
+      </div>
+
+      <div>
+        <h1 class="text-6xl font-black text-gray-900 leading-none">404</h1>
+        <p class="text-xl font-semibold text-gray-700 mt-3">Página no encontrada</p>
+        <p class="text-gray-500 mt-2 leading-relaxed">
+          La página que buscás no existe o fue movida. Pero no te preocupes, podés seguir explorando.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="/" class="btn-primary flex-1">
+          Volver al inicio
+        </a>
+        <a href="/tienda" class="btn-outline flex-1">
+          Ir a la tienda
+        </a>
+      </div>
+
+    </div>
+  </div>
+</Layout>

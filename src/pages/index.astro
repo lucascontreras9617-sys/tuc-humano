@@ -31,11 +31,11 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
   <HeroSlider />
 
   <!-- ======== VALORES ======== -->
-  <section id="valores" class="py-24 bg-white">
+  <section id="valores" class="py-12 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <div class="max-w-4xl mx-auto text-center">
-        <div class="space-y-8">
+        <div class="space-y-6">
           <span class="inline-block bg-celeste-50 text-celeste-600 text-xs font-bold px-6 py-2 rounded-full uppercase tracking-widest">
             Nuestros valores
           </span>
@@ -44,16 +44,16 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
             <span class="text-celeste-500 underline decoration-8 underline-offset-[12px]">una bandera</span>
           </h2>
 
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
             {[
               { title: 'Algodón premium', desc: 'Suave, resistente y confortable' },
               { title: 'Arte propio', desc: 'Diseños únicos con mensaje' },
               { title: 'Fit oversize', desc: 'Para todos los cuerpos' },
               { title: 'Militante', desc: 'Cada remera es una bandera' },
             ].map(item => (
-              <div class="bg-gray-50 rounded-2xl p-6 hover:bg-celeste-50 transition-all duration-300 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1">
-                <p class="font-display uppercase tracking-tight text-gray-900 text-xl leading-tight">{item.title}</p>
-                <p class="text-gray-500 text-xs mt-2 leading-relaxed">{item.desc}</p>
+              <div class="bg-white rounded-xl p-5 hover:bg-celeste-50 transition-all duration-300 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:-translate-y-1">
+                <p class="font-display uppercase tracking-tight text-gray-900 text-lg leading-tight">{item.title}</p>
+                <p class="text-gray-500 text-xs mt-1 leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -63,13 +63,13 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
   </section>
 
   <!-- ======== SELECCIÓN DE CATEGORÍAS ======== -->
-  <section class="py-12 bg-white">
+  <section class="py-8 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Opción Remeras -->
-        <a href="#remeras-section" class="group relative aspect-[16/9] md:aspect-auto md:h-[400px] overflow-hidden rounded-3xl border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Opción Remeras (2/3 del ancho) -->
+        <a href="#remeras-section" class="md:col-span-2 group relative aspect-[16/9] md:aspect-auto md:h-[380px] overflow-hidden rounded-3xl border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
           <img 
-            src="/images/parte de frente de la remera.jpg" 
+            src="/images/parte de frente de la remera.webp" 
             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
             alt="Sección Remeras"
           />
@@ -81,10 +81,10 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
           </div>
         </a>
 
-        <!-- Opción Libros (Featured Argentina Humana) -->
-        <a href="#libros" class="group relative aspect-[16/9] md:aspect-auto md:h-[400px] overflow-hidden rounded-3xl border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
+        <!-- Opción Libros (1/3 del ancho) -->
+        <a href="#libros" class="group relative aspect-[16/9] md:aspect-auto md:h-[380px] overflow-hidden rounded-3xl border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
           <img 
-            src="/images/libro_argentina_humana.jpg" 
+            src="/images/libro_argentina_humana.webp" 
             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
             alt="Sección Libros"
           />
@@ -100,48 +100,62 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
   </section>
 
   <!-- ======== REMERAS (PRODUCTO ESTRELLA) ======== -->
-  <section id="remeras-section" class="py-12 bg-gray-50 border-y-8 border-black scroll-mt-20">
+  <section id="remeras-section" class="py-10 bg-gray-50 border-y-8 border-black scroll-mt-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="mb-8">
+      <div class="mb-6">
         <h2 class="section-title">Nuestras Remeras</h2>
-        <div class="mt-8 bg-black text-white p-6 md:p-12 border-l-[16px] border-celeste-500 shadow-[20px_20px_0px_0px_rgba(0,174,239,0.25)] reveal-text">
-          <div class="space-y-12">
-            <p class="text-2xl md:text-4xl font-display uppercase tracking-[-0.04em] leading-[0.9] italic">
-              Nuestras remeras oversize no son solo prendas, son una declaración de identidad y valores. Hechas con algodón de primera calidad, combinan suavidad, durabilidad y un ajuste cómodo que abraza todos los cuerpos, acompañándote con estilo y confort día tras día.
-            </p>
-            
-            <div class="h-1 w-32 bg-celeste-500 mb-8"></div>
 
-            <p class="text-xl md:text-3xl font-display uppercase tracking-[-0.02em] leading-tight italic text-gray-400">
-              Cada diseño es una pieza artística repleta de significado. Rinde homenaje a los grandes símbolos de <span class="text-celeste-400">la lucha popular</span> y a quienes soñaron —y siguen soñando— con una <span class="text-celeste-500 underline decoration-4 underline-offset-8">¡Argentina más justa, libre y soberana!</span>
-            </p>
+        <!-- Layout: Texto recortado + Galería Dúo lado a lado -->
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-5 gap-6 reveal-text">
+          <!-- Bloque de texto compacto (2/5) -->
+          <div class="lg:col-span-2 bg-black text-white p-6 md:p-8 border-l-[16px] border-celeste-500 shadow-[20px_20px_0px_0px_rgba(0,174,239,0.25)] flex flex-col justify-between">
+            <div class="space-y-6">
+              <p class="text-xl md:text-2xl font-display uppercase tracking-[-0.04em] leading-[0.9] italic">
+                No son solo prendas, son una declaración de identidad y valores.
+              </p>
+              <div class="h-1 w-24 bg-celeste-500"></div>
+              <p class="text-base md:text-lg font-display uppercase tracking-[-0.02em] leading-tight italic text-gray-400">
+                Cada diseño rinde homenaje a los símbolos de <span class="text-celeste-400">la lucha popular</span> y a quienes soñaron con una <span class="text-celeste-500 underline decoration-4 underline-offset-8">Argentina más justa, libre y soberana.</span>
+              </p>
+            </div>
+            <div class="mt-6 space-y-3">
+              <p class="text-xs uppercase tracking-widest text-gray-500 font-technical">Algodón premium · Fit oversize · Arte propio</p>
+              <a href="#remeras-grid" class="btn-primary text-sm py-3 px-6 w-full text-center">Ver todas las remeras</a>
+            </div>
+          </div>
+
+          <!-- Galería Dúo (3/5) -->
+          <div class="lg:col-span-3 grid grid-cols-2 gap-4 reveal-text-delay">
+            <!-- Frente -->
+            <div class="group relative aspect-[4/5] overflow-hidden border-8 border-black shadow-lg bg-black">
+              <img 
+                src="/images/parte de frente de la remera.webp" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                alt="Vista Frontal" 
+              />
+              <div class="absolute bottom-4 left-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase -rotate-2">Identidad</div>
+            </div>
+            <!-- Espalda -->
+            <div class="group relative aspect-[4/5] overflow-hidden border-8 border-black shadow-lg bg-black">
+              <img 
+                src="/images/parte de atras de la remeras.webp" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                alt="Vista Dorsal" 
+              />
+              <div class="absolute bottom-4 right-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase rotate-2">Resistencia</div>
+            </div>
           </div>
         </div>
 
-        <!-- Galería Dúo (Equilibrio Brutalista) -->
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 reveal-text-delay">
-          <!-- Frente -->
-          <div class="group aspect-[4/5] overflow-hidden border-8 border-black shadow-lg bg-black">
-            <img 
-              src="/images/parte de frente de la remera.jpg" 
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-              alt="Vista Frontal" 
-            />
-            <div class="absolute bottom-4 left-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase -rotate-2">Identidad</div>
-          </div>
-          <!-- Espalda -->
-          <div class="group aspect-[4/5] overflow-hidden border-8 border-black shadow-lg bg-black">
-            <img 
-              src="/images/parte de atras de la remeras.jpg" 
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-              alt="Vista Dorsal" 
-            />
-            <div class="absolute bottom-4 right-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase rotate-2">Resistencia</div>
-          </div>
+        <!-- Frase de refuerzo entre galería y productos -->
+        <div class="mt-6 flex items-center gap-4">
+          <div class="h-1 flex-1 bg-black"></div>
+          <p class="font-display uppercase tracking-tighter text-lg md:text-2xl italic text-gray-900 whitespace-nowrap">Suavidad, durabilidad y confort — para todos los cuerpos</p>
+          <div class="h-1 flex-1 bg-black"></div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div id="remeras-grid" class={`grid gap-5 scroll-mt-20 ${remeras.length === 1 ? 'grid-cols-1 max-w-md mx-auto sm:max-w-lg' : remeras.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto' : remeras.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
         {remeras.map(p => (
           <ProductCard
             id={p.id}
@@ -165,32 +179,29 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
 
   <!-- ======== LIBROS Y OTROS ======== -->
   {librosYOtros.length > 0 && (
-    <section id="libros" class="py-24 bg-white scroll-mt-20">
+    <section id="libros" class="py-14 bg-white scroll-mt-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Featured Book Header (Argentina Humana) -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20 bg-gray-50 p-8 md:p-16 border-8 border-black shadow-[20px_20px_0px_0px_rgba(0,174,239,0.2)]">
+        <!-- Featured Book Header (Argentina Humana) - más compacto -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-12 bg-gray-50 p-6 md:p-10 border-8 border-black shadow-[20px_20px_0px_0px_rgba(0,174,239,0.2)]">
           <div class="relative group">
             <img 
-              src="/images/libro_argentina_humana.jpg" 
+              src="/images/libro_argentina_humana.webp" 
               alt="Libro Argentina Humana" 
               class="w-full h-auto rounded-lg shadow-2xl border-4 border-black group-hover:-rotate-2 transition-transform duration-500"
             />
-            <div class="absolute -top-6 -right-6 bg-celeste-500 text-white w-24 h-24 rounded-full flex items-center justify-center font-black text-xl rotate-12 border-4 border-black shadow-lg">
+            <div class="absolute -top-4 -right-4 bg-celeste-500 text-white w-20 h-20 rounded-full flex items-center justify-center font-black text-lg rotate-12 border-4 border-black shadow-lg">
               INFO
             </div>
           </div>
-          <div class="space-y-6">
+          <div class="space-y-4">
             <span class="inline-block bg-black text-white px-4 py-1 font-display text-sm uppercase tracking-widest">Destacado</span>
-            <h2 class="text-5xl md:text-6xl font-black italic leading-[0.9] text-black">ARGENTINA HUMANA</h2>
+            <h2 class="text-4xl md:text-5xl font-black italic leading-[0.9] text-black">ARGENTINA HUMANA</h2>
             <div class="h-2 w-24 bg-celeste-500 font-bold"></div>
-            <p class="text-lg md:text-xl text-gray-800 leading-relaxed font-sans italic">
-              En 'Argentina humana', Juan Grabois nos invita a explorar una visión transformadora de la justicia social en el siglo XXI. A través de un enfoque contracultural, el autor desafía las estructuras políticas y sociales tradicionales, proponiendo un modelo más inclusivo y humano para la sociedad argentina.
+            <p class="text-base md:text-lg text-gray-800 leading-relaxed font-sans italic">
+              Juan Grabois nos invita a explorar una visión transformadora de la justicia social. Un enfoque contracultural que desafía las estructuras tradicionales, proponiendo un modelo más inclusivo y humano.
             </p>
-            <p class="text-gray-600 leading-relaxed">
-              Grabois, conocido por su activismo y compromiso con los derechos humanos, ofrece un análisis profundo y crítico de las desigualdades actuales, mientras presenta soluciones prácticas y esperanzadoras. Este ensayo se convierte en un llamado a la acción para construir un futuro más justo y equitativo, donde la dignidad y el bienestar de cada individuo sean el centro de las políticas públicas.
-            </p>
-            <div class="pt-4">
+            <div class="pt-2">
               <a href="/producto/argentina-humana-grabois" class="btn-primary">
                 Ver detalles del libro
               </a>
@@ -198,14 +209,14 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
           </div>
         </div>
 
-        <div class="mb-12 text-right">
+        <div class="mb-8 text-right">
           <h2 class="section-title">Más títulos</h2>
-          <p class="text-lg text-gray-800 font-sans font-semibold max-w-2xl border-r-4 border-black pr-4 my-6 ml-auto">
+          <p class="text-lg text-gray-800 font-sans font-semibold max-w-2xl border-r-4 border-black pr-4 my-4 ml-auto">
             Herramientas para el pensamiento crítico y la acción popular.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-end">
+        <div class={`grid gap-5 ${librosYOtros.length <= 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
           {librosYOtros.map(p => (
             <ProductCard
               id={p.id}
@@ -231,10 +242,10 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
   <!-- ======== LOOKBOOK ======== -->
   <LookbookGallery
     images={[
-      { src: '/images/parte de frente de la remera.jpg', alt: 'TUC-HUMANO campaña - frente' },
-      { src: '/images/parte de atras de la remeras.jpg', alt: 'TUC-HUMANO campaña - espalda' },
-      { src: '/images/foto 1.jpeg', alt: 'TUC-HUMANO - detalle' },
-      { src: '/images/foto 2.jpeg', alt: 'TUC-HUMANO - estilo' },
+      { src: '/images/parte de frente de la remera.webp', alt: 'TUC-HUMANO campaña - frente' },
+      { src: '/images/parte de atras de la remeras.webp', alt: 'TUC-HUMANO campaña - espalda' },
+      { src: '/images/foto 1.webp', alt: 'TUC-HUMANO - detalle' },
+      { src: '/images/foto 2.webp', alt: 'TUC-HUMANO - estilo' },
     ]}
   />
 
