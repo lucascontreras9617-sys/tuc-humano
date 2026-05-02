@@ -172,7 +172,7 @@
 </style>
 
 <script>
-  import { cartItems, cartSubtotal, cartOpen, closeCart, removeFromCart, updateQuantity } from '../lib/cart';
+  import { cartItems, cartSubtotal, cartOpen, closeCart, removeFromCart, updateQuantity, clearCart } from '../lib/cart';
 
   const drawer = document.getElementById('cart-drawer')!;
   const overlay = document.getElementById('cart-overlay')!;
@@ -467,7 +467,9 @@
   }
 
   // --- CHECKOUT SUBMIT ---
-  checkoutBtn.addEventListener('click', async () => {
+  checkoutBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+
     if (!checkoutForm.checkValidity() || !selectedShippingMethod) {
       checkoutForm.reportValidity();
       return;
@@ -476,47 +478,65 @@
     const items = cartItems.get();
     if (!items.length) return;
 
-    checkoutBtn.innerHTML = '<span class="animate-pulse">Generando pago seguro...</span>';
+    checkoutBtn.innerHTML = '<span class="animate-pulse">Abriendo WhatsApp...</span>';
     checkoutBtn.setAttribute('disabled', 'true');
+    checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
     checkoutError.classList.add('hidden');
 
     const fd = new FormData(checkoutForm);
-    const shippingDetails = {
-      name: fd.get('name'),
-      email: fd.get('email'),
-      phone: fd.get('phone'),
-      provincia: fd.get('provincia'),
-      localidad: fd.get('localidad'),
-      cp: fd.get('cp'),
-      calle: fd.get('calle'),
-      numero: fd.get('numero'),
-      depto: fd.get('depto'),
-      aclaraciones: fd.get('aclaraciones'),
-      metodo_envio: selectedShippingMethod
-    };
+    const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '5493816447082';
+    
+    let productsText = '';
+    items.forEach(item => {
+      productsText += `- ${item.quantity}x ${item.name} (Talle: ${item.size}) - ${formatPrice(item.price * item.quantity)}\n`;
+    });
 
-    try {
-      const res = await fetch('/api/create-preference', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, shipping_cost: shippingCost, buyer_info: shippingDetails }),
-      });
-      const data = await res.json();
-      
-      if (data.init_point) {
-        window.location.href = data.init_point;
-      } else {
-        checkoutError.textContent = data.error || 'Error al generar el pago. Verificá tu conexión.';
-        checkoutError.classList.remove('hidden');
-        checkoutBtn.innerHTML = 'Reintentar Pagar';
-        checkoutBtn.removeAttribute('disabled');
-      }
-    } catch {
-      checkoutError.textContent = 'Error de red al conectar con el servidor.';
-      checkoutError.classList.remove('hidden');
-      checkoutBtn.innerHTML = 'Reintentar Pagar';
+    const subtotal = cartSubtotal.get();
+    const total = subtotal + shippingCost;
+
+    const deptoStr = fd.get('depto') ? ` (Depto: ${fd.get('depto')})` : '';
+    const aclaracionesStr = fd.get('aclaraciones') ? `\nAclaraciones: ${fd.get('aclaraciones')}` : '';
+
+    const message = `¡Hola TUC-HUMANO! Quiero confirmar el siguiente pedido:
+
+*📝 DETALLE DEL PEDIDO:*
+${productsText}
+*Subtotal:* ${formatPrice(subtotal)}
+*Envío* (${selectedShippingMethod}): ${shippingCost === 0 ? 'Gratis' : formatPrice(shippingCost)}
+
+*💰 TOTAL A PAGAR: ${formatPrice(total)}*
+
+*👤 DATOS DEL CLIENTE:*
+Nombre: ${fd.get('name')}
+Email: ${fd.get('email')}
+Teléfono: ${fd.get('phone')}
+
+*🚚 DIRECCIÓN DE ENVÍO:*
+${fd.get('calle')} ${fd.get('numero')}${deptoStr}
+${fd.get('localidad')}, ${fd.get('provincia')} (CP: ${fd.get('cp')})${aclaracionesStr}
+
+¡Espero los datos para realizar la transferencia!`;
+
+    const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+    
+    // Redirect to whatsapp in a new tab to avoid breaking the page
+    window.open(waUrl, '_blank');
+    
+    // Clear cart and close drawer
+    clearCart();
+    closeDrawer();
+    
+    // Reset button just in case user comes back
+    setTimeout(() => {
+      checkoutBtn.innerHTML = `
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        <span>Pagar Compra</span>
+      `;
       checkoutBtn.removeAttribute('disabled');
-    }
+      checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }, 1500);
   });
 
 </script>
