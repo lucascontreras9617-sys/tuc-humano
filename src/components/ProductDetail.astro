@@ -130,10 +130,7 @@ const hasStock = product.has_sizes
           </div>
         ) : (
           <div>
-             <span class="inline-block bg-gray-100 text-gray-600 text-sm px-4 py-2 rounded-lg font-medium border border-gray-200">
-               Talle/Tamaño Único
-             </span>
-             <p id="stock-indicator" class="text-xs text-gray-400 mt-2">
+             <p id="stock-indicator" class="text-xs text-gray-400">
                {product.stock_unico <= 5 && product.stock_unico > 0 ? '⚠️ Últimas ' + product.stock_unico + ' unidades' : 'Stock disponible'}
              </p>
           </div>
