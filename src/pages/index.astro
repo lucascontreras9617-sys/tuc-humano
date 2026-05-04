@@ -122,26 +122,26 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
         <!-- Layout: Texto recortado + Galería Dúo lado a lado -->
         <div class="mt-6 grid grid-cols-1 lg:grid-cols-5 gap-6 reveal-text">
           <!-- Bloque de texto compacto (2/5) -->
-          <div class="lg:col-span-2 bg-black text-white p-6 md:p-8 border-l-[16px] border-celeste-500 shadow-[20px_20px_0px_0px_rgba(0,174,239,0.25)] flex flex-col justify-between">
-            <div class="space-y-6">
-              <p class="text-xl md:text-2xl font-display uppercase tracking-[-0.04em] leading-[0.9] italic">
+          <div class="lg:col-span-2 bg-black text-white p-6 md:p-10 border-l-[16px] border-celeste-500 shadow-[20px_20px_0px_0px_rgba(0,174,239,0.25)] flex flex-col justify-between">
+            <div class="space-y-8">
+              <p class="text-3xl md:text-5xl font-display uppercase tracking-[-0.04em] leading-[0.95] italic">
                 No son solo prendas, son una declaración de identidad y valores.
               </p>
-              <div class="h-1 w-24 bg-celeste-500"></div>
-              <p class="text-base md:text-lg font-display uppercase tracking-[-0.02em] leading-tight italic text-gray-400">
+              <div class="h-2 w-32 bg-celeste-500"></div>
+              <p class="text-xl md:text-2xl font-display uppercase tracking-[-0.02em] leading-tight italic text-gray-400">
                 Cada diseño rinde homenaje a los símbolos de <span class="text-celeste-400">la lucha popular</span> y a quienes soñaron con una <span class="text-celeste-500 underline decoration-4 underline-offset-8">Argentina más justa, libre y soberana.</span>
               </p>
             </div>
-            <div class="mt-6 space-y-3">
-              <p class="text-xs uppercase tracking-widest text-gray-500 font-technical">Algodón premium · Fit oversize · Arte propio</p>
-              <a href="#remeras-grid" class="btn-primary text-sm py-3 px-6 w-full text-center">Ver todas las remeras</a>
+            <div class="mt-8 space-y-4">
+              <p class="text-sm md:text-base uppercase tracking-widest text-gray-500 font-technical">Algodón premium · Fit oversize · Arte propio</p>
+              <a href="#remeras-grid" class="btn-primary text-base py-4 px-6 w-full text-center">Ver todas las remeras</a>
             </div>
           </div>
 
           <!-- Galería Dúo (3/5) -->
           <div class="lg:col-span-3 grid grid-cols-2 gap-4 reveal-text-delay">
             <!-- Frente -->
-            <div class="group relative aspect-[4/5] overflow-hidden border-8 border-black shadow-lg bg-black">
+            <div class="group relative h-full overflow-hidden border-8 border-black shadow-lg bg-black">
               <img 
                 src="/images/parte de frente de la remera.webp" 
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
@@ -150,7 +150,7 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
               <div class="absolute bottom-4 left-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase -rotate-2">Identidad</div>
             </div>
             <!-- Espalda -->
-            <div class="group relative aspect-[4/5] overflow-hidden border-8 border-black shadow-lg bg-black">
+            <div class="group relative h-full overflow-hidden border-8 border-black shadow-lg bg-black">
               <img 
                 src="/images/parte de atras de la remeras.webp" 
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
