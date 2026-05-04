@@ -54,7 +54,7 @@
            text-white uppercase font-display tracking-tight px-8 py-4
            border-2 border-black hover:border-celeste-500
            transition-all duration-300 ease-out
-           active:scale-95;
+           active:scale-95 active:translate-y-1 active:translate-x-1;
   }
 
   /* Botón secundario brutalista */
@@ -64,7 +64,7 @@
            hover:bg-black hover:text-white
            uppercase font-display tracking-tight px-8 py-4
            transition-all duration-300 ease-out
-           active:scale-95;
+           active:scale-95 active:translate-y-1 active:translate-x-1;
   }
 
   /* Card de producto brutalista */

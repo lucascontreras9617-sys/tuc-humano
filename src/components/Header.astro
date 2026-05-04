@@ -1,5 +1,8 @@
 ---
 // Header con logo, nav y carrito
+const pathname = Astro.url.pathname;
+const isHome = pathname === '/' || pathname === '';
+const isTienda = pathname.startsWith('/tienda');
 ---
 
 <header id="main-header" class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 transition-shadow duration-300">
@@ -16,12 +19,12 @@
       </a>
 
       <!-- Nav Desktop -->
-      <nav class="hidden md:flex items-center gap-8">
-        <a href="/" class="nav-link text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors">Inicio</a>
-        <a href="/tienda" class="nav-link text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors">Tienda</a>
-        <a href="/#libros" class="nav-link text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors">Libros</a>
-        <a href="/#lookbook" class="nav-link text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors">Lookbook</a>
-        <a href="/#valores" class="nav-link text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors">Nosotros</a>
+      <nav class="hidden md:flex items-center gap-8 h-full">
+        <a href="/" class={`nav-link text-sm font-medium transition-colors h-16 flex items-center border-b-4 ${isHome ? 'border-celeste-500 text-gray-900' : 'border-transparent text-gray-600 hover:text-celeste-500'}`}>Inicio</a>
+        <a href="/tienda" class={`nav-link text-sm font-medium transition-colors h-16 flex items-center border-b-4 ${isTienda ? 'border-celeste-500 text-gray-900' : 'border-transparent text-gray-600 hover:text-celeste-500'}`}>Tienda</a>
+        <a href="/#libros" class="nav-link text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors h-16 flex items-center border-b-4 border-transparent">Libros</a>
+        <a href="/#lookbook" class="nav-link text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors h-16 flex items-center border-b-4 border-transparent">Lookbook</a>
+        <a href="/#valores" class="nav-link text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors h-16 flex items-center border-b-4 border-transparent">Nosotros</a>
       </nav>
 
       <!-- Carrito + Menu mobile -->
@@ -61,11 +64,11 @@
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="md:hidden hidden pb-4 border-t border-gray-100 mt-2 pt-4">
       <nav class="flex flex-col gap-3">
-        <a href="/" class="text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors px-2 py-1">Inicio</a>
-        <a href="/tienda" class="text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors px-2 py-1">Tienda</a>
-        <a href="/#libros" class="text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors px-2 py-1">Libros</a>
-        <a href="/#lookbook" class="text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors px-2 py-1">Lookbook</a>
-        <a href="/#valores" class="text-sm font-medium text-gray-600 hover:text-celeste-500 transition-colors px-2 py-1">Nosotros</a>
+        <a href="/" class={`text-sm font-medium transition-colors px-4 py-2 border-l-4 ${isHome ? 'border-celeste-500 text-gray-900 bg-gray-50' : 'border-transparent text-gray-600 hover:text-celeste-500 hover:bg-gray-50'}`}>Inicio</a>
+        <a href="/tienda" class={`text-sm font-medium transition-colors px-4 py-2 border-l-4 ${isTienda ? 'border-celeste-500 text-gray-900 bg-gray-50' : 'border-transparent text-gray-600 hover:text-celeste-500 hover:bg-gray-50'}`}>Tienda</a>
+        <a href="/#libros" class="text-sm font-medium text-gray-600 hover:text-celeste-500 hover:bg-gray-50 transition-colors px-4 py-2 border-l-4 border-transparent">Libros</a>
+        <a href="/#lookbook" class="text-sm font-medium text-gray-600 hover:text-celeste-500 hover:bg-gray-50 transition-colors px-4 py-2 border-l-4 border-transparent">Lookbook</a>
+        <a href="/#valores" class="text-sm font-medium text-gray-600 hover:text-celeste-500 hover:bg-gray-50 transition-colors px-4 py-2 border-l-4 border-transparent">Nosotros</a>
       </nav>
     </div>
 
