@@ -101,9 +101,8 @@ const hasStock = product.has_sizes
     </div>
 
     <!-- Description -->
-    <p class="text-gray-600 leading-relaxed text-sm border-l-4 border-celeste-200 pl-4">
-      {product.description}
-    </p>
+    <div class="text-gray-600 leading-relaxed text-sm border-l-4 border-celeste-200 pl-4 space-y-4" set:html={product.description}>
+    </div>
 
     {hasStock ? (
       <>

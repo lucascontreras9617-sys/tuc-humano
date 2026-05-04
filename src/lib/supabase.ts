@@ -102,7 +102,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     slug: 'remera-oversize-de-lucha',
     price: 27500.00,
     old_price: 35000.00,
-    description: 'Remera oversize de algodón premium con estampado artístico del escudo tucumano. Una declaración de identidad, de lucha y de amor por Tucumán. Hecha con algodón de primera calidad, suave, duradera y con un ajuste cómodo que abraza todos los cuerpos.',
+    description: 'Remera oversize unisex de algodón pesado. Calidad que se siente desde el primer toque.<br/><br/>Confeccionada con algodón de alto gramaje: suave, amplia, con un ajuste que abraza todo tipo de cuerpos. Hecha para durar lavado tras lavado, sin perder forma ni color.<br/><br/>Su espalda habla por sí sola. Un collage de figuras, símbolos y consignas que forman parte de nuestra historia y nuestra identidad: El escudo, las luchas, los rostros que nos representan.<br/><br/>Vestirla es memoria. Es pertenencia. Es decir quiénes somos.',
     image_url: '/images/parte de frente de la remera.webp',
     image_back_url: '/images/parte de atras de la remeras.webp',
     stock_s: 10, stock_m: 15, stock_l: 15, stock_xl: 10, stock_unico: 0,
