@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { calcularEnvio, getProvinciaPorCP, type CalcCartItem } from '../../lib/shippingCalculator';
 
+export const prerender = false;
+
 export const POST: APIRoute = async ({ request }) => {
   let body;
   try {
