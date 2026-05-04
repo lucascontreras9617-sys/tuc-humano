@@ -114,40 +114,42 @@ const discountPercent = old_price ? Math.round(((old_price - price) / old_price)
 <script>
   import { addToCart as addFn, openCart } from '../lib/cart';
 
-  document.querySelectorAll('.add-to-cart-quick').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const button = e.currentTarget as HTMLButtonElement;
-      const card = button.closest('.product-card');
-      if (!card) return;
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.add-to-cart-quick').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const button = e.currentTarget as HTMLButtonElement;
+        const card = button.closest('.product-card');
+        if (!card) return;
 
-      const product = JSON.parse(button.dataset.product || '{}');
-      let size = 'UNICO';
+        const product = JSON.parse(button.dataset.product || '{}');
+        let size = 'UNICO';
 
-      if (product.has_sizes) {
-         const select = card.querySelector('.quick-add-size') as HTMLSelectElement;
-         if (!select || !select.value) {
-            const err = card.querySelector('.quick-add-error');
-            if (err) err.classList.remove('hidden');
-            return;
-         }
-         size = select.value;
-      }
+        if (product.has_sizes) {
+           const select = card.querySelector('.quick-add-size') as HTMLSelectElement;
+           if (!select || !select.value) {
+              const err = card.querySelector('.quick-add-error');
+              if (err) err.classList.remove('hidden');
+              return;
+           }
+           size = select.value;
+        }
 
-      addFn({
-        productId: product.id,
-        name: product.name,
-        size: size as any,
-        price: product.price,
-        image: product.image_url || '/images/parte de frente de la remera.webp',
+        addFn({
+          productId: product.id,
+          name: product.name,
+          size: size as any,
+          price: product.price,
+          image: product.image_url || '/images/parte de frente de la remera.webp',
+        });
+        
+        const err = card.querySelector('.quick-add-error');
+        if (err) err.classList.add('hidden');
+        
+        openCart();
       });
-      
-      const err = card.querySelector('.quick-add-error');
-      if (err) err.classList.add('hidden');
-      
-      openCart();
     });
   });
 </script>

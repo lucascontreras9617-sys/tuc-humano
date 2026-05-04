@@ -190,130 +190,132 @@ const hasStock = product.has_sizes
 <script>
   import { addToCart as addFn, openCart } from '../lib/cart';
 
-  const ctxEl = document.getElementById('product-ctx');
-  if (ctxEl) {
-    const product = JSON.parse(ctxEl.dataset.product || '{}');
-    const hasSizes = product.has_sizes;
-    let selectedSize: string | null = hasSizes ? null : 'UNICO';
-    let quantity = 1;
-    let maxStock = hasSizes ? 0 : product.stock_unico;
+  document.addEventListener('astro:page-load', () => {
+    const ctxEl = document.getElementById('product-ctx');
+    if (ctxEl) {
+      const product = JSON.parse(ctxEl.dataset.product || '{}');
+      const hasSizes = product.has_sizes;
+      let selectedSize: string | null = hasSizes ? null : 'UNICO';
+      let quantity = 1;
+      let maxStock = hasSizes ? 0 : product.stock_unico;
 
-    const stockMap: Record<string, number> = {
-      S:  product.stock_s,
-      M:  product.stock_m,
-      L:  product.stock_l,
-      XL: product.stock_xl,
-    };
+      const stockMap: Record<string, number> = {
+        S:  product.stock_s,
+        M:  product.stock_m,
+        L:  product.stock_l,
+        XL: product.stock_xl,
+      };
 
-    // Thumbnail switcher
-    document.querySelectorAll('.thumb-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const target = e.currentTarget as HTMLButtonElement;
-        const src = target.dataset.src;
-        const mainImg = document.getElementById('main-product-img') as HTMLImageElement;
-        if (mainImg && src) mainImg.src = src;
-        document.querySelectorAll('.thumb-btn').forEach(b => {
-          b.classList.remove('border-black', 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]');
-          b.classList.add('border-transparent');
-        });
-        target.classList.remove('border-transparent');
-        target.classList.add('border-black', 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]');
-      });
-    });
-
-    // Size selection
-    if (hasSizes) {
-      document.querySelectorAll('.size-btn').forEach(btn => {
+      // Thumbnail switcher
+      document.querySelectorAll('.thumb-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-          const b = e.currentTarget as HTMLButtonElement;
-          if (b.disabled) return;
-          
-          document.querySelectorAll('.size-btn').forEach(oldBtn => oldBtn.classList.remove('selected'));
-          b.classList.add('selected');
-          
-          selectedSize = b.dataset.size || null;
-          if (selectedSize) {
-            maxStock = stockMap[selectedSize] || 0;
-          }
-          quantity = 1;
-          
-          const qtyDisp = document.getElementById('qty-display');
-          if (qtyDisp) qtyDisp.textContent = '1';
-          
-          const sizeErr = document.getElementById('size-error');
-          if (sizeErr) sizeErr.classList.add('hidden');
-          
-          const stockInd = document.getElementById('stock-indicator');
-          if (stockInd) stockInd.textContent = maxStock <= 3 ? `⚠️ Últimas ${maxStock} unidades` : '';
+          const target = e.currentTarget as HTMLButtonElement;
+          const src = target.dataset.src;
+          const mainImg = document.getElementById('main-product-img') as HTMLImageElement;
+          if (mainImg && src) mainImg.src = src;
+          document.querySelectorAll('.thumb-btn').forEach(b => {
+            b.classList.remove('border-black', 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]');
+            b.classList.add('border-transparent');
+          });
+          target.classList.remove('border-transparent');
+          target.classList.add('border-black', 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]');
         });
       });
-    }
 
-    // Quantity
-    document.getElementById('qty-dec')?.addEventListener('click', () => {
-      if (quantity > 1) {
-        quantity--;
-        const disp = document.getElementById('qty-display');
-        if (disp) disp.textContent = String(quantity);
-      }
-    });
-
-    document.getElementById('qty-inc')?.addEventListener('click', () => {
-      if (quantity < maxStock) {
-        quantity++;
-        const disp = document.getElementById('qty-display');
-        if (disp) disp.textContent = String(quantity);
-      }
-    });
-
-    function addToCart() {
-      if (hasSizes && !selectedSize) {
-        const errEl = document.getElementById('size-error');
-        if (errEl) errEl.classList.remove('hidden');
-        return;
-      }
-
-      for (let i = 0; i < quantity; i++) {
-        addFn({
-          productId: product.id,
-          name: product.name,
-          size: (selectedSize || 'UNICO') as any,
-          price: product.price,
-          image: product.image_url || '/images/parte de frente de la remera.webp',
+      // Size selection
+      if (hasSizes) {
+        document.querySelectorAll('.size-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const b = e.currentTarget as HTMLButtonElement;
+            if (b.disabled) return;
+            
+            document.querySelectorAll('.size-btn').forEach(oldBtn => oldBtn.classList.remove('selected'));
+            b.classList.add('selected');
+            
+            selectedSize = b.dataset.size || null;
+            if (selectedSize) {
+              maxStock = stockMap[selectedSize] || 0;
+            }
+            quantity = 1;
+            
+            const qtyDisp = document.getElementById('qty-display');
+            if (qtyDisp) qtyDisp.textContent = '1';
+            
+            const sizeErr = document.getElementById('size-error');
+            if (sizeErr) sizeErr.classList.add('hidden');
+            
+            const stockInd = document.getElementById('stock-indicator');
+            if (stockInd) stockInd.textContent = maxStock <= 3 ? `⚠️ Últimas ${maxStock} unidades` : '';
+          });
         });
       }
-      openCart();
-      
-      const btn = document.getElementById('add-to-cart-btn');
-      if (btn) {
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '¡Agregado al carrito!';
-        btn.classList.add('bg-celeste-500', 'border-celeste-500', 'text-white');
-        setTimeout(() => {
-          btn.innerHTML = originalText;
-          btn.classList.remove('bg-celeste-500', 'border-celeste-500', 'text-white');
-        }, 1500);
-      }
-    }
 
-    document.getElementById('add-to-cart-btn')?.addEventListener('click', addToCart);
-
-    document.getElementById('buy-now-btn')?.addEventListener('click', () => {
-      if (hasSizes && !selectedSize) {
-        const errEl = document.getElementById('size-error');
-        if (errEl) errEl.classList.remove('hidden');
-        return;
-      }
-      addToCart();
-      // Auto-navigate to step 2 (shipping form) after a brief delay for drawer to open
-      setTimeout(() => {
-        const step1 = document.getElementById('step-1');
-        const step2 = document.getElementById('step-2');
-        if (step1 && step2) {
-          step1.classList.add('hidden');
-          step2.classList.remove('hidden');
+      // Quantity
+      document.getElementById('qty-dec')?.addEventListener('click', () => {
+        if (quantity > 1) {
+          quantity--;
+          const disp = document.getElementById('qty-display');
+          if (disp) disp.textContent = String(quantity);
         }
-      }, 350);
-    });
-  }
+      });
+
+      document.getElementById('qty-inc')?.addEventListener('click', () => {
+        if (quantity < maxStock) {
+          quantity++;
+          const disp = document.getElementById('qty-display');
+          if (disp) disp.textContent = String(quantity);
+        }
+      });
+
+      function addToCart() {
+        if (hasSizes && !selectedSize) {
+          const errEl = document.getElementById('size-error');
+          if (errEl) errEl.classList.remove('hidden');
+          return;
+        }
+
+        for (let i = 0; i < quantity; i++) {
+          addFn({
+            productId: product.id,
+            name: product.name,
+            size: (selectedSize || 'UNICO') as any,
+            price: product.price,
+            image: product.image_url || '/images/parte de frente de la remera.webp',
+          });
+        }
+        openCart();
+        
+        const btn = document.getElementById('add-to-cart-btn');
+        if (btn) {
+          const originalText = btn.innerHTML;
+          btn.innerHTML = '¡Agregado al carrito!';
+          btn.classList.add('bg-celeste-500', 'border-celeste-500', 'text-white');
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('bg-celeste-500', 'border-celeste-500', 'text-white');
+          }, 1500);
+        }
+      }
+
+      document.getElementById('add-to-cart-btn')?.addEventListener('click', addToCart);
+
+      document.getElementById('buy-now-btn')?.addEventListener('click', () => {
+        if (hasSizes && !selectedSize) {
+          const errEl = document.getElementById('size-error');
+          if (errEl) errEl.classList.remove('hidden');
+          return;
+        }
+        addToCart();
+        // Auto-navigate to step 2 (shipping form) after a brief delay for drawer to open
+        setTimeout(() => {
+          const step1 = document.getElementById('step-1');
+          const step2 = document.getElementById('step-2');
+          if (step1 && step2) {
+            step1.classList.add('hidden');
+            step2.classList.remove('hidden');
+          }
+        }, 350);
+      });
+    }
+  });
 </script>

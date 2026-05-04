@@ -174,330 +174,322 @@
 <script>
   import { cartItems, cartSubtotal, cartOpen, closeCart, removeFromCart, updateQuantity, clearCart } from '../lib/cart';
 
-  const drawer = document.getElementById('cart-drawer')!;
-  const overlay = document.getElementById('cart-overlay')!;
-  const closeBtn = document.getElementById('cart-close-btn')!;
-  
-  // Elementos Paso 1
-  const step1 = document.getElementById('step-1')!;
-  const itemsContainer = document.getElementById('cart-items-container')!;
-  const emptyMsg = document.getElementById('cart-empty')!;
-  const cartFooter1 = document.getElementById('cart-footer-1')!;
-  const subtotalEl1 = document.getElementById('cart-subtotal-1')!;
-  const skipToStep2Btn = document.getElementById('go-to-step-2')!;
+  document.addEventListener('astro:page-load', () => {
+    const drawer = document.getElementById('cart-drawer');
+    const overlay = document.getElementById('cart-overlay');
+    const closeBtn = document.getElementById('cart-close-btn');
+    
+    if (!drawer || !overlay || !closeBtn) return;
 
-  // Elementos Paso 2
-  const step2 = document.getElementById('step-2')!;
-  const backBtn = document.getElementById('back-to-step-1')!;
-  const checkoutForm = document.getElementById('checkout-form') as HTMLFormElement;
-  const provinciaSelect = document.getElementById('provincia-select') as HTMLSelectElement;
-  const cpInput = document.getElementById('cp-input') as HTMLInputElement;
-  const shippingWrapper = document.getElementById('shipping-options-wrapper')!;
-  const shippingContainer = document.getElementById('shipping-options-container')!;
-  const shippingLoader = document.getElementById('shipping-loader')!;
-  const subtotalEl2 = document.getElementById('cart-subtotal-2')!;
-  const shippingCostEl = document.getElementById('cart-shipping-cost')!;
-  const finalTotalEl = document.getElementById('cart-total-final')!;
-  const checkoutBtn = document.getElementById('checkout-btn') as HTMLButtonElement;
-  const checkoutError = document.getElementById('checkout-error')!;
+    // Elementos Paso 1
+    const step1 = document.getElementById('step-1')!;
+    const itemsContainer = document.getElementById('cart-items-container')!;
+    const emptyMsg = document.getElementById('cart-empty')!;
+    const cartFooter1 = document.getElementById('cart-footer-1')!;
+    const subtotalEl1 = document.getElementById('cart-subtotal-1')!;
+    const skipToStep2Btn = document.getElementById('go-to-step-2')!;
 
-  let shippingCost = 0;
-  let selectedShippingMethod = '';
+    // Elementos Paso 2
+    const step2 = document.getElementById('step-2')!;
+    const backBtn = document.getElementById('back-to-step-1')!;
+    const checkoutForm = document.getElementById('checkout-form') as HTMLFormElement;
+    const provinciaSelect = document.getElementById('provincia-select') as HTMLSelectElement;
+    const cpInput = document.getElementById('cp-input') as HTMLInputElement;
+    const shippingWrapper = document.getElementById('shipping-options-wrapper')!;
+    const shippingContainer = document.getElementById('shipping-options-container')!;
+    const shippingLoader = document.getElementById('shipping-loader')!;
+    const subtotalEl2 = document.getElementById('cart-subtotal-2')!;
+    const shippingCostEl = document.getElementById('cart-shipping-cost')!;
+    const finalTotalEl = document.getElementById('cart-total-final')!;
+    const checkoutBtn = document.getElementById('checkout-btn') as HTMLButtonElement;
+    const checkoutError = document.getElementById('checkout-error')!;
 
-  function formatPrice(n: number) {
-    return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0 }).format(n);
-  }
+    let shippingCost = 0;
+    let selectedShippingMethod = '';
 
-  // --- DRAWER TOGGLE ---
-  function openDrawer() {
-    drawer.classList.remove('translate-x-full');
-    overlay.classList.remove('hidden');
-    setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-    document.body.style.overflow = 'hidden'; // Previene que la página haga scroll de fondo
-  }
+    function formatPrice(n: number) {
+      return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0 }).format(n);
+    }
 
-  function closeDrawer() {
-    drawer.classList.add('translate-x-full');
-    overlay.classList.add('opacity-0');
-    setTimeout(() => overlay.classList.add('hidden'), 300);
-    closeCart();
-    document.body.style.overflow = ''; // Libera el scroll al cerrar
-  }
+    // --- DRAWER TOGGLE ---
+    function openDrawer() {
+      drawer.classList.remove('translate-x-full');
+      overlay.classList.remove('hidden');
+      setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+      document.body.style.overflow = 'hidden';
+    }
 
-  cartOpen.subscribe((open) => {
-    if (open) openDrawer();
-    else closeDrawer();
-  });
+    function closeDrawer() {
+      drawer.classList.add('translate-x-full');
+      overlay.classList.add('opacity-0');
+      setTimeout(() => overlay.classList.add('hidden'), 300);
+      closeCart();
+      document.body.style.overflow = '';
+    }
 
-  closeBtn.addEventListener('click', closeDrawer);
-  overlay.addEventListener('click', closeDrawer);
+    // Clean up previous listeners if necessary (though astro handles it usually)
+    const unsubOpen = cartOpen.subscribe((open) => {
+      if (open) openDrawer();
+      else closeDrawer();
+    });
 
-  // --- NAVIGATION STEPS ---
-  skipToStep2Btn.addEventListener('click', () => {
-    step1.classList.add('hidden');
-    step2.classList.remove('hidden');
-    validateForm(); // chequeamos validation inicial
-  });
+    closeBtn.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
 
-  backBtn.addEventListener('click', () => {
-    step2.classList.add('hidden');
-    step1.classList.remove('hidden');
-  });
+    // --- NAVIGATION STEPS ---
+    skipToStep2Btn.addEventListener('click', () => {
+      step1.classList.add('hidden');
+      step2.classList.remove('hidden');
+      validateForm();
+    });
 
-  // --- RENDERING ITEMS ---
-  function renderItems(items: readonly any[]) {
-    itemsContainer.querySelectorAll('.cart-item-row').forEach(el => el.remove());
-    const isEmpty = items.length === 0;
-    emptyMsg.classList.toggle('hidden', !isEmpty);
-    cartFooter1.classList.toggle('hidden', isEmpty);
-
-    if (isEmpty) {
+    backBtn.addEventListener('click', () => {
       step2.classList.add('hidden');
       step1.classList.remove('hidden');
-    }
-
-    items.forEach((item) => {
-      const row = document.createElement('div');
-      row.className = 'cart-item-row flex gap-4 items-start py-3 border-b border-gray-50';
-      row.innerHTML = `
-        <img src="${item.image}" alt="${item.name}" class="w-16 h-20 object-cover rounded-lg flex-shrink-0 bg-gray-100" />
-        <div class="flex-grow min-w-0">
-          <p class="font-semibold text-gray-900 text-sm leading-tight truncate">${item.name}</p>
-          <p class="text-celeste-500 text-xs mt-0.5">Talle: <strong>${item.size}</strong></p>
-          <p class="text-gray-900 font-bold text-sm mt-0.5">${formatPrice(item.price)}</p>
-          <div class="flex items-center gap-2 mt-1.5">
-            <button data-pid="${item.productId}" data-size="${item.size}" data-action="dec"
-              class="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-celeste-50 hover:text-celeste-600 qty-btn">−</button>
-            <span class="text-xs font-semibold w-4 text-center">${item.quantity}</span>
-            <button data-pid="${item.productId}" data-size="${item.size}" data-action="inc"
-              class="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-celeste-50 hover:text-celeste-600 qty-btn">+</button>
-            <button data-pid="${item.productId}" data-size="${item.size}" data-action="remove"
-              class="ml-auto text-gray-300 hover:text-red-400 p-1 remove-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      `;
-      itemsContainer.insertBefore(row, emptyMsg);
     });
 
-    // qty buttons listeners
-    itemsContainer.querySelectorAll('.qty-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const b = e.currentTarget as HTMLButtonElement;
-        const pid = b.dataset.pid!;
-        const size = b.dataset.size!;
-        const item = cartItems.get().find(i => i.productId === pid && i.size === size);
-        if (!item) return;
-        if (b.dataset.action === 'inc') updateQuantity(pid, size, item.quantity + 1);
-        else if (b.dataset.action === 'dec') updateQuantity(pid, size, item.quantity - 1);
-        
-        // re-triggeamos calculo de peso en caso de que modifiquen estando en envio
-        if (!step2.classList.contains('hidden')) {
-          calculateShipping();
-        }
-      });
-    });
+    // --- RENDERING ITEMS ---
+    function renderItems(items: readonly any[]) {
+      itemsContainer.querySelectorAll('.cart-item-row').forEach(el => el.remove());
+      const isEmpty = items.length === 0;
+      emptyMsg.classList.toggle('hidden', !isEmpty);
+      cartFooter1.classList.toggle('hidden', isEmpty);
 
-    itemsContainer.querySelectorAll('.remove-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const b = e.currentTarget as HTMLButtonElement;
-        removeFromCart(b.dataset.pid!, b.dataset.size!);
-        if (!step2.classList.contains('hidden')) calculateShipping();
-      });
-    });
-  }
-
-  cartItems.subscribe(renderItems);
-
-  function updateTotalUI() {
-    const sub = cartSubtotal.get();
-    subtotalEl1.textContent = formatPrice(sub);
-    subtotalEl2.textContent = formatPrice(sub);
-    shippingCostEl.textContent = shippingCost === 0 ? (selectedShippingMethod ? 'Gratis' : '$0') : formatPrice(shippingCost);
-    finalTotalEl.textContent = formatPrice(sub + shippingCost);
-  }
-  cartSubtotal.subscribe(updateTotalUI);
-
-  // --- FORM LOGIC & SHIPPING CALC ---
-  let calcTimeout: any = null;
-
-  function handleShippingOptionClick(e: Event) {
-    const input = e.currentTarget as HTMLInputElement;
-    shippingCost = Number(input.value);
-    selectedShippingMethod = input.dataset.name || 'Envío';
-    updateTotalUI();
-    validateForm();
-  }
-
-  function injectShippingOptions(options: any[]) {
-    shippingContainer.innerHTML = '';
-    
-    // Si la provincia es Tucumán (o el usuario pone CP tucumano)
-    const isTucuman = provinciaSelect.value === 'Tucumán' || cpInput.value.startsWith('40') || cpInput.value.startsWith('41');
-    
-    // Armamos la lista completa de opciones
-    let finalOptions = [...options];
-
-    // Si es Tucumán, agregamos opción gratuita local primero
-    if (isTucuman) {
-      finalOptions.unshift({
-        nombre: 'Acordar envío por WhatsApp o Retiro (Sólo S.M. Tucumán / Yerba Buena / Tafí Viejo / Alderetes / La Banda)',
-        precio: 0,
-        dias: 'Coordinamos horario'
-      });
-    }
-
-    finalOptions.forEach((opt, idx) => {
-      const isChecked = idx === 0;
-      if (isChecked) {
-        shippingCost = opt.precio;
-        selectedShippingMethod = opt.nombre;
+      if (isEmpty) {
+        step2.classList.add('hidden');
+        step1.classList.remove('hidden');
       }
-      
-      const el = document.createElement('label');
-      el.className = 'flex items-start gap-3 p-3 bg-white rounded-lg border border-celeste-100 cursor-pointer hover:border-celeste-300 transition-colors';
-      el.innerHTML = `
-        <input type="radio" name="shipping_method" value="${opt.precio}" data-name="${opt.nombre}" class="mt-1 text-celeste-600 focus:ring-celeste-500 shipping-radio" ${isChecked ? 'checked' : ''} />
-        <div class="flex-grow">
-          <div class="flex justify-between items-center">
-            <span class="text-sm font-semibold text-gray-900 leading-tight pr-2">${opt.nombre}</span>
-            <span class="text-sm font-black text-celeste-600 whitespace-nowrap">${opt.precio === 0 ? '¡Gratis!' : formatPrice(opt.precio)}</span>
+
+      items.forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'cart-item-row flex gap-4 items-start py-3 border-b border-gray-50';
+        row.innerHTML = `
+          <img src="${item.image}" alt="${item.name}" class="w-16 h-20 object-cover rounded-lg flex-shrink-0 bg-gray-100" />
+          <div class="flex-grow min-w-0">
+            <p class="font-semibold text-gray-900 text-sm leading-tight truncate">${item.name}</p>
+            <p class="text-celeste-500 text-xs mt-0.5">Talle: <strong>${item.size}</strong></p>
+            <p class="text-gray-900 font-bold text-sm mt-0.5">${formatPrice(item.price)}</p>
+            <div class="flex items-center gap-2 mt-1.5">
+              <button data-pid="${item.productId}" data-size="${item.size}" data-action="dec"
+                class="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-celeste-50 hover:text-celeste-600 qty-btn">−</button>
+              <span class="text-xs font-semibold w-4 text-center">${item.quantity}</span>
+              <button data-pid="${item.productId}" data-size="${item.size}" data-action="inc"
+                class="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-celeste-50 hover:text-celeste-600 qty-btn">+</button>
+              <button data-pid="${item.productId}" data-size="${item.size}" data-action="remove"
+                class="ml-auto text-gray-300 hover:text-red-400 p-1 remove-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <span class="text-xs text-gray-500">${opt.dias}</span>
-        </div>
-      `;
-      shippingContainer.appendChild(el);
-    });
-
-    shippingContainer.querySelectorAll('.shipping-radio').forEach(r => {
-      r.addEventListener('change', handleShippingOptionClick);
-    });
-
-    shippingWrapper.classList.remove('hidden');
-    updateTotalUI();
-    validateForm();
-  }
-
-  async function calculateShipping() {
-    const cp = cpInput.value.trim();
-    if (cp.length < 4) return;
-
-    shippingLoader.classList.remove('hidden');
-    shippingWrapper.classList.remove('hidden');
-    shippingContainer.innerHTML = '<p class="text-sm text-gray-400 p-2 text-center">Calculando envíos...</p>';
-    
-    try {
-      const items = cartItems.get();
-      const provincia = provinciaSelect.value;
-      const res = await fetch('/api/shipping-calculator', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cp_destino: cp, provincia, items })
+        `;
+        itemsContainer.insertBefore(row, emptyMsg);
       });
-      const data = await res.json();
 
-      if (data.error) {
-        shippingContainer.innerHTML = `<p class="text-xs text-red-500 p-2 font-semibold">${data.error}</p>`;
-        shippingCost = 0;
-        selectedShippingMethod = '';
-        
-        // Pintar input de rojo
-        cpInput.classList.add('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
-        cpInput.classList.remove('border-gray-200', 'focus:ring-celeste-500');
-      } else {
-        // Limpiar input si esta rojo
-        cpInput.classList.remove('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
-        cpInput.classList.add('border-gray-200', 'focus:ring-celeste-500');
+      // qty buttons listeners
+      itemsContainer.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const b = e.currentTarget as HTMLButtonElement;
+          const pid = b.dataset.pid!;
+          const size = b.dataset.size!;
+          const item = cartItems.get().find(i => i.productId === pid && i.size === size);
+          if (!item) return;
+          if (b.dataset.action === 'inc') updateQuantity(pid, size, item.quantity + 1);
+          else if (b.dataset.action === 'dec') updateQuantity(pid, size, item.quantity - 1);
+          
+          if (!step2.classList.contains('hidden')) {
+            calculateShipping();
+          }
+        });
+      });
 
-        injectShippingOptions(data.options);
-      }
-    } catch {
-      shippingContainer.innerHTML = '<p class="text-xs text-red-500 p-2">Error de conexión base.</p>';
-      shippingCost = 0;
-      selectedShippingMethod = '';
-    } finally {
-      shippingLoader.classList.add('hidden');
-      updateTotalUI();
+      itemsContainer.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const b = e.currentTarget as HTMLButtonElement;
+          removeFromCart(b.dataset.pid!, b.dataset.size!);
+          if (!step2.classList.contains('hidden')) calculateShipping();
+        });
+      });
     }
-  }
 
-  // Trigger autocálculo solo cuando el CP tiene al menos 4 digitos
-  cpInput.addEventListener('input', () => {
-    // Limpiar visual de error rápido apenas intenta corregir
-    cpInput.classList.remove('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
-    cpInput.classList.add('border-gray-200', 'focus:ring-celeste-500');
+    const unsubItems = cartItems.subscribe(renderItems);
 
-    if (calcTimeout) clearTimeout(calcTimeout);
-    if (cpInput.value.trim().length >= 4) {
-      calcTimeout = setTimeout(() => {
-        calculateShipping();
-      }, 800);
-    } else {
-      shippingWrapper.classList.add('hidden');
-      shippingCost = 0;
-      selectedShippingMethod = '';
+    function updateTotalUI() {
+      const sub = cartSubtotal.get();
+      subtotalEl1.textContent = formatPrice(sub);
+      subtotalEl2.textContent = formatPrice(sub);
+      shippingCostEl.textContent = shippingCost === 0 ? (selectedShippingMethod ? 'Gratis' : '$0') : formatPrice(shippingCost);
+      finalTotalEl.textContent = formatPrice(sub + shippingCost);
+    }
+    const unsubSub = cartSubtotal.subscribe(updateTotalUI);
+
+    // --- FORM LOGIC & SHIPPING CALC ---
+    let calcTimeout: any = null;
+
+    function handleShippingOptionClick(e: Event) {
+      const input = e.currentTarget as HTMLInputElement;
+      shippingCost = Number(input.value);
+      selectedShippingMethod = input.dataset.name || 'Envío';
       updateTotalUI();
       validateForm();
     }
-  });
 
-  // Si cambia la provincia, y hay un CP válido, recalc
-  provinciaSelect.addEventListener('change', () => {
-    if (cpInput.value.trim().length >= 4) {
-      calculateShipping();
+    function injectShippingOptions(options: any[]) {
+      shippingContainer.innerHTML = '';
+      
+      const isTucuman = provinciaSelect.value === 'Tucumán' || cpInput.value.startsWith('40') || cpInput.value.startsWith('41');
+      let finalOptions = [...options];
+
+      if (isTucuman) {
+        finalOptions.unshift({
+          nombre: 'Acordar envío por WhatsApp o Retiro (Sólo S.M. Tucumán / Yerba Buena / Tafí Viejo / Alderetes / La Banda)',
+          precio: 0,
+          dias: 'Coordinamos horario'
+        });
+      }
+
+      finalOptions.forEach((opt, idx) => {
+        const isChecked = idx === 0;
+        if (isChecked) {
+          shippingCost = opt.precio;
+          selectedShippingMethod = opt.nombre;
+        }
+        
+        const el = document.createElement('label');
+        el.className = 'flex items-start gap-3 p-3 bg-white rounded-lg border border-celeste-100 cursor-pointer hover:border-celeste-300 transition-colors';
+        el.innerHTML = `
+          <input type="radio" name="shipping_method" value="${opt.precio}" data-name="${opt.nombre}" class="mt-1 text-celeste-600 focus:ring-celeste-500 shipping-radio" ${isChecked ? 'checked' : ''} />
+          <div class="flex-grow">
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-semibold text-gray-900 leading-tight pr-2">${opt.nombre}</span>
+              <span class="text-sm font-black text-celeste-600 whitespace-nowrap">${opt.precio === 0 ? '¡Gratis!' : formatPrice(opt.precio)}</span>
+            </div>
+            <span class="text-xs text-gray-500">${opt.dias}</span>
+          </div>
+        `;
+        shippingContainer.appendChild(el);
+      });
+
+      shippingContainer.querySelectorAll('.shipping-radio').forEach(r => {
+        r.addEventListener('change', handleShippingOptionClick);
+      });
+
+      shippingWrapper.classList.remove('hidden');
+      updateTotalUI();
+      validateForm();
     }
-    validateForm();
-  });
 
-  // Validaciones
-  checkoutForm.addEventListener('input', validateForm);
+    async function calculateShipping() {
+      const cp = cpInput.value.trim();
+      if (cp.length < 4) return;
 
-  function validateForm() {
-    const isValid = checkoutForm.checkValidity() && selectedShippingMethod !== '';
-    if (isValid) {
-      checkoutBtn.removeAttribute('disabled');
-      checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-    } else {
-      checkoutBtn.setAttribute('disabled', 'true');
-      checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      shippingLoader.classList.remove('hidden');
+      shippingWrapper.classList.remove('hidden');
+      shippingContainer.innerHTML = '<p class="text-sm text-gray-400 p-2 text-center">Calculando envíos...</p>';
+      
+      try {
+        const items = cartItems.get();
+        const provincia = provinciaSelect.value;
+        const res = await fetch('/api/shipping-calculator', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cp_destino: cp, provincia, items })
+        });
+        const data = await res.json();
+
+        if (data.error) {
+          shippingContainer.innerHTML = `<p class="text-xs text-red-500 p-2 font-semibold">${data.error}</p>`;
+          shippingCost = 0;
+          selectedShippingMethod = '';
+          
+          cpInput.classList.add('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
+          cpInput.classList.remove('border-gray-200', 'focus:ring-celeste-500');
+        } else {
+          cpInput.classList.remove('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
+          cpInput.classList.add('border-gray-200', 'focus:ring-celeste-500');
+
+          injectShippingOptions(data.options);
+        }
+      } catch {
+        shippingContainer.innerHTML = '<p class="text-xs text-red-500 p-2">Error de conexión base.</p>';
+        shippingCost = 0;
+        selectedShippingMethod = '';
+      } finally {
+        shippingLoader.classList.add('hidden');
+        updateTotalUI();
+      }
     }
-  }
 
-  // --- CHECKOUT SUBMIT ---
-  checkoutBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
+    cpInput.addEventListener('input', () => {
+      cpInput.classList.remove('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
+      cpInput.classList.add('border-gray-200', 'focus:ring-celeste-500');
 
-    if (!checkoutForm.checkValidity() || !selectedShippingMethod) {
-      checkoutForm.reportValidity();
-      return;
-    }
-
-    const items = cartItems.get();
-    if (!items.length) return;
-
-    checkoutBtn.innerHTML = '<span class="animate-pulse">Abriendo WhatsApp...</span>';
-    checkoutBtn.setAttribute('disabled', 'true');
-    checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
-    checkoutError.classList.add('hidden');
-
-    const fd = new FormData(checkoutForm);
-    const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '5493816447082';
-    
-    let productsText = '';
-    items.forEach(item => {
-      productsText += `- ${item.quantity}x ${item.name} (Talle: ${item.size}) - ${formatPrice(item.price * item.quantity)}\n`;
+      if (calcTimeout) clearTimeout(calcTimeout);
+      if (cpInput.value.trim().length >= 4) {
+        calcTimeout = setTimeout(() => {
+          calculateShipping();
+        }, 800);
+      } else {
+        shippingWrapper.classList.add('hidden');
+        shippingCost = 0;
+        selectedShippingMethod = '';
+        updateTotalUI();
+        validateForm();
+      }
     });
 
-    const subtotal = cartSubtotal.get();
-    const total = subtotal + shippingCost;
+    provinciaSelect.addEventListener('change', () => {
+      if (cpInput.value.trim().length >= 4) {
+        calculateShipping();
+      }
+      validateForm();
+    });
 
-    const deptoStr = fd.get('depto') ? ` (Depto: ${fd.get('depto')})` : '';
-    const aclaracionesStr = fd.get('aclaraciones') ? `\nAclaraciones: ${fd.get('aclaraciones')}` : '';
+    checkoutForm.addEventListener('input', validateForm);
 
-    const message = `¡Hola TUC-HUMANO! Quiero confirmar el siguiente pedido:
+    function validateForm() {
+      const isValid = checkoutForm.checkValidity() && selectedShippingMethod !== '';
+      if (isValid) {
+        checkoutBtn.removeAttribute('disabled');
+        checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      } else {
+        checkoutBtn.setAttribute('disabled', 'true');
+        checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+    }
+
+    checkoutBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      if (!checkoutForm.checkValidity() || !selectedShippingMethod) {
+        checkoutForm.reportValidity();
+        return;
+      }
+
+      const items = cartItems.get();
+      if (!items.length) return;
+
+      checkoutBtn.innerHTML = '<span class="animate-pulse">Abriendo WhatsApp...</span>';
+      checkoutBtn.setAttribute('disabled', 'true');
+      checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      checkoutError.classList.add('hidden');
+
+      const fd = new FormData(checkoutForm);
+      const waNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '5493816447082';
+      
+      let productsText = '';
+      items.forEach(item => {
+        productsText += `- ${item.quantity}x ${item.name} (Talle: ${item.size}) - ${formatPrice(item.price * item.quantity)}\n`;
+      });
+
+      const subtotal = cartSubtotal.get();
+      const total = subtotal + shippingCost;
+
+      const deptoStr = fd.get('depto') ? ` (Depto: ${fd.get('depto')})` : '';
+      const aclaracionesStr = fd.get('aclaraciones') ? `\nAclaraciones: ${fd.get('aclaraciones')}` : '';
+
+      const message = `¡Hola TUC-HUMANO! Quiero confirmar el siguiente pedido:
 
 *📝 DETALLE DEL PEDIDO:*
 ${productsText}
@@ -517,26 +509,22 @@ ${fd.get('localidad')}, ${fd.get('provincia')} (CP: ${fd.get('cp')})${aclaracion
 
 ¡Espero los datos para realizar la transferencia!`;
 
-    const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-    
-    // Redirect to whatsapp
-    window.location.href = waUrl;
-    
-    // Clear cart and close drawer
-    clearCart();
-    closeDrawer();
-    
-    // Reset button just in case user comes back
-    setTimeout(() => {
-      checkoutBtn.innerHTML = `
-        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-        </svg>
-        <span>Pagar Compra</span>
-      `;
-      checkoutBtn.removeAttribute('disabled');
-      checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-    }, 1500);
+      const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+      
+      window.location.href = waUrl;
+      clearCart();
+      closeDrawer();
+      
+      setTimeout(() => {
+        checkoutBtn.innerHTML = `
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <span>Pagar Compra</span>
+        `;
+        checkoutBtn.removeAttribute('disabled');
+        checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }, 1500);
+    });
   });
-
 </script>
