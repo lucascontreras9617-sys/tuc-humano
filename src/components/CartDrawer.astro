@@ -519,8 +519,8 @@ ${fd.get('localidad')}, ${fd.get('provincia')} (CP: ${fd.get('cp')})${aclaracion
 
     const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
     
-    // Redirect to whatsapp in a new tab to avoid breaking the page
-    window.open(waUrl, '_blank');
+    // Redirect to whatsapp
+    window.location.href = waUrl;
     
     // Clear cart and close drawer
     clearCart();
