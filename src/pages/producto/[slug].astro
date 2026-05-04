@@ -1,28 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ProductDetail from '../../components/ProductDetail.astro';
-import { getProductBySlug } from '../../lib/supabase';
+import { getProductBySlug, FALLBACK_PRODUCTS } from '../../lib/supabase';
 
 const { slug } = Astro.params;
-
-// Placeholder product when Supabase not configured
-const placeholderProduct = {
-  id: 'placeholder-id',
-  name: 'Remera Oversize TUC-HUMANO',
-  slug: 'remera-oversize-tuc-humano',
-  price: 27500,
-  old_price: 35000,
-  description: 'Remera oversize de algodón premium con estampado artístico del escudo tucumano. Una declaración de identidad, de lucha y de amor por Tucumán. Hecha con algodón de primera calidad, suave, duradera y con un ajuste cómodo que abraza todos los cuerpos.',
-  image_url: '/images/parte de frente de la remera.webp',
-  image_back_url: '/images/parte de atras de la remeras.webp',
-  stock_s: 10,
-  stock_m: 15,
-  stock_l: 15,
-  stock_xl: 10,
-  stock_unico: 0,
-  has_sizes: true,
-  active: true,
-};
 
 let product = null;
 try {
@@ -34,7 +15,7 @@ try {
 }
 
 if (!product) {
-  product = placeholderProduct;
+  product = FALLBACK_PRODUCTS.find(p => p.slug === slug) || FALLBACK_PRODUCTS[0];
 }
 ---
 
