@@ -96,14 +96,14 @@ const discountPercent = old_price ? Math.round(((old_price - price) / old_price)
       )}
 
       <div class="flex gap-2">
-        <a href={`/producto/${slug}`} class="btn-outline flex-1 text-xs py-2 px-0 text-center" onclick="window.location.href=this.href;">
+        <a href={`/producto/${slug}`} class="btn-outline flex-1 text-sm py-2 px-0 text-center" onclick="window.location.href=this.href;">
           Detalles
         </a>
         <button
-          class="btn-primary flex-1 text-xs py-2 px-0 add-to-cart-quick"
+          class="btn-primary bg-celeste-500 border-celeste-500 hover:bg-black hover:border-black flex-1 text-sm py-2 px-0 add-to-cart-quick"
           data-product={JSON.stringify({id, name, price, image_url, has_sizes})}
         >
-          Sumar
+          Comprar
         </button>
       </div>
       <p class="quick-add-error text-red-500 text-xs hidden text-center mt-1">⚠️ Seleccioná un talle</p>
