@@ -1,8 +1,9 @@
 ---
 // src/components/HeroSlider.astro
 const slides = [
-  { url: '/images/foto_portada_slide_lateral.webp', title: 'RESISTENCIA URBANA' },
-  { url: '/images/foto dedo en v.webp', title: 'RESISTENCIA Y CULTURA' }
+  { url: '/images/foto_portada_slide_lateral.webp', title: 'RESISTENCIA URBANA', position: 'object-center' },
+  { url: '/images/foto 1.webp', title: 'NUESTRA GENTE', position: 'object-center' },
+  { url: '/images/foto 2.webp', title: 'NUESTRO ESTILO', position: 'object-center' }
 ];
 ---
 
@@ -17,7 +18,7 @@ const slides = [
         <img 
           src={slide.url} 
           alt={slide.title}
-          class="h-full w-full object-cover"
+          class={`h-full w-full object-cover ${slide.position}`}
           loading={index === 0 ? 'eager' : 'lazy'}
         />
       </div>
@@ -43,8 +44,12 @@ const slides = [
   }
 
   .hero-slide img {
-    transform: scale(1) !important;
-    transition: none !important;
+    transform: scale(1.15);
+    transition: transform 10s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .hero-slide.active img {
+    transform: scale(1);
   }
 
   /* Textura de ruido aplicada al slider */
@@ -63,7 +68,7 @@ const slides = [
   const slides = document.querySelectorAll('.hero-slide');
   const dots = document.querySelectorAll('.slider-dot');
   let current = 0;
-  const interval = 7000;
+  const interval = 4000;
 
   function nextSlide() {
     slides[current].classList.remove('active');

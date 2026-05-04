@@ -37,7 +37,7 @@ const discountPercent = old_price ? Math.round(((old_price - price) / old_price)
       <img
         src={image_url}
         alt={name}
-        class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${image_back_url ? 'group-hover:opacity-0' : ''}`}
+        class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
         loading="lazy"
       />
       <!-- Foto Secundaria (Solo si existe) -->
@@ -45,7 +45,7 @@ const discountPercent = old_price ? Math.round(((old_price - price) / old_price)
         <img
           src={image_back_url}
           alt={`${name} - Vista alternativa`}
-          class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000 auto-fade-in"
           loading="lazy"
         />
       )}
@@ -151,3 +151,22 @@ const discountPercent = old_price ? Math.round(((old_price - price) / old_price)
     });
   });
 </script>
+
+<style>
+  @keyframes fadeOut {
+    0%, 45% { opacity: 1; }
+    50%, 95% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes fadeIn {
+    0%, 45% { opacity: 0; }
+    50%, 95% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  .auto-fade-out {
+    animation: fadeOut 8s infinite ease-in-out;
+  }
+  .auto-fade-in {
+    animation: fadeIn 8s infinite ease-in-out;
+  }
+</style>
