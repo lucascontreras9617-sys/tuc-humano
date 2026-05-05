@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import logoImg from '../assets/images/logo_y_marca_de_la_pagina.webp';
+
 // Header con logo, nav y carrito
 const pathname = Astro.url.pathname;
 const isHome = pathname === '/' || pathname === '';
@@ -11,8 +14,8 @@ const isTienda = pathname.startsWith('/tienda');
 
       <!-- Logo -->
       <a href="/" class="flex-shrink-0 hover:opacity-80 transition-opacity">
-        <img
-          src="/images/logo_y_marca_de_la_pagina.webp"
+        <Image
+          src={logoImg}
           alt="TUC-HUMANO"
           class="h-12 w-auto"
         />

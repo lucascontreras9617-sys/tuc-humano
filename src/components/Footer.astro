@@ -1,4 +1,8 @@
 ---
+import { Image } from 'astro:assets';
+import logoImg from '../assets/images/logo_y_marca_de_la_pagina.webp';
+import igImg from '../assets/images/instagram.png';
+
 // Footer
 ---
 
@@ -8,8 +12,8 @@
       <!-- Brand -->
       <div class="space-y-4">
         <div class="flex items-center gap-2">
-          <img
-            src="/images/logo_y_marca_de_la_pagina.webp"
+          <Image
+            src={logoImg}
             alt="TUC-HUMANO"
             class="h-12 w-auto brightness-0 invert"
           />
@@ -27,7 +31,7 @@
             class="text-gray-400 hover:text-celeste-400 transition-colors inline-block"
             aria-label="Instagram Patria Grande Tucumán"
           >
-            <img src="/images/instagram.png" alt="Instagram" class="h-5 w-5 brightness-0 invert opacity-70 hover:opacity-100 transition-opacity" />
+            <Image src={igImg} alt="Instagram" class="h-5 w-5 brightness-0 invert opacity-70 hover:opacity-100 transition-opacity" />
           </a>
           <a
             href={`https://wa.me/${import.meta.env.PUBLIC_WHATSAPP_NUMBER || "5493816447082"}`}

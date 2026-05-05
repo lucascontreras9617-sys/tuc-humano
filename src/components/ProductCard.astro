@@ -1,4 +1,7 @@
 ---
+import { Image, getImage } from 'astro:assets';
+const imagesGlob = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*.{jpeg,jpg,png,gif,webp}');
+
 interface Props {
   id: string;
   name: string;
@@ -27,6 +30,15 @@ const formatPrice = (p: number) => new Intl.NumberFormat('es-AR', {
 const formatted = formatPrice(price);
 const formattedOld = old_price ? formatPrice(old_price) : null;
 const discountPercent = old_price ? Math.round(((old_price - price) / old_price) * 100) : 0;
+
+const imagePath1 = `/src/assets${image_url}`;
+const imagePath2 = image_back_url ? `/src/assets${image_back_url}` : null;
+
+let optimizedImageUrlForCart = image_url;
+if (imagesGlob[imagePath1]) {
+  const optimized = await getImage({ src: imagesGlob[imagePath1]() });
+  optimizedImageUrlForCart = optimized.src;
+}
 ---
 
 <article class="product-card group" data-product-id={id}>
@@ -34,21 +46,38 @@ const discountPercent = old_price ? Math.round(((old_price - price) / old_price)
     <!-- Image -->
     <div class="relative aspect-[3/4] overflow-hidden bg-black border-b-4 border-black">
       <!-- Foto Principal -->
-      <img
-        src={image_url}
-        alt={name}
-        class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
-        loading="lazy"
-      />
+      {imagesGlob[imagePath1] ? (
+        <Image
+          src={imagesGlob[imagePath1]()}
+          alt={name}
+          class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
+          loading="lazy"
+        />
+      ) : (
+        <img
+          src={image_url}
+          alt={name}
+          class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
+          loading="lazy"
+        />
+      )}
+      
       <!-- Foto Secundaria (Solo si existe) -->
-      {image_back_url && (
+      {imagePath2 && imagesGlob[imagePath2] ? (
+        <Image
+          src={imagesGlob[imagePath2]()}
+          alt={`${name} - Vista alternativa`}
+          class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000 auto-fade-in"
+          loading="lazy"
+        />
+      ) : image_back_url ? (
         <img
           src={image_back_url}
           alt={`${name} - Vista alternativa`}
           class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000 auto-fade-in"
           loading="lazy"
         />
-      )}
+      ) : null}
       {!hasStock && (
         <div class="absolute inset-0 bg-white/70 flex items-center justify-center">
           <span class="bg-gray-900 text-white text-xs font-semibold px-4 py-2 rounded-full">Sin stock</span>
@@ -101,7 +130,7 @@ const discountPercent = old_price ? Math.round(((old_price - price) / old_price)
         </a>
         <button
           class="btn-primary bg-celeste-500 border-celeste-500 hover:bg-black hover:border-black flex-1 text-sm py-2 px-0 add-to-cart-quick"
-          data-product={JSON.stringify({id, name, price, image_url, has_sizes})}
+          data-product={JSON.stringify({id, name, price, image_url: optimizedImageUrlForCart, has_sizes})}
         >
           Comprar
         </button>

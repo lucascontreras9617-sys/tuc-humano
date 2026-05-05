@@ -1,4 +1,7 @@
 ---
+import { Image, getImage } from 'astro:assets';
+const imagesGlob = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*.{jpeg,jpg,png,gif,webp}');
+
 interface Props {
   product: {
     id: string;
@@ -39,21 +42,51 @@ const sizes = product.has_sizes ? [
 const hasStock = product.has_sizes 
   ? (product.stock_s > 0 || product.stock_m > 0 || product.stock_l > 0 || product.stock_xl > 0)
   : (product.stock_unico > 0);
+
+const imagePath1 = `/src/assets${product.image_url}`;
+const imagePath2 = product.image_back_url ? `/src/assets${product.image_back_url}` : null;
+
+let optimizedImageUrlForCart = product.image_url;
+let optimizedImageBackUrlForCart = product.image_back_url;
+
+if (imagesGlob[imagePath1]) {
+  const optimized = await getImage({ src: imagesGlob[imagePath1]() });
+  optimizedImageUrlForCart = optimized.src;
+}
+if (imagePath2 && imagesGlob[imagePath2]) {
+  const optimized = await getImage({ src: imagesGlob[imagePath2]() });
+  optimizedImageBackUrlForCart = optimized.src;
+}
+
+const productForClient = {
+  ...product,
+  image_url: optimizedImageUrlForCart,
+  image_back_url: optimizedImageBackUrlForCart
+};
 ---
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
   
-  <div id="product-ctx" data-product={JSON.stringify(product)} class="hidden"></div>
+  <div id="product-ctx" data-product={JSON.stringify(productForClient)} class="hidden"></div>
 
   <!-- Gallery -->
   <div class="space-y-3">
     <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-50 group border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-      <img
-        id="main-product-img"
-        src={product.image_url || '/images/parte de frente de la remera.webp'}
-        alt={product.name}
-        class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-      />
+      {imagesGlob[imagePath1] ? (
+        <Image
+          id="main-product-img"
+          src={imagesGlob[imagePath1]()}
+          alt={product.name}
+          class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+        />
+      ) : (
+        <img
+          id="main-product-img"
+          src={product.image_url}
+          alt={product.name}
+          class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+        />
+      )}
       {discountPercent > 0 && (
         <div class="absolute top-4 left-4 z-10">
           <span class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg">
@@ -67,15 +100,23 @@ const hasStock = product.has_sizes
       <div class="flex gap-3">
         <button
           class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-          data-src={product.image_url || '/images/parte de frente de la remera.webp'}
+          data-src={optimizedImageUrlForCart}
         >
-          <img src={product.image_url || '/images/parte de frente de la remera.webp'} alt="Frente" class="w-full h-full object-cover" />
+          {imagesGlob[imagePath1] ? (
+            <Image src={imagesGlob[imagePath1]()} alt="Frente" class="w-full h-full object-cover" />
+          ) : (
+            <img src={product.image_url} alt="Frente" class="w-full h-full object-cover" />
+          )}
         </button>
         <button
           class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-4 border-transparent hover:border-black transition-colors"
-          data-src={product.image_back_url}
+          data-src={optimizedImageBackUrlForCart}
         >
-          <img src={product.image_back_url} alt="Espalda" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
+          {imagePath2 && imagesGlob[imagePath2] ? (
+            <Image src={imagesGlob[imagePath2]()} alt="Espalda" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
+          ) : (
+            <img src={product.image_back_url} alt="Espalda" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
+          )}
         </button>
       </div>
     )}
