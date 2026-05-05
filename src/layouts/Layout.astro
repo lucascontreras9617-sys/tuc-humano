@@ -9,6 +9,9 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
 import CartDrawer from '../components/CartDrawer.astro';
 import { ViewTransitions } from 'astro:transitions';
 
+import logoWebp from '../assets/images/logo_y_marca_de_la_pagina.webp';
+import logoPng from '../assets/images/logo_y_marca_de_la_pagina.png';
+
 interface Props {
   title?: string;
   description?: string;
@@ -19,7 +22,7 @@ interface Props {
 const {
   title = 'TUC-HUMANO | Remeras Oversize desde Tucumán',
   description = 'Remeras oversize con diseño artístico y conciencia social. Nacidas en Tucumán, para quienes caminan cada lucha con identidad y estilo.',
-  image = '/images/logo_y_marca_de_la_pagina.webp',
+  image = logoWebp.src,
   noindex = false,
 } = Astro.props;
 
@@ -32,7 +35,7 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/images/logo_y_marca_de_la_pagina.png" />
+    <link rel="icon" type="image/png" href={logoPng.src} />
     <link rel="canonical" href={canonicalURL} />
 
     <!-- SEO -->
