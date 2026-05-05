@@ -30,7 +30,7 @@ const { images = defaultImages } = Astro.props;
         <Image
           src={imagesGlob[image.src]()}
           alt={image.alt}
-          loading="lazy"
+          loading="eager"
           class="w-full h-[60vh] md:h-[80vh] object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div class="lookbook-overlay">

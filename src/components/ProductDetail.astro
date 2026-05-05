@@ -78,6 +78,7 @@ const productForClient = {
           src={imagesGlob[imagePath1]()}
           alt={product.name}
           class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+          loading="eager"
         />
       ) : (
         <img
@@ -103,7 +104,7 @@ const productForClient = {
           data-src={optimizedImageUrlForCart}
         >
           {imagesGlob[imagePath1] ? (
-            <Image src={imagesGlob[imagePath1]()} alt="Frente" class="w-full h-full object-cover" />
+            <Image src={imagesGlob[imagePath1]()} alt="Frente" class="w-full h-full object-cover" loading="eager" />
           ) : (
             <img src={product.image_url} alt="Frente" class="w-full h-full object-cover" />
           )}
@@ -113,7 +114,7 @@ const productForClient = {
           data-src={optimizedImageBackUrlForCart}
         >
           {imagePath2 && imagesGlob[imagePath2] ? (
-            <Image src={imagesGlob[imagePath2]()} alt="Espalda" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
+            <Image src={imagesGlob[imagePath2]()} alt="Espalda" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" loading="eager" />
           ) : (
             <img src={product.image_back_url} alt="Espalda" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
           )}

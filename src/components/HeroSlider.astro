@@ -22,7 +22,7 @@ const slides = [
           src={images[slide.url]()} 
           alt={slide.title}
           class={`h-full w-full object-cover ${slide.position}`}
-          loading={index === 0 ? 'eager' : 'lazy'}
+          loading="eager"
         />
       </div>
     ))}

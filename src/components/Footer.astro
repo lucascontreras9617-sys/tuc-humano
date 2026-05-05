@@ -16,6 +16,7 @@ import igImg from '../assets/images/instagram.png';
             src={logoImg}
             alt="TUC-HUMANO"
             class="h-12 w-auto brightness-0 invert"
+            loading="eager"
           />
         </div>
         <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
@@ -31,7 +32,7 @@ import igImg from '../assets/images/instagram.png';
             class="text-gray-400 hover:text-celeste-400 transition-colors inline-block"
             aria-label="Instagram Patria Grande Tucumán"
           >
-            <Image src={igImg} alt="Instagram" class="h-5 w-5 brightness-0 invert opacity-70 hover:opacity-100 transition-opacity" />
+            <Image src={igImg} alt="Instagram" class="h-5 w-5 brightness-0 invert opacity-70 hover:opacity-100 transition-opacity" loading="eager" />
           </a>
           <a
             href={`https://wa.me/${import.meta.env.PUBLIC_WHATSAPP_NUMBER || "5493816447082"}`}
