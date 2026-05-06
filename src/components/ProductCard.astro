@@ -16,9 +16,10 @@ interface Props {
   stock_xl?: number;
   stock_unico?: number;
   has_sizes?: boolean;
+  is_featured?: boolean;
 }
 
-const { id, name, slug, price, old_price, image_url, image_back_url, stock_s = 0, stock_m = 0, stock_l = 0, stock_xl = 0, stock_unico = 0, has_sizes = true } = Astro.props;
+const { id, name, slug, price, old_price, image_url, image_back_url, stock_s = 0, stock_m = 0, stock_l = 0, stock_xl = 0, stock_unico = 0, has_sizes = true, is_featured = false } = Astro.props;
 const hasStock = has_sizes ? (stock_s > 0 || stock_m > 0 || stock_l > 0 || stock_xl > 0) : stock_unico > 0;
 
 const formatPrice = (p: number) => new Intl.NumberFormat('es-AR', {
@@ -41,10 +42,10 @@ if (imagesGlob[imagePath1]) {
 }
 ---
 
-<article class="product-card group" data-product-id={id}>
+<article class={`product-card group relative ${is_featured ? 'shadow-[0_20px_50px_rgba(0,174,239,0.3)] border-4 border-celeste-500 rounded-2xl overflow-hidden bg-white z-20' : ''}`} data-product-id={id}>
   <a href={`/producto/${slug}`} class="block">
     <!-- Image -->
-    <div class="relative aspect-[3/4] overflow-hidden bg-black border-b-4 border-black">
+    <div class={`relative overflow-hidden bg-black border-b-4 border-black ${is_featured ? 'aspect-[2/3]' : 'aspect-[3/4]'}`}>
       <!-- Foto Principal -->
       {imagesGlob[imagePath1] ? (
         <Image
@@ -58,7 +59,7 @@ if (imagesGlob[imagePath1]) {
           src={image_url}
           alt={name}
           class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
-          loading="lazy"
+          loading="eager"
         />
       )}
       
@@ -75,7 +76,7 @@ if (imagesGlob[imagePath1]) {
           src={image_back_url}
           alt={`${name} - Vista alternativa`}
           class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000 auto-fade-in"
-          loading="lazy"
+          loading="eager"
         />
       ) : null}
       {!hasStock && (
@@ -100,10 +101,10 @@ if (imagesGlob[imagePath1]) {
     </div>
 
     <!-- Info -->
-    <div class="p-4">
-      <h3 class="font-semibold text-gray-900 text-sm leading-tight mb-1">{name}</h3>
-      <div class="flex items-center gap-2 mt-1">
-        <p class="text-celeste-600 font-bold text-lg">{formatted}</p>
+    <div class={`p-4 text-center ${is_featured ? 'py-2' : ''}`}>
+      <h3 class={`font-semibold text-gray-900 leading-tight mb-1 ${is_featured ? 'text-lg' : 'text-sm'}`}>{name}</h3>
+      <div class="flex items-center justify-center gap-2 mt-1">
+        <p class={`text-celeste-600 font-bold ${is_featured ? 'text-2xl' : 'text-lg'}`}>{formatted}</p>
         {formattedOld && (
           <p class="text-gray-400 text-sm line-through">{formattedOld}</p>
         )}
@@ -113,9 +114,9 @@ if (imagesGlob[imagePath1]) {
 
   <!-- Quick Add (shows on hover) -->
   {hasStock && (
-    <div class="px-4 pb-4 flex flex-col gap-2 relative z-20" onclick="event.preventDefault();">
+    <div class={`px-4 pb-4 flex flex-col relative z-20 ${is_featured ? 'gap-2' : 'gap-3'}`} onclick="event.preventDefault();">
       {has_sizes && (
-        <select class="quick-add-size w-full text-sm border border-gray-200 rounded-lg py-2 px-3 focus:ring-celeste-500 focus:border-celeste-500 bg-white text-gray-900 cursor-pointer">
+        <select class={`quick-add-size w-full border border-gray-200 rounded-lg py-2 px-3 focus:ring-celeste-500 focus:border-celeste-500 bg-white text-gray-900 cursor-pointer ${is_featured ? 'text-sm font-bold' : 'text-sm'}`}>
            <option value="">Elegí tu talle</option>
            {stock_s && stock_s > 0 ? <option value="S">Talle S</option> : null}
            {stock_m && stock_m > 0 ? <option value="M">Talle M</option> : null}
@@ -125,13 +126,13 @@ if (imagesGlob[imagePath1]) {
       )}
 
       <div class="flex gap-2">
-        <a href={`/producto/${slug}`} class="btn-outline flex-1 text-sm py-2 px-0 text-center" onclick="window.location.href=this.href;">
-          Detalles
-        </a>
         <button
-          class="btn-primary bg-celeste-500 border-celeste-500 hover:bg-black hover:border-black flex-1 text-sm py-2 px-0 add-to-cart-quick"
+          class={`btn-primary bg-celeste-500 border-celeste-500 hover:bg-black hover:border-black flex-1 font-bold add-to-cart-quick flex items-center justify-center gap-3 shadow-[0_10px_20px_-10px_rgba(0,174,239,0.5)] transition-all active:scale-95 ${is_featured ? 'py-3 text-lg animate-pulse-subtle' : 'py-2 text-sm'}`}
           data-product={JSON.stringify({id, name, price, image_url: optimizedImageUrlForCart, has_sizes})}
         >
+          <svg xmlns="http://www.w3.org/2000/svg" class={`${is_featured ? 'h-5 w-5' : 'h-4 w-4'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
           Comprar
         </button>
       </div>
@@ -139,6 +140,16 @@ if (imagesGlob[imagePath1]) {
     </div>
   )}
 </article>
+
+<style>
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s infinite;
+  }
+  @keyframes pulse-subtle {
+    0%, 100% { transform: scale(1); box-shadow: 0 10px 20px -10px rgba(0,174,239,0.5); }
+    50% { transform: scale(1.02); box-shadow: 0 15px 30px -10px rgba(0,174,239,0.7); }
+  }
+</style>
 
 <script>
   import { addToCart as addFn, openCart } from '../lib/cart';

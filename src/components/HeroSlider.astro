@@ -10,7 +10,7 @@ const slides = [
 ];
 ---
 
-<section class="relative aspect-[4/3] sm:aspect-video md:aspect-auto md:h-[85vh] w-full overflow-hidden bg-black border-b-8 border-black">
+<section class="relative h-[calc(100vh-64px)] w-full overflow-hidden bg-black border-b-8 border-black">
   <div id="hero-slider" class="absolute inset-0 h-full w-full">
     {slides.map((slide, index) => (
       <div 
@@ -21,7 +21,7 @@ const slides = [
         <Image 
           src={images[slide.url]()} 
           alt={slide.title}
-          class={`h-full w-full object-cover ${slide.position}`}
+          class="h-full w-full object-cover"
           loading="eager"
         />
       </div>
@@ -68,39 +68,50 @@ const slides = [
 </style>
 
 <script>
-  const slides = document.querySelectorAll('.hero-slide');
-  const dots = document.querySelectorAll('.slider-dot');
-  let current = 0;
-  const interval = 4000;
+  document.addEventListener('astro:page-load', () => {
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    let current = 0;
+    const interval = 4000;
 
-  function nextSlide() {
-    slides[current].classList.remove('active');
-    dots[current].classList.remove('bg-white');
-    dots[current].classList.add('bg-transparent');
-    
-    current = (current + 1) % slides.length;
-    
-    slides[current].classList.add('active');
-    dots[current].classList.add('bg-white');
-    dots[current].classList.remove('bg-transparent');
-  }
+    if (slides.length === 0) return;
 
-  setInterval(nextSlide, interval);
-
-  dots.forEach(dot => {
-    dot.addEventListener('click', () => {
-      const index = parseInt(dot.getAttribute('data-index') || '0');
-      if (index === current) return;
-      
+    function nextSlide() {
+      if (!slides[current] || !dots[current]) return;
       slides[current].classList.remove('active');
       dots[current].classList.remove('bg-white');
       dots[current].classList.add('bg-transparent');
       
-      current = index;
+      current = (current + 1) % slides.length;
       
+      if (!slides[current] || !dots[current]) return;
       slides[current].classList.add('active');
       dots[current].classList.add('bg-white');
       dots[current].classList.remove('bg-transparent');
+    }
+
+    const timer = setInterval(nextSlide, interval);
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const index = parseInt(dot.getAttribute('data-index') || '0');
+        if (index === current) return;
+        
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('bg-white');
+        dots[current].classList.add('bg-transparent');
+        
+        current = index;
+        
+        slides[current].classList.add('active');
+        dots[current].classList.add('bg-white');
+        dots[current].classList.remove('bg-transparent');
+      });
     });
+
+    // Cleanup on page swap to avoid multiple intervals
+    document.addEventListener('astro:before-preparation', () => {
+      clearInterval(timer);
+    }, { once: true });
   });
 </script>

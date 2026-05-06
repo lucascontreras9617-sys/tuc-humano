@@ -11,6 +11,8 @@ import argHumanaImg from '../assets/images/libro_argentina_humana.webp';
 import frenteImg from '../assets/images/parte de frente de la remera.webp';
 import atrasImg from '../assets/images/parte de atras de la remeras.webp';
 import foto1Img from '../assets/images/foto 1.webp';
+import lateral1Img from '../assets/images/lateral 1.webp';
+import lateral2Img from '../assets/images/lateral2.webp';
 import enviadoImg from '../assets/images/enviado.png';
 import mpImg from '../assets/images/Mercado_Pago.svg.png';
 import waImg from '../assets/images/whatsapp.png';
@@ -42,9 +44,9 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
 
   <!-- ======== VALORES ======== -->
   <section id="valores" class="py-12 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
 
-      <div class="max-w-4xl mx-auto text-center">
+      <div class="max-w-5xl mx-auto text-center relative z-10">
         <div class="space-y-6">
           <span class="inline-block bg-celeste-50 text-celeste-600 text-xs font-bold px-6 py-2 rounded-full uppercase tracking-widest">
             Nuestros valores
@@ -54,40 +56,182 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
             <span class="text-celeste-500 underline decoration-8 underline-offset-[12px]">una bandera</span>
           </h2>
 
-          <div class="border-l-4 border-celeste-500 bg-gray-50 pl-5 pr-6 py-5 mt-8 max-w-2xl mx-auto">
-            <p class="text-gray-800 text-sm md:text-base leading-relaxed font-technical">
-              Esta tienda es una iniciativa de
-              <a href="https://www.instagram.com/patriagrande.tuc/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-gray-900 hover:text-celeste-500 transition-colors group">
+          <div class="mt-10 max-w-4xl mx-auto px-8 py-8 bg-white rounded-[30px] relative">
+            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-white px-8 py-1.5 border border-gray-100 rounded-full text-[11px] md:text-xs uppercase tracking-[0.3em] font-extrabold text-celeste-500 shadow-sm">
+              Iniciativa Militante
+            </div>
+            <p class="text-gray-500 text-lg md:text-2xl leading-tight font-technical text-center">
+              Tienda de 
+              <a href="https://www.instagram.com/patriagrande.tuc/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-black/60 hover:text-celeste-500 transition-colors font-bold group">
                 <strong class="font-display uppercase tracking-tight">Argentina Humana – Patria Grande Tucumán</strong>
-                <Image src={igImg} alt="Instagram" class="w-4 h-4 opacity-80 group-hover:opacity-100 transition-opacity" loading="eager" />
-              </a>.
-              Somos un partido autofinanciado: nos sostenemos con el aporte de nuestra militancia, suscripciones y actividades para juntar fondos.
+                <Image src={igImg} alt="Instagram" class="w-5 h-5 opacity-40 group-hover:opacity-100 transition-opacity" loading="eager" />
+              </a>, 
+              partido autofinanciado por su militancia. Todo lo recaudado va a acciones solidarias y al crecimiento del partido.
             </p>
-            <p class="text-celeste-600 text-xs uppercase tracking-widest font-technical mt-3 font-semibold">
-              Todo lo recaudado se destina a acciones solidarias y a la construcción del partido en Tucumán.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-            {[
-              { title: 'Algodón premium', desc: 'Suave, resistente y confortable' },
-              { title: 'Arte propio', desc: 'Diseños únicos con mensaje' },
-              { title: 'Fit oversize', desc: 'Para todos los cuerpos' },
-              { title: 'Militante', desc: 'Cada remera es una bandera' },
-            ].map(item => (
-              <div class="bg-white rounded-xl p-5 hover:bg-celeste-50 transition-all duration-300 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:-translate-y-1">
-                <p class="font-display uppercase tracking-tight text-gray-900 text-lg leading-tight">{item.title}</p>
-                <p class="text-gray-500 text-xs mt-1 leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ======== REMERAS (PRODUCTO ESTRELLA) ======== -->
+  <section id="remeras-section" class="py-12 bg-white scroll-mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mb-6">
+        
+        <!-- 1) Grilla de Productos (Compra inmediata) -->
+        <div id="remeras-grid" class="scroll-mt-20 mt-4 mb-32">
+          {remeras.length === 1 ? (
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
+              <!-- Banner Izquierdo -->
+              <div class="hidden lg:block aspect-[2/3] border-4 border-black bg-black relative group overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all duration-300">
+                <Image src={lateral1Img} class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Lateral 1" loading="eager" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="absolute bottom-4 left-4 bg-celeste-500 text-white px-3 py-1 font-display text-[10px] uppercase -rotate-2 transform translate-y-10 group-hover:translate-y-0 transition-transform">Identidad</div>
+              </div>
+
+              <!-- Tarjeta de Producto (Centro) -->
+              <div class="max-w-md mx-auto w-full transform lg:scale-110 relative z-10">
+                {remeras.map(p => (
+                  <ProductCard
+                    id={p.id}
+                    name={p.name}
+                    slug={p.slug}
+                    price={p.price}
+                    old_price={p.old_price}
+                    image_url={p.image_url}
+                    image_back_url={p.image_back_url}
+                    stock_s={p.stock_s}
+                    stock_m={p.stock_m}
+                    stock_l={p.stock_l}
+                    stock_xl={p.stock_xl}
+                    stock_unico={p.stock_unico}
+                    has_sizes={p.has_sizes}
+                    is_featured={true}
+                  />
+                ))}
+              </div>
+
+              <!-- Banner Derecho -->
+              <div class="hidden lg:block aspect-[2/3] border-4 border-black bg-black relative group overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all duration-300">
+                <Image src={lateral2Img} class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Lateral 2" loading="eager" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="absolute bottom-4 right-4 bg-celeste-500 text-white px-3 py-1 font-display text-[10px] uppercase rotate-2 transform translate-y-10 group-hover:translate-y-0 transition-transform">Resistencia</div>
+              </div>
+            </div>
+          ) : (
+            <div class={`grid gap-5 scroll-mt-20 ${remeras.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto' : remeras.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
+              {remeras.map(p => (
+                <ProductCard
+                  id={p.id}
+                  name={p.name}
+                  slug={p.slug}
+                  price={p.price}
+                  old_price={p.old_price}
+                  image_url={p.image_url}
+                  image_back_url={p.image_back_url}
+                  stock_s={p.stock_s}
+                  stock_m={p.stock_m}
+                  stock_l={p.stock_l}
+                  stock_xl={p.stock_xl}
+                  stock_unico={p.stock_unico}
+                  has_sizes={p.has_sizes}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <!-- 2) Galería Single + Texto (Explicación) -->
+        <div class="mt-32">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 reveal-text max-w-5xl mx-auto items-stretch">
+            
+            <!-- BLOQUE 1: Texto (Marco cuadrado ajustado a la foto) -->
+            <div class="aspect-square bg-black text-white p-10 md:p-14 border-l-[20px] border-celeste-500 shadow-xl flex flex-col justify-center text-center">
+              <div class="space-y-6 md:space-y-8">
+                <p class="text-xl md:text-3xl lg:text-4xl font-display uppercase tracking-[-0.04em] leading-[0.95] italic">
+                  No son solo prendas, son una declaración de identidad y valores.
+                </p>
+                <div class="h-1.5 md:h-2 w-20 md:w-24 bg-celeste-500 mx-auto"></div>
+                <p class="text-sm md:text-lg lg:text-xl font-display uppercase tracking-[-0.02em] leading-tight italic text-gray-400">
+                  Cada diseño rinde homenaje a los símbolos de <span class="text-celeste-400">la lucha popular</span> y a quienes soñaron con una <span class="text-celeste-500 underline decoration-4 underline-offset-8">Argentina más justa, libre y soberana.</span>
+                </p>
+              </div>
+              <div class="mt-8 md:mt-12">
+                <p class="text-[10px] md:text-xs lg:text-sm uppercase tracking-widest text-gray-500 font-technical">Algodón premium · Fit oversize · Arte propio</p>
+              </div>
+            </div>
+
+            <!-- BLOQUE 2: Foto Única (Dedo en V) -->
+            <div class="aspect-square group relative overflow-hidden border-8 border-black shadow-lg bg-black">
+              <Image 
+                src={dedovImg} 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                alt="Foto dedo en v"
+                loading="eager"
+              />
+              <div class="absolute bottom-6 left-6 bg-celeste-50 text-celeste-600 px-4 py-2 font-display text-xs uppercase font-bold shadow-md">Identidad y Resistencia</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Recuadros de Valor -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-32">
+          {[
+            { title: 'Algodón premium', desc: 'Suave, resistente y confortable' },
+            { title: 'Arte propio', desc: 'Diseños únicos con mensaje' },
+            { title: 'Fit oversize', desc: 'Para todos los cuerpos' },
+            { title: 'Militante', desc: 'Cada remera es una bandera' },
+          ].map(item => (
+            <div class="bg-white rounded-xl p-6 hover:bg-celeste-50 transition-all duration-300 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:-translate-y-1">
+              <p class="font-display uppercase tracking-tight text-gray-900 text-xl leading-tight">{item.title}</p>
+              <p class="text-gray-500 text-xs mt-2 leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== LIBROS Y OTROS ======== -->
+  {librosYOtros.length > 0 && (
+    <section id="libros" class="py-24 bg-white scroll-mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="mb-14 text-center">
+          <h2 class="section-title">Libros y Accesorios</h2>
+          <p class="text-base md:text-lg text-gray-800 font-technical font-semibold max-w-2xl mx-auto my-4 uppercase tracking-wider">
+            Herramientas para el pensamiento crítico y la acción popular.
+          </p>
+        </div>
+
+        <div class={`grid gap-5 ${librosYOtros.length <= 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
+          {librosYOtros.map(p => (
+            <ProductCard
+              id={p.id}
+              name={p.name}
+              slug={p.slug}
+              price={p.price}
+              old_price={p.old_price}
+              image_url={p.image_url}
+              image_back_url={p.image_back_url}
+              stock_s={p.stock_s}
+              stock_m={p.stock_m}
+              stock_l={p.stock_l}
+              stock_xl={p.stock_xl}
+              stock_unico={p.stock_unico}
+              has_sizes={p.has_sizes}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
   <!-- ======== SELECCIÓN DE CATEGORÍAS ======== -->
-  <section class="py-8 bg-white">
+  <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Opción Remeras (2/3 del ancho) -->
@@ -124,166 +268,6 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
       </div>
     </div>
   </section>
-
-  <!-- ======== REMERAS (PRODUCTO ESTRELLA) ======== -->
-  <section id="remeras-section" class="py-10 bg-gray-50 border-y-8 border-black scroll-mt-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="mb-6">
-        <h2 class="section-title">Nuestras Remeras</h2>
-
-        <!-- Layout: Texto recortado + Galería Dúo lado a lado -->
-        <div class="mt-6 grid grid-cols-1 lg:grid-cols-5 gap-6 reveal-text">
-          <!-- Bloque de texto compacto (2/5) -->
-          <div class="lg:col-span-2 bg-black text-white p-6 md:p-10 border-l-[16px] border-celeste-500 shadow-[20px_20px_0px_0px_rgba(0,174,239,0.25)] flex flex-col justify-between">
-            <div class="space-y-8">
-              <p class="text-3xl md:text-5xl font-display uppercase tracking-[-0.04em] leading-[0.95] italic">
-                No son solo prendas, son una declaración de identidad y valores.
-              </p>
-              <div class="h-2 w-32 bg-celeste-500"></div>
-              <p class="text-xl md:text-2xl font-display uppercase tracking-[-0.02em] leading-tight italic text-gray-400">
-                Cada diseño rinde homenaje a los símbolos de <span class="text-celeste-400">la lucha popular</span> y a quienes soñaron con una <span class="text-celeste-500 underline decoration-4 underline-offset-8">Argentina más justa, libre y soberana.</span>
-              </p>
-            </div>
-            <div class="mt-8 space-y-4">
-              <p class="text-sm md:text-base uppercase tracking-widest text-gray-500 font-technical">Algodón premium · Fit oversize · Arte propio</p>
-              <a href="#remeras-grid" class="btn-primary text-base py-4 px-6 w-full text-center">Ver todas las remeras</a>
-            </div>
-          </div>
-
-          <!-- Galería Dúo (3/5) -->
-          <div class="lg:col-span-3 grid grid-cols-2 gap-4 reveal-text-delay">
-            <!-- Frente -->
-            <div class="group relative h-full overflow-hidden border-8 border-black shadow-lg bg-black">
-              <Image 
-                src={frenteImg} 
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                alt="Frente de remera"
-                loading="eager"
-              />
-              <div class="absolute bottom-4 left-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase -rotate-2">Identidad</div>
-            </div>
-            <!-- Espalda -->
-            <div class="group relative h-full overflow-hidden border-8 border-black shadow-lg bg-black">
-              <Image 
-                src={atrasImg} 
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                alt="Espalda de remera"
-                loading="eager"
-              />
-              <div class="absolute bottom-4 right-4 bg-celeste-500 text-white px-4 py-1 font-display text-xs uppercase rotate-2">Resistencia</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Frase de refuerzo entre galería y productos -->
-        <div class="mt-6 flex items-center gap-4">
-          <div class="h-1 flex-1 bg-black"></div>
-          <p class="font-display uppercase tracking-tighter text-lg md:text-2xl italic text-gray-900 whitespace-nowrap">Suavidad, durabilidad y confort — para todos los cuerpos</p>
-          <div class="h-1 flex-1 bg-black"></div>
-        </div>
-      </div>
-
-      <div id="remeras-grid" class="scroll-mt-20 mt-8">
-        {remeras.length === 1 ? (
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center max-w-6xl mx-auto">
-            <!-- Banner Izquierdo -->
-            <div class="hidden lg:block aspect-square border-8 border-black bg-black relative group overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all duration-300">
-              <Image src={foto1Img} class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Lookbook 1" loading="eager" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-              <div class="absolute bottom-0 left-0 p-6 w-full">
-                <h3 class="text-white text-3xl font-display uppercase italic tracking-tighter">Identidad<br/>Militante</h3>
-              </div>
-            </div>
-
-            <!-- Tarjeta de Producto (Centro) -->
-            <div class="max-w-md mx-auto w-full transform lg:scale-105 relative z-10">
-              {remeras.map(p => (
-                <ProductCard
-                  id={p.id}
-                  name={p.name}
-                  slug={p.slug}
-                  price={p.price}
-                  old_price={p.old_price}
-                  image_url={p.image_url}
-                  image_back_url={p.image_back_url}
-                  stock_s={p.stock_s}
-                  stock_m={p.stock_m}
-                  stock_l={p.stock_l}
-                  stock_xl={p.stock_xl}
-                  stock_unico={p.stock_unico}
-                  has_sizes={p.has_sizes}
-                />
-              ))}
-            </div>
-
-            <!-- Banner Derecho -->
-            <div class="hidden lg:block aspect-square border-8 border-black bg-black relative group overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all duration-300">
-              <Image src={dedovImg} class="w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Lookbook 2" loading="eager" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-              <div class="absolute bottom-0 right-0 p-6 w-full text-right">
-                <h3 class="text-white text-3xl font-display uppercase italic tracking-tighter">Cultura<br/>Popular</h3>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div class={`grid gap-5 scroll-mt-20 ${remeras.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto' : remeras.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
-            {remeras.map(p => (
-              <ProductCard
-                id={p.id}
-                name={p.name}
-                slug={p.slug}
-                price={p.price}
-                old_price={p.old_price}
-                image_url={p.image_url}
-                image_back_url={p.image_back_url}
-                stock_s={p.stock_s}
-                stock_m={p.stock_m}
-                stock_l={p.stock_l}
-                stock_xl={p.stock_xl}
-                stock_unico={p.stock_unico}
-                has_sizes={p.has_sizes}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  </section>
-
-  <!-- ======== LIBROS Y OTROS ======== -->
-  {librosYOtros.length > 0 && (
-    <section id="libros" class="py-14 bg-white scroll-mt-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div class="mb-8 text-center">
-          <h2 class="section-title">Libros y Accesorios</h2>
-          <p class="text-base md:text-lg text-gray-800 font-technical font-semibold max-w-2xl mx-auto my-4 uppercase tracking-wider">
-            Herramientas para el pensamiento crítico y la acción popular.
-          </p>
-        </div>
-
-        <div class={`grid gap-5 ${librosYOtros.length <= 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
-          {librosYOtros.map(p => (
-            <ProductCard
-              id={p.id}
-              name={p.name}
-              slug={p.slug}
-              price={p.price}
-              old_price={p.old_price}
-              image_url={p.image_url}
-              image_back_url={p.image_back_url}
-              stock_s={p.stock_s}
-              stock_m={p.stock_m}
-              stock_l={p.stock_l}
-              stock_xl={p.stock_xl}
-              stock_unico={p.stock_unico}
-              has_sizes={p.has_sizes}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
 
   <!-- ======== LOOKBOOK ======== -->
   <LookbookGallery
