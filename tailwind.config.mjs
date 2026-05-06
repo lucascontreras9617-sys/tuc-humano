@@ -5,16 +5,16 @@ export default {
     extend: {
       colors: {
         celeste: {
-          50:  '#e6f7fd',
-          100: '#b3e8fa',
-          200: '#80d9f7',
-          300: '#4dcaf4',
-          400: '#1abbf1',
-          500: '#00AEEF',
-          600: '#008bbf',
-          700: '#00688f',
-          800: '#00455f',
-          900: '#00222f',
+          50:  '#f0f9fd',
+          100: '#dcf1fb',
+          200: '#c1e7f8',
+          300: '#97d7f3',
+          400: '#64c0eb',
+          500: '#1b9ed9',
+          600: '#1383bd',
+          700: '#116999',
+          800: '#12597f',
+          900: '#144b6a',
         },
       },
       fontFamily: {
@@ -33,7 +33,7 @@ export default {
       keyframes: {
         pulseColorBrutal: {
           '0%, 100%': { color: '#030712' }, /* Black */
-          '50%': { color: '#00AEEF' },      /* Celeste */
+          '50%': { color: '#1b9ed9' },      /* Celeste */
         },
         fadeIn: {
           '0%': { opacity: '0' },

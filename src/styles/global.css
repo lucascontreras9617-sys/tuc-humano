@@ -6,9 +6,9 @@
 
 @layer base {
   :root {
-    --celeste: #00AEEF;
-    --celeste-dark: #0090c8;
-    --celeste-light: #e6f7fd;
+    --celeste: #1b9ed9;
+    --celeste-dark: #1383bd;
+    --celeste-light: #f0f9fd;
   }
 
   h1, h2, h3, h4, h5, h6 {

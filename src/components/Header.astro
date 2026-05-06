@@ -8,7 +8,7 @@ const isHome = pathname === '/' || pathname === '';
 const isTienda = pathname.startsWith('/tienda');
 ---
 
-<header id="main-header" class="sticky top-0 z-50 bg-white/40 backdrop-blur-xl transition-all duration-300 border-b border-white/20 shadow-sm">
+<header id="main-header" class="sticky top-0 z-50 bg-white transition-all duration-300 border-b border-gray-100 shadow-sm">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
 
@@ -133,7 +133,7 @@ const isTienda = pathname.startsWith('/tienda');
     progressBar.style.top = '0';
     progressBar.style.left = '0';
     progressBar.style.height = '3px';
-    progressBar.style.backgroundColor = '#00AEEF';
+    progressBar.style.backgroundColor = '#1b9ed9';
     progressBar.style.zIndex = '9999';
     progressBar.style.transition = 'width 0.4s ease';
     progressBar.style.width = '0';
