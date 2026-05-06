@@ -4,13 +4,13 @@ import { Image } from 'astro:assets';
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*.{jpeg,jpg,png,gif,webp}');
 
 const slides = [
-  { url: '/src/assets/images/foto_portada_slide_lateral.webp', title: 'RESISTENCIA URBANA', position: 'object-top' },
-  { url: '/src/assets/images/foto 1.webp', title: 'NUESTRA GENTE', position: 'object-top' },
-  { url: '/src/assets/images/foto 2.webp', title: 'NUESTRO ESTILO', position: 'object-top' }
+  { url: '/src/assets/images/foto_portada_slide_lateral.webp', title: 'RESISTENCIA URBANA' },
+  { url: '/src/assets/images/foto 1.webp', title: 'NUESTRA GENTE' },
+  { url: '/src/assets/images/foto 2.webp', title: 'NUESTRO ESTILO' }
 ];
 ---
 
-<section class="relative h-[60dvh] sm:h-[70dvh] md:h-[calc(100vh-64px)] w-full overflow-hidden bg-white border-b-8 border-black">
+<section class="relative h-[60dvh] md:h-[calc(100vh-64px)] min-h-[400px] md:min-h-[600px] w-full overflow-hidden bg-white border-b-8 border-black">
   <div id="hero-slider" class="absolute inset-0 h-full w-full">
     {slides.map((slide, index) => (
       <div 
@@ -21,7 +21,7 @@ const slides = [
         <Image 
           src={images[slide.url]()} 
           alt={slide.title}
-          class={`h-full w-full object-cover ${slide.position}`}
+          class={`h-full w-full object-cover object-top md:object-center`}
           loading="eager"
         />
       </div>
