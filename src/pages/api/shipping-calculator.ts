@@ -40,7 +40,6 @@ export const POST: APIRoute = async ({ request }) => {
 
   // Map frontend items to CalcCartItem (inyectando dimensiones artificiales)
   const calcItems: CalcCartItem[] = items.map((item: any) => {
-    // Si el nombre dice 'libro' o 'grabois' asumimos dimensiones de libro
     const isLibro = item.name.toLowerCase().includes('libro') || item.name.toLowerCase().includes('grabois');
     return {
       nombre: item.name,
@@ -58,19 +57,28 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonResponse({ error: res.mensaje || 'Error al calcular tarifa' }, 400);
   }
 
-  const options = [];
-
-  options.push({
-    nombre: 'A Domicilio (Andreani Estándar)',
-    precio: res.precioDomicilio,
-    dias: `Aprox. $${res.precioDomicilio} (Zona ${res.zona})`
-  });
-
-  options.push({
-    nombre: 'Retiro en Sucursal (Andreani)',
-    precio: res.precioSucursal,
-    dias: `Aprox. $${res.precioSucursal}`
-  });
+  const options = [
+    {
+      nombre: `Clásico a Domicilio (PAQ.AR · 2-5 días)`,
+      precio: res.clasicoDomicilio,
+      dias: '2-5 días hábiles'
+    },
+    {
+      nombre: `Clásico a Sucursal (PAQ.AR · 2-5 días)`,
+      precio: res.clasicoSucursal,
+      dias: '2-5 días hábiles'
+    },
+    {
+      nombre: `Expreso a Domicilio (PAQ.AR · 1-3 días)`,
+      precio: res.expresoDomicilio,
+      dias: '1-3 días hábiles'
+    },
+    {
+      nombre: `Expreso a Sucursal (PAQ.AR · 1-3 días)`,
+      precio: res.expresoSucursal,
+      dias: '1-3 días hábiles'
+    },
+  ];
 
   return jsonResponse({ options });
 };
