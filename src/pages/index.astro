@@ -75,19 +75,62 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="mb-6">
         
-        <!-- 1) Grilla de Productos (Compra inmediata) -->
-        <div id="remeras-grid" class="scroll-mt-20 mt-4 mb-32">
-          {remeras.length === 1 ? (
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
-              <!-- Banner Izquierdo -->
-              <a href="/producto/remera-oversize-de-lucha" class="hidden lg:block aspect-[2/3] border-4 border-black bg-black relative group overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all duration-300">
-                <Image src={lateral1Img} class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Lateral 1" loading="eager" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div class="absolute bottom-4 left-4 bg-celeste-500 text-white px-3 py-1 font-display text-[10px] uppercase -rotate-2 transform translate-y-10 group-hover:translate-y-0 transition-transform">Identidad</div>
-              </a>
+        <div id="remeras-grid" class="scroll-mt-20 mt-4 mb-32 relative">
 
-              <!-- Tarjeta de Producto (Centro) -->
-              <div class="max-w-md mx-auto w-full transform lg:scale-110 relative z-10">
+          {remeras.length === 1 ? (
+            <div class="max-w-7xl mx-auto">
+              <!-- PREVENTA integrado arriba de la grilla -->
+              <div class="bg-black text-white text-center py-5 md:py-6 mb-0 border-b-4 border-celeste-500">
+                <p class="font-display text-3xl md:text-5xl lg:text-6xl uppercase tracking-tighter italic leading-none">Preventa Exclusiva</p>
+                <p class="font-technical text-xs md:text-sm uppercase tracking-[0.25em] text-celeste-400 mt-2">Hasta el 5 de junio · Entrega vísperas del 20 de junio</p>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 items-center mt-10">
+                <!-- Banner Izquierdo -->
+                <a href="/producto/remera-oversize-de-lucha" class="hidden lg:block aspect-[2/3] border-4 border-black bg-black relative group overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all duration-300">
+                  <Image src={lateral1Img} class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Lateral 1" loading="eager" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div class="absolute bottom-4 left-4 bg-celeste-500 text-white px-3 py-1 font-display text-[10px] uppercase -rotate-2 transform translate-y-10 group-hover:translate-y-0 transition-transform">Identidad</div>
+                </a>
+
+                <!-- Tarjeta de Producto (Centro) -->
+                <div class="max-w-md mx-auto w-full transform lg:scale-110 relative z-10">
+                  {remeras.map(p => (
+                    <ProductCard
+                      id={p.id}
+                      name={p.name}
+                      slug="remera-oversize-de-lucha"
+                      price={p.price}
+                      old_price={p.old_price}
+                      image_url={p.image_url}
+                      image_back_url="/images/lateral2.webp"
+                      stock_s={p.stock_s}
+                      stock_m={p.stock_m}
+                      stock_l={p.stock_l}
+                      stock_xl={p.stock_xl}
+                      stock_unico={p.stock_unico}
+                      has_sizes={p.has_sizes}
+                      is_featured={true}
+                    />
+                  ))}
+                </div>
+
+                <!-- Banner Derecho -->
+                <a href="/producto/remera-oversize-de-lucha" class="hidden lg:block aspect-[2/3] border-4 border-black bg-black relative group overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all duration-300">
+                  <Image src={atrasImg} class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Hombre de espalda" loading="eager" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div class="absolute bottom-4 right-4 bg-celeste-500 text-white px-3 py-1 font-display text-[10px] uppercase rotate-2 transform translate-y-10 group-hover:translate-y-0 transition-transform">Resistencia</div>
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <!-- PREVENTA integrado arriba de la grilla -->
+              <div class="bg-black text-white text-center py-5 md:py-6 mb-8 border-b-4 border-celeste-500">
+                <p class="font-display text-3xl md:text-5xl lg:text-6xl uppercase tracking-tighter italic leading-none">Preventa Exclusiva</p>
+                <p class="font-technical text-xs md:text-sm uppercase tracking-[0.25em] text-celeste-400 mt-2">Hasta el 5 de junio · Entrega vísperas del 20 de junio</p>
+              </div>
+              <div class={`grid gap-5 scroll-mt-20 ${remeras.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto' : remeras.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
                 {remeras.map(p => (
                   <ProductCard
                     id={p.id}
@@ -96,44 +139,16 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
                     price={p.price}
                     old_price={p.old_price}
                     image_url={p.image_url}
-                    image_back_url="/images/lateral2.webp"
+                    image_back_url={p.image_back_url}
                     stock_s={p.stock_s}
                     stock_m={p.stock_m}
                     stock_l={p.stock_l}
                     stock_xl={p.stock_xl}
                     stock_unico={p.stock_unico}
                     has_sizes={p.has_sizes}
-                    is_featured={true}
                   />
                 ))}
               </div>
-
-              <!-- Banner Derecho -->
-              <a href="/producto/remera-oversize-de-lucha" class="hidden lg:block aspect-[2/3] border-4 border-black bg-black relative group overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all duration-300">
-                <Image src={atrasImg} class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Hombre de espalda" loading="eager" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div class="absolute bottom-4 right-4 bg-celeste-500 text-white px-3 py-1 font-display text-[10px] uppercase rotate-2 transform translate-y-10 group-hover:translate-y-0 transition-transform">Resistencia</div>
-              </a>
-            </div>
-          ) : (
-            <div class={`grid gap-5 scroll-mt-20 ${remeras.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto' : remeras.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
-              {remeras.map(p => (
-                <ProductCard
-                  id={p.id}
-                  name={p.name}
-                  slug="remera-oversize-de-lucha"
-                  price={p.price}
-                  old_price={p.old_price}
-                  image_url={p.image_url}
-                  image_back_url={p.image_back_url}
-                  stock_s={p.stock_s}
-                  stock_m={p.stock_m}
-                  stock_l={p.stock_l}
-                  stock_xl={p.stock_xl}
-                  stock_unico={p.stock_unico}
-                  has_sizes={p.has_sizes}
-                />
-              ))}
             </div>
           )}
         </div>
