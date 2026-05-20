@@ -116,13 +116,20 @@ if (imagesGlob[imagePath1]) {
   {hasStock && (
     <div class={`px-4 pb-4 flex flex-col relative z-20 ${is_featured ? 'gap-2' : 'gap-3'}`} onclick="event.preventDefault();">
       {has_sizes && (
-        <select class={`quick-add-size w-full border border-gray-200 rounded-lg py-2 px-3 focus:ring-celeste-500 focus:border-celeste-500 bg-white text-gray-900 cursor-pointer ${is_featured ? 'text-sm font-bold' : 'text-sm'}`}>
-           <option value="">Elegí tu talle</option>
-           {stock_s && stock_s > 0 ? <option value="S">Talle S</option> : null}
-           {stock_m && stock_m > 0 ? <option value="M">Talle M</option> : null}
-           {stock_l && stock_l > 0 ? <option value="L">Talle L</option> : null}
-           {stock_xl && stock_xl > 0 ? <option value="XL">Talle XL</option> : null}
-        </select>
+        <>
+          <select class={`quick-add-size w-full border border-gray-200 rounded-lg py-2 px-3 focus:ring-celeste-500 focus:border-celeste-500 bg-white text-gray-900 cursor-pointer ${is_featured ? 'text-sm font-bold' : 'text-sm'}`}>
+             <option value="">Elegí tu talle</option>
+             {stock_s && stock_s > 0 ? <option value="S">Talle S</option> : null}
+             {stock_m && stock_m > 0 ? <option value="M">Talle M</option> : null}
+             {stock_l && stock_l > 0 ? <option value="L">Talle L</option> : null}
+             {stock_xl && stock_xl > 0 ? <option value="XL">Talle XL</option> : null}
+          </select>
+          <div class="quick-add-oversize-tip hidden mt-2 bg-black rounded-lg p-3 text-center">
+            <p class="font-display text-celeste-400 text-[10px] uppercase tracking-wider leading-relaxed">
+              El calce por ser oversize es más grande que una remera normal. Sugerimos un talle menos del acostumbrado o el normal para un look holgado.
+            </p>
+          </div>
+        </>
       )}
 
       <div class="flex gap-2">
@@ -155,6 +162,23 @@ if (imagesGlob[imagePath1]) {
   import { addToCart as addFn, openCart } from '../lib/cart';
 
   document.addEventListener('astro:page-load', () => {
+    // Escuchar el cambio en el selector de talles rápido para mostrar/ocultar el disclaimer
+    document.querySelectorAll('.quick-add-size').forEach(select => {
+      select.addEventListener('change', (e) => {
+        const s = e.currentTarget as HTMLSelectElement;
+        const card = s.closest('.product-card');
+        if (!card) return;
+        const tip = card.querySelector('.quick-add-oversize-tip');
+        if (tip) {
+          if (s.value) {
+            tip.classList.remove('hidden');
+          } else {
+            tip.classList.add('hidden');
+          }
+        }
+      });
+    });
+
     document.querySelectorAll('.add-to-cart-quick').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
