@@ -111,8 +111,10 @@
           </select>
 
           <div class="grid grid-cols-3 gap-4">
-            <input type="text" name="localidad" required placeholder="Localidad" class="form-input col-span-2" />
-            <input type="text" name="cp" id="cp-input" required placeholder="C.P." class="form-input" />
+            <select name="localidad" id="localidad-select" required class="form-input col-span-2 bg-white cursor-pointer appearance-none" disabled>
+              <option value="" disabled selected>Primero elegí provincia...</option>
+            </select>
+            <input type="text" name="cp" id="cp-input" required placeholder="C.P." class="form-input bg-gray-50 text-gray-500" readonly tabindex="-1" />
           </div>
 
           <div class="grid grid-cols-3 gap-4">
@@ -173,6 +175,7 @@
 
 <script>
   import { cartItems, cartSubtotal, cartOpen, closeCart, removeFromCart, updateQuantity, clearCart } from '../lib/cart';
+  import { LOCALIDADES_POR_PROVINCIA } from '../lib/localidadesArgentina';
 
   document.addEventListener('astro:page-load', () => {
     const drawer = document.getElementById('cart-drawer');
@@ -194,6 +197,7 @@
     const backBtn = document.getElementById('back-to-step-1')!;
     const checkoutForm = document.getElementById('checkout-form') as HTMLFormElement;
     const provinciaSelect = document.getElementById('provincia-select') as HTMLSelectElement;
+    const localidadSelect = document.getElementById('localidad-select') as HTMLSelectElement;
     const cpInput = document.getElementById('cp-input') as HTMLInputElement;
     const shippingWrapper = document.getElementById('shipping-options-wrapper')!;
     const shippingContainer = document.getElementById('shipping-options-container')!;
@@ -325,7 +329,6 @@
     const unsubSub = cartSubtotal.subscribe(updateTotalUI);
 
     // --- FORM LOGIC & SHIPPING CALC ---
-    let calcTimeout: any = null;
 
     function handleShippingOptionClick(e: Event) {
       const input = e.currentTarget as HTMLInputElement;
@@ -402,13 +405,7 @@
           shippingContainer.innerHTML = `<p class="text-xs text-red-500 p-2 font-semibold">${data.error}</p>`;
           shippingCost = 0;
           selectedShippingMethod = '';
-          
-          cpInput.classList.add('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
-          cpInput.classList.remove('border-gray-200', 'focus:ring-celeste-500');
         } else {
-          cpInput.classList.remove('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
-          cpInput.classList.add('border-gray-200', 'focus:ring-celeste-500');
-
           injectShippingOptions(data.options);
         }
       } catch {
@@ -421,26 +418,48 @@
       }
     }
 
-    cpInput.addEventListener('input', () => {
-      cpInput.classList.remove('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
-      cpInput.classList.add('border-gray-200', 'focus:ring-celeste-500');
+    // --- LOCALIDAD SELECTOR LOGIC ---
+    provinciaSelect.addEventListener('change', () => {
+      const prov = provinciaSelect.value;
+      const localidades = LOCALIDADES_POR_PROVINCIA[prov] || [];
 
-      if (calcTimeout) clearTimeout(calcTimeout);
-      if (cpInput.value.trim().length >= 4) {
-        calcTimeout = setTimeout(() => {
-          calculateShipping();
-        }, 800);
-      } else {
-        shippingWrapper.classList.add('hidden');
-        shippingCost = 0;
-        selectedShippingMethod = '';
-        updateTotalUI();
-        validateForm();
-      }
+      // Limpiar y repoblar el select de localidades
+      localidadSelect.innerHTML = '';
+      const defaultOpt = document.createElement('option');
+      defaultOpt.value = '';
+      defaultOpt.disabled = true;
+      defaultOpt.selected = true;
+      defaultOpt.textContent = `Elegí tu localidad (${localidades.length})`;
+      localidadSelect.appendChild(defaultOpt);
+
+      localidades.forEach(loc => {
+        const opt = document.createElement('option');
+        opt.value = loc.nombre;
+        opt.dataset.cp = loc.cp;
+        opt.textContent = `${loc.nombre} (CP ${loc.cp})`;
+        localidadSelect.appendChild(opt);
+      });
+
+      localidadSelect.disabled = false;
+
+      // Reset CP y envío
+      cpInput.value = '';
+      shippingWrapper.classList.add('hidden');
+      shippingCost = 0;
+      selectedShippingMethod = '';
+      updateTotalUI();
+      validateForm();
     });
 
-    provinciaSelect.addEventListener('change', () => {
-      if (cpInput.value.trim().length >= 4) {
+    localidadSelect.addEventListener('change', () => {
+      const selectedOption = localidadSelect.options[localidadSelect.selectedIndex];
+      const cp = selectedOption?.dataset?.cp || '';
+
+      // Auto-fill CP
+      cpInput.value = cp;
+
+      // Disparar cálculo de envío automáticamente
+      if (cp.length >= 4) {
         calculateShipping();
       }
       validateForm();

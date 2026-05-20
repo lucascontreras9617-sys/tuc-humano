@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { calcularEnvio, getProvinciaPorCP, type CalcCartItem } from '../../lib/shippingCalculator';
+import { calcularEnvio, calcularEnvioPorProvincia, getProvinciaPorCP, type CalcCartItem } from '../../lib/shippingCalculator';
 
 export const prerender = false;
 
@@ -17,21 +17,13 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonResponse({ error: 'Código postal inválido.' }, 400);
   }
 
-  // Validación cruzada de Código Postal vs Provincia
-  const provinciaReal = getProvinciaPorCP(cp_destino);
+  // Cuando la provincia viene del selector de localidades, la usamos directamente
+  // ya que la combinación provincia-localidad-CP es confiable.
+  // Solo derivamos del CP si no se envió provincia.
+  const provinciaFinal = provincia || getProvinciaPorCP(cp_destino);
   
-  if (!provinciaReal) {
-    return jsonResponse({ error: `El Código Postal ${cp_destino} es inválido o no existe en Argentina.` }, 400);
-  }
-
-  if (provincia) {
-    if (provincia !== provinciaReal) {
-        // Excepción por fronteras difusas Neuquén/Río Negro (8300)
-        const isNeuquenSur = parseInt(cp_destino) >= 8300 && parseInt(cp_destino) <= 8499 && (provincia === 'Neuquén' || provincia === 'Río Negro');
-        if (!isNeuquenSur) {
-          return jsonResponse({ error: `El CP ${cp_destino} no pertenece a ${provincia}. Seleccioná la provincia correcta (${provinciaReal}).` }, 400);
-        }
-    }
+  if (!provinciaFinal) {
+    return jsonResponse({ error: `No se pudo determinar la provincia para el CP ${cp_destino}.` }, 400);
   }
 
   if (!items.length) {
@@ -51,7 +43,10 @@ export const POST: APIRoute = async ({ request }) => {
     };
   });
 
-  const res = calcularEnvio(calcItems, cp_destino);
+  // Usar provincia directamente si está disponible (del selector de localidades)
+  const res = provinciaFinal
+    ? calcularEnvioPorProvincia(calcItems, provinciaFinal)
+    : calcularEnvio(calcItems, cp_destino);
 
   if (!res.valido) {
     return jsonResponse({ error: res.mensaje || 'Error al calcular tarifa' }, 400);

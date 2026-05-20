@@ -126,3 +126,29 @@ export function calcularEnvio(
     valido: true,
   };
 }
+
+// Calcula envío usando la provincia directamente (sin derivar del CP)
+export function calcularEnvioPorProvincia(
+  items: CalcCartItem[],
+  provincia: string
+): ShippingResult {
+  const emptyResult: ShippingResult = {
+    provincia: '', expresoSucursal: 0, clasicoSucursal: 0,
+    expresoDomicilio: 0, clasicoDomicilio: 0, valido: false,
+  };
+
+  const tarifa = TARIFAS_PAQAR[provincia];
+  if (!tarifa) {
+    return { ...emptyResult, mensaje: `No hay tarifas para ${provincia}` };
+  }
+
+  return {
+    provincia,
+    expresoSucursal: tarifa.expresoSuc,
+    clasicoSucursal: tarifa.clasicoSuc,
+    expresoDomicilio: tarifa.expresoDom,
+    clasicoDomicilio: tarifa.clasicoDom,
+    valido: true,
+  };
+}
+
