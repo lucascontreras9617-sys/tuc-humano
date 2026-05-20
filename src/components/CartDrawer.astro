@@ -119,9 +119,10 @@
           </select>
 
           <div class="grid grid-cols-3 gap-4">
-            <select name="localidad" id="localidad-select" required class="form-input col-span-2 bg-white cursor-pointer appearance-none" disabled>
-              <option value="" disabled selected>Primero elegí provincia...</option>
-            </select>
+            <div class="col-span-2 relative">
+              <input type="text" name="localidad" id="localidad-input" required placeholder="Primero elegí provincia..." class="form-input bg-white cursor-pointer" disabled autocomplete="off" list="localidades-list" />
+              <datalist id="localidades-list"></datalist>
+            </div>
             <input type="text" name="cp" id="cp-input" required placeholder="C.P." class="form-input transition-colors duration-200" maxlength="4" pattern="[0-9]{4}" disabled />
             <p id="cp-error" class="text-red-500 text-[10px] col-span-3 hidden font-technical uppercase tracking-wider mt-0.5">⚠️ El C.P. no coincide con la localidad seleccionada</p>
           </div>
@@ -206,7 +207,8 @@
     const backBtn = document.getElementById('back-to-step-1')!;
     const checkoutForm = document.getElementById('checkout-form') as HTMLFormElement;
     const provinciaSelect = document.getElementById('provincia-select') as HTMLSelectElement;
-    const localidadSelect = document.getElementById('localidad-select') as HTMLSelectElement;
+    const localidadInput = document.getElementById('localidad-input') as HTMLInputElement;
+    const localidadesDatalist = document.getElementById('localidades-list') as HTMLDataListElement;
     const cpInput = document.getElementById('cp-input') as HTMLInputElement;
     const shippingWrapper = document.getElementById('shipping-options-wrapper')!;
     const shippingContainer = document.getElementById('shipping-options-container')!;
@@ -434,29 +436,44 @@
       }
     }
 
+    function getSelectedLocalityOption() {
+      const val = localidadInput.value.trim().toLowerCase();
+      const options = Array.from(localidadesDatalist.options);
+      return options.find(opt => opt.value.toLowerCase() === val);
+    }
+
     // --- LOCALIDAD SELECTOR LOGIC ---
     provinciaSelect.addEventListener('change', () => {
       const prov = provinciaSelect.value;
       const localidades = LOCALIDADES_POR_PROVINCIA[prov] || [];
 
-      // Limpiar y repoblar el select de localidades
-      localidadSelect.innerHTML = '';
-      const defaultOpt = document.createElement('option');
-      defaultOpt.value = '';
-      defaultOpt.disabled = true;
-      defaultOpt.selected = true;
-      defaultOpt.textContent = `Elegí tu localidad (${localidades.length})`;
-      localidadSelect.appendChild(defaultOpt);
-
+      // Agrupar C.P.s por nombre único de localidad para permitir múltiples C.P. válidos
+      const cpsPorLocalidad: Record<string, string[]> = {};
       localidades.forEach(loc => {
-        const opt = document.createElement('option');
-        opt.value = loc.nombre;
-        opt.dataset.cp = loc.cp;
-        opt.textContent = loc.nombre;
-        localidadSelect.appendChild(opt);
+        const [nombre, cp] = loc;
+        if (!cpsPorLocalidad[nombre]) {
+          cpsPorLocalidad[nombre] = [];
+        }
+        if (!cpsPorLocalidad[nombre].includes(cp)) {
+          cpsPorLocalidad[nombre].push(cp);
+        }
       });
 
-      localidadSelect.disabled = false;
+      const uniqueLocalidades = Object.keys(cpsPorLocalidad).sort((a, b) => a.localeCompare(b));
+
+      // Limpiar y repoblar el datalist de localidades
+      localidadesDatalist.innerHTML = '';
+      uniqueLocalidades.forEach(nombre => {
+        const opt = document.createElement('option');
+        opt.value = nombre;
+        opt.dataset.cps = JSON.stringify(cpsPorLocalidad[nombre]);
+        localidadesDatalist.appendChild(opt);
+      });
+
+      localidadInput.value = '';
+      localidadInput.placeholder = 'Buscá tu localidad...';
+      localidadInput.disabled = false;
+      localidadInput.dataset.lastSelected = '';
 
       // Reset CP y envío
       cpInput.value = '';
@@ -471,29 +488,50 @@
       validateForm();
     });
 
-    localidadSelect.addEventListener('change', () => {
-      // Habilitar input de C.P. para entrada manual
-      cpInput.disabled = false;
-      cpInput.value = '';
-      cpInput.focus();
-
+    function handleLocalidadInput() {
+      const matchedOpt = getSelectedLocalityOption();
+      
       const cpError = document.getElementById('cp-error');
       if (cpError) cpError.classList.add('hidden');
       cpInput.classList.remove('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
 
+      if (matchedOpt) {
+        // Encontró una localidad de la lista
+        if (localidadInput.value !== matchedOpt.value) {
+          localidadInput.value = matchedOpt.value;
+        }
+        
+        cpInput.disabled = false;
+        
+        // Solo vaciar el CP si cambiaron a una localidad distinta de la última válida seleccionada
+        if (localidadInput.dataset.lastSelected !== matchedOpt.value) {
+          cpInput.value = '';
+          cpInput.focus();
+          localidadInput.dataset.lastSelected = matchedOpt.value;
+        }
+      } else {
+        // Aún no coincide con ninguna localidad de la lista
+        cpInput.disabled = true;
+        cpInput.value = '';
+        localidadInput.dataset.lastSelected = '';
+      }
+      
       shippingWrapper.classList.add('hidden');
       shippingCost = 0;
       selectedShippingMethod = '';
       updateTotalUI();
       validateForm();
-    });
+    }
+
+    localidadInput.addEventListener('input', handleLocalidadInput);
+    localidadInput.addEventListener('change', handleLocalidadInput);
 
     cpInput.addEventListener('input', () => {
       // Solo permitir números
       cpInput.value = cpInput.value.replace(/\D/g, '');
       const cp = cpInput.value.trim();
-      const selectedOption = localidadSelect.options[localidadSelect.selectedIndex];
-      const correctCp = selectedOption?.dataset?.cp || '';
+      const matchedOpt = getSelectedLocalityOption();
+      const validCps = JSON.parse(matchedOpt?.dataset?.cps || '[]');
       const cpError = document.getElementById('cp-error');
 
       // Limpiar clases de error
@@ -501,7 +539,7 @@
       if (cpError) cpError.classList.add('hidden');
 
       if (cp.length === 4) {
-        if (cp === correctCp) {
+        if (validCps.includes(cp)) {
           // CP es correcto, calcular envío
           calculateShipping();
         } else {
@@ -525,9 +563,9 @@
     checkoutForm.addEventListener('input', validateForm);
 
     function validateForm() {
-      const selectedOption = localidadSelect.options[localidadSelect.selectedIndex];
-      const correctCp = selectedOption?.dataset?.cp || '';
-      const cpValido = cpInput.value.trim() === correctCp;
+      const matchedOpt = getSelectedLocalityOption();
+      const validCps = JSON.parse(matchedOpt?.dataset?.cps || '[]');
+      const cpValido = validCps.includes(cpInput.value.trim());
 
       const isValid = checkoutForm.checkValidity() && selectedShippingMethod !== '' && cpValido;
       if (isValid) {
