@@ -63,16 +63,6 @@ export const POST: APIRoute = async ({ request }) => {
       precio: res.clasicoSucursal,
       dias: '2-5 días hábiles'
     },
-    {
-      nombre: `Expreso a Domicilio (PAQ.AR · 1-3 días)`,
-      precio: res.expresoDomicilio,
-      dias: '1-3 días hábiles'
-    },
-    {
-      nombre: `Expreso a Sucursal (PAQ.AR · 1-3 días)`,
-      precio: res.expresoSucursal,
-      dias: '1-3 días hábiles'
-    },
   ];
 
   return jsonResponse({ options });

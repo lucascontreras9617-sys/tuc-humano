@@ -122,7 +122,8 @@
             <select name="localidad" id="localidad-select" required class="form-input col-span-2 bg-white cursor-pointer appearance-none" disabled>
               <option value="" disabled selected>Primero elegí provincia...</option>
             </select>
-            <input type="text" name="cp" id="cp-input" required placeholder="C.P." class="form-input bg-gray-50 text-gray-500" readonly tabindex="-1" />
+            <input type="text" name="cp" id="cp-input" required placeholder="C.P." class="form-input transition-colors duration-200" maxlength="4" pattern="[0-9]{4}" disabled />
+            <p id="cp-error" class="text-red-500 text-[10px] col-span-3 hidden font-technical uppercase tracking-wider mt-0.5">⚠️ El C.P. no coincide con la localidad seleccionada</p>
           </div>
 
           <div class="grid grid-cols-3 gap-4">
@@ -451,7 +452,7 @@
         const opt = document.createElement('option');
         opt.value = loc.nombre;
         opt.dataset.cp = loc.cp;
-        opt.textContent = `${loc.nombre} (CP ${loc.cp})`;
+        opt.textContent = loc.nombre;
         localidadSelect.appendChild(opt);
       });
 
@@ -459,6 +460,10 @@
 
       // Reset CP y envío
       cpInput.value = '';
+      cpInput.disabled = true;
+      const cpError = document.getElementById('cp-error');
+      if (cpError) cpError.classList.add('hidden');
+      cpInput.classList.remove('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
       shippingWrapper.classList.add('hidden');
       shippingCost = 0;
       selectedShippingMethod = '';
@@ -467,15 +472,52 @@
     });
 
     localidadSelect.addEventListener('change', () => {
+      // Habilitar input de C.P. para entrada manual
+      cpInput.disabled = false;
+      cpInput.value = '';
+      cpInput.focus();
+
+      const cpError = document.getElementById('cp-error');
+      if (cpError) cpError.classList.add('hidden');
+      cpInput.classList.remove('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
+
+      shippingWrapper.classList.add('hidden');
+      shippingCost = 0;
+      selectedShippingMethod = '';
+      updateTotalUI();
+      validateForm();
+    });
+
+    cpInput.addEventListener('input', () => {
+      // Solo permitir números
+      cpInput.value = cpInput.value.replace(/\D/g, '');
+      const cp = cpInput.value.trim();
       const selectedOption = localidadSelect.options[localidadSelect.selectedIndex];
-      const cp = selectedOption?.dataset?.cp || '';
+      const correctCp = selectedOption?.dataset?.cp || '';
+      const cpError = document.getElementById('cp-error');
 
-      // Auto-fill CP
-      cpInput.value = cp;
+      // Limpiar clases de error
+      cpInput.classList.remove('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
+      if (cpError) cpError.classList.add('hidden');
 
-      // Disparar cálculo de envío automáticamente
-      if (cp.length >= 4) {
-        calculateShipping();
+      if (cp.length === 4) {
+        if (cp === correctCp) {
+          // CP es correcto, calcular envío
+          calculateShipping();
+        } else {
+          // C.P. incorrecto
+          cpInput.classList.add('border-red-500', 'focus:ring-red-500', 'text-red-700', 'bg-red-50');
+          if (cpError) cpError.classList.remove('hidden');
+          shippingWrapper.classList.add('hidden');
+          shippingCost = 0;
+          selectedShippingMethod = '';
+          updateTotalUI();
+        }
+      } else {
+        shippingWrapper.classList.add('hidden');
+        shippingCost = 0;
+        selectedShippingMethod = '';
+        updateTotalUI();
       }
       validateForm();
     });
@@ -483,7 +525,11 @@
     checkoutForm.addEventListener('input', validateForm);
 
     function validateForm() {
-      const isValid = checkoutForm.checkValidity() && selectedShippingMethod !== '';
+      const selectedOption = localidadSelect.options[localidadSelect.selectedIndex];
+      const correctCp = selectedOption?.dataset?.cp || '';
+      const cpValido = cpInput.value.trim() === correctCp;
+
+      const isValid = checkoutForm.checkValidity() && selectedShippingMethod !== '' && cpValido;
       if (isValid) {
         checkoutBtn.removeAttribute('disabled');
         checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
