@@ -92,8 +92,8 @@ INSERT INTO products (name, slug, price, old_price, description, image_url, imag
 (
   'Remera oversize de lucha',
   'remera-oversize-de-lucha',
-  27500.00,
-  35000.00,
+  30000.00,
+  40000.00,
   'Remera oversize de algodón premium con estampado artístico del escudo tucumano. Una declaración de identidad, de lucha y de amor por Tucumán. Hecha con algodón de primera calidad, suave, duradera y con un ajuste cómodo que abraza todos los cuerpos.',
   '/images/remera-frente.jpg',
   '/images/remera-espalda.jpg',
