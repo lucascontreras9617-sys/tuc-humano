@@ -286,7 +286,7 @@
         const row = document.createElement('div');
         row.className = 'cart-item-row flex gap-4 items-start py-3 border-b border-gray-50';
         row.innerHTML = `
-          <img src="${item.image}" alt="${item.name}" class="w-16 h-20 object-cover rounded-lg flex-shrink-0 bg-gray-100" />
+          <img src="${item.image}" alt="${item.name}" class="w-16 h-20 object-cover rounded-lg flex-shrink-0 bg-gray-100" width="64" height="80" loading="lazy" />
           <div class="flex-grow min-w-0">
             <p class="font-semibold text-gray-900 text-sm leading-tight truncate">${item.name}</p>
             <p class="text-celeste-500 text-xs mt-0.5">Talle: <strong>${item.size}</strong></p>

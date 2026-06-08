@@ -1,5 +1,5 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { Image, getImage, Picture } from 'astro:assets';
 const imagesGlob = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*.{jpeg,jpg,png,gif,webp}');
 
 interface Props {
@@ -35,6 +35,9 @@ const discountPercent = old_price ? Math.round(((old_price - price) / old_price)
 const imagePath1 = `/src/assets${image_url}`;
 const imagePath2 = image_back_url ? `/src/assets${image_back_url}` : null;
 
+const img1 = imagesGlob[imagePath1] ? (await imagesGlob[imagePath1]()).default : null;
+const img2 = imagePath2 && imagesGlob[imagePath2] ? (await imagesGlob[imagePath2]()).default : null;
+
 let optimizedImageUrlForCart = image_url;
 if (imagesGlob[imagePath1]) {
   const optimized = await getImage({ src: imagesGlob[imagePath1]() });
@@ -47,36 +50,60 @@ if (imagesGlob[imagePath1]) {
     <!-- Image -->
     <div class={`relative overflow-hidden bg-black border-b-4 border-black ${is_featured ? 'aspect-[2/3]' : 'aspect-[3/4]'}`}>
       <!-- Foto Principal -->
-      {imagesGlob[imagePath1] ? (
-        <Image
-          src={imagesGlob[imagePath1]()}
+      {img1 ? (
+        <Picture
+          src={img1}
           alt={name}
+          formats={['avif', 'webp']}
+          widths={[400, 800, 1200, 1600]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          width={img1.width}
+          height={img1.height}
           class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
-          loading="eager"
+          loading="lazy"
+          quality={80}
         />
       ) : (
-        <img
+        <Picture
           src={image_url}
           alt={name}
+          formats={['avif', 'webp']}
+          widths={[400, 800, 1200, 1600]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          width={600}
+          height={800}
           class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
-          loading="eager"
+          loading="lazy"
+          quality={80}
         />
       )}
       
       <!-- Foto Secundaria (Solo si existe) -->
-      {imagePath2 && imagesGlob[imagePath2] ? (
-        <Image
-          src={imagesGlob[imagePath2]()}
+      {img2 ? (
+        <Picture
+          src={img2}
           alt={`${name} - Vista alternativa`}
+          formats={['avif', 'webp']}
+          widths={[400, 800, 1200, 1600]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          width={img2.width}
+          height={img2.height}
           class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000 auto-fade-in"
-          loading="eager"
+          loading="lazy"
+          quality={80}
         />
       ) : image_back_url ? (
-        <img
+        <Picture
           src={image_back_url}
           alt={`${name} - Vista alternativa`}
+          formats={['avif', 'webp']}
+          widths={[400, 800, 1200, 1600]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          width={600}
+          height={800}
           class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000 auto-fade-in"
-          loading="eager"
+          loading="lazy"
+          quality={80}
         />
       ) : null}
       {!hasStock && (

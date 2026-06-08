@@ -1,5 +1,5 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { Image, getImage, Picture } from 'astro:assets';
 const imagesGlob = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*.{jpeg,jpg,png,gif,webp}');
 
 interface Props {
@@ -46,6 +46,9 @@ const hasStock = product.has_sizes
 const imagePath1 = `/src/assets${product.image_url}`;
 const imagePath2 = product.image_back_url ? `/src/assets${product.image_back_url}` : null;
 
+const img1 = imagesGlob[imagePath1] ? (await imagesGlob[imagePath1]()).default : null;
+const img2 = imagePath2 && imagesGlob[imagePath2] ? (await imagesGlob[imagePath2]()).default : null;
+
 let optimizedImageUrlForCart = product.image_url;
 let optimizedImageBackUrlForCart = product.image_back_url;
 
@@ -72,20 +75,35 @@ const productForClient = {
   <!-- Gallery -->
   <div class="space-y-3">
     <div class="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-50 group border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-      {imagesGlob[imagePath1] ? (
-        <Image
+      {img1 ? (
+        <Picture
           id="main-product-img"
-          src={imagesGlob[imagePath1]()}
+          src={img1}
           alt={product.name}
+          formats={['avif', 'webp']}
+          widths={[400, 800, 1200, 1600]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          width={img1.width}
+          height={img1.height}
           class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
           loading="eager"
+          fetchpriority="high"
+          quality={80}
         />
       ) : (
-        <img
+        <Picture
           id="main-product-img"
           src={product.image_url}
           alt={product.name}
+          formats={['avif', 'webp']}
+          widths={[400, 800, 1200, 1600]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          width={600}
+          height={800}
           class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+          loading="eager"
+          fetchpriority="high"
+          quality={80}
         />
       )}
       {discountPercent > 0 && (
@@ -103,20 +121,64 @@ const productForClient = {
           class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
           data-src={optimizedImageUrlForCart}
         >
-          {imagesGlob[imagePath1] ? (
-            <Image src={imagesGlob[imagePath1]()} alt="Frente" class="w-full h-full object-cover" loading="eager" />
+          {img1 ? (
+            <Picture
+              src={img1}
+              alt="Frente"
+              formats={['avif', 'webp']}
+              widths={[200, 400]}
+              sizes="150px"
+              width={img1.width}
+              height={img1.height}
+              class="w-full h-full object-cover"
+              loading="eager"
+              quality={80}
+            />
           ) : (
-            <img src={product.image_url} alt="Frente" class="w-full h-full object-cover" />
+            <Picture
+              src={product.image_url}
+              alt="Frente"
+              formats={['avif', 'webp']}
+              widths={[200, 400]}
+              sizes="150px"
+              width={150}
+              height={200}
+              class="w-full h-full object-cover"
+              loading="eager"
+              quality={80}
+            />
           )}
         </button>
         <button
           class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-4 border-transparent hover:border-black transition-colors"
           data-src={optimizedImageBackUrlForCart}
         >
-          {imagePath2 && imagesGlob[imagePath2] ? (
-            <Image src={imagesGlob[imagePath2]()} alt="Espalda" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" loading="eager" />
+          {img2 ? (
+            <Picture
+              src={img2}
+              alt="Espalda"
+              formats={['avif', 'webp']}
+              widths={[200, 400]}
+              sizes="150px"
+              width={img2.width}
+              height={img2.height}
+              class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+              loading="eager"
+              quality={80}
+            />
           ) : (
-            <img src={product.image_back_url} alt="Espalda" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
+            <Picture
+              src={product.image_back_url}
+              alt="Espalda"
+              formats={['avif', 'webp']}
+              widths={[200, 400]}
+              sizes="150px"
+              width={150}
+              height={200}
+              class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+              loading="eager"
+              quality={80}
+            />
           )}
         </button>
       </div>

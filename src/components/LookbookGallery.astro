@@ -1,6 +1,6 @@
 ---
 // Lookbook gallery - editorial full-width
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 const imagesGlob = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*.{jpeg,jpg,png,gif,webp}');
 
 interface Props {
@@ -12,6 +12,13 @@ const defaultImages = [
 ];
 
 const { images = defaultImages } = Astro.props;
+
+const resolvedImages = await Promise.all(
+  images.map(async (image) => {
+    const imgData = (await imagesGlob[image.src]()).default;
+    return { ...image, img: imgData };
+  })
+);
 ---
 
 <section id="lookbook" class="bg-[#1b9ed9]">
@@ -24,13 +31,19 @@ const { images = defaultImages } = Astro.props;
     </p>
   </div>
 
-  <div class={`grid gap-1 ${images.length === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
-    {images.map((image) => (
+  <div class={`grid gap-1 ${resolvedImages.length === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
+    {resolvedImages.map((image) => (
       <a href="/producto/remera-oversize-de-lucha" class="lookbook-cell group block">
-        <Image
-          src={imagesGlob[image.src]()}
+        <Picture
+          src={image.img}
           alt={image.alt}
-          loading="eager"
+          formats={['avif', 'webp']}
+          widths={[400, 800, 1200, 1600]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          width={image.img.width}
+          height={image.img.height}
+          loading="lazy"
+          quality={80}
           class="w-full h-[60vh] md:h-[80vh] object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div class="lookbook-overlay">

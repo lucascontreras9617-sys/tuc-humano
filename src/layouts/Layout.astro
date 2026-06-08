@@ -59,9 +59,19 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl);
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${siteUrl}${image}`} />
 
-    <!-- Preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://jenbskrxpktziiajrbpt.supabase.co" />
+
+    <!-- Critical CSS: font-display swap for all @fontsource fonts -->
+    <style is:inline>
+      @font-face { font-family: 'Anton'; font-display: swap; }
+      @font-face { font-family: 'Space Grotesk Variable'; font-display: swap; }
+      @font-face { font-family: 'Inter Variable'; font-display: swap; }
+      /* Prevent layout shift on header */
+      #main-header { min-height: 64px; }
+      /* Prevent CLS on hero */
+      .hero-slide img, .hero-slide picture { width: 100%; height: 100%; object-fit: cover; }
+    </style>
   </head>
   <body class="min-h-screen flex flex-col">
     <Header />
