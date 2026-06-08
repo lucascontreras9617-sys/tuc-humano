@@ -4,7 +4,7 @@ import ProductDetail from '../../components/ProductDetail.astro';
 import { getProducts, FALLBACK_PRODUCTS } from '../../lib/supabase';
 
 export async function getStaticPaths() {
-  let products = [];
+  let products: any[] = [];
   try {
     products = await getProducts();
   } catch (e) {

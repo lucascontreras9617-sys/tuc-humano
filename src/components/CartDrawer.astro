@@ -228,16 +228,16 @@
 
     // --- DRAWER TOGGLE ---
     function openDrawer() {
-      drawer.classList.remove('translate-x-full');
-      overlay.classList.remove('hidden');
-      setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+      drawer!.classList.remove('translate-x-full');
+      overlay!.classList.remove('hidden');
+      setTimeout(() => overlay!.classList.remove('opacity-0'), 10);
       document.body.style.overflow = 'hidden';
     }
 
     function closeDrawer() {
-      drawer.classList.add('translate-x-full');
-      overlay.classList.add('opacity-0');
-      setTimeout(() => overlay.classList.add('hidden'), 300);
+      drawer!.classList.add('translate-x-full');
+      overlay!.classList.add('opacity-0');
+      setTimeout(() => overlay!.classList.add('hidden'), 300);
       closeCart();
       document.body.style.overflow = '';
     }
