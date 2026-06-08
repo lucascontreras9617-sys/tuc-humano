@@ -23,7 +23,14 @@ export const cartCount = computed(cartItems, (items) =>
 
 // Computed: subtotal
 export const cartSubtotal = computed(cartItems, (items) =>
-  items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  items.reduce((sum, item) => {
+    if (item.productId === 'prod-5') {
+      const pairs = Math.floor(item.quantity / 2);
+      const individual = item.quantity % 2;
+      return sum + (pairs * 23000) + (individual * 15000);
+    }
+    return sum + (item.price * item.quantity);
+  }, 0)
 );
 
 // Cart is open/closed (drawer)

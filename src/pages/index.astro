@@ -8,6 +8,7 @@ import { Image, Picture } from 'astro:assets';
 import igImg from '../assets/images/instagram.png';
 import dedovImg from '../assets/images/foto dedo en v.webp';
 import argHumanaImg from '../assets/images/libro_argentina_humana.webp';
+import aritosImg from '../assets/images/aritosplaza.webp';
 import frenteImg from '../assets/images/parte de frente de la remera.webp';
 import atrasImg from '../assets/images/parte de atras de la remeras.webp';
 import foto1Img from '../assets/images/foto 1.webp';
@@ -16,6 +17,10 @@ import lateral2Img from '../assets/images/lateral2.webp';
 import enviadoImg from '../assets/images/enviado.png';
 import mpImg from '../assets/images/Mercado_Pago.svg.png';
 import waImg from '../assets/images/whatsapp.png';
+import { getImage } from 'astro:assets';
+
+const optimizedAritos = await getImage({ src: aritosImg, width: 400, format: 'webp' });
+const aritosCartImage = optimizedAritos.src;
 
 let featuredProducts: any[] = [];
 try {
@@ -29,9 +34,10 @@ try {
 
 const heroProduct = featuredProducts[0] || null;
 
-// Separar libros de remeras (has_sizes indica si es textil o producto unico)
+// Separar categorías
 const remeras = featuredProducts.filter(p => p.has_sizes);
-const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
+const libros = featuredProducts.filter(p => !p.has_sizes && p.slug.includes('grabois'));
+const aritosYPines = featuredProducts.filter(p => !p.has_sizes && !p.slug.includes('grabois'));
 ---
 
 <Layout
@@ -212,20 +218,117 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
     </div>
   </section>
 
-  <!-- ======== LIBROS Y OTROS ======== -->
-  {librosYOtros.length > 0 && (
+  <!-- ======== LIBROS ======== -->
+  {libros.length > 0 && (
     <section id="libros" class="py-24 bg-[#F5F5F3] scroll-mt-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div class="mb-14 text-center">
-          <h2 class="section-title">Libros y Accesorios</h2>
+          <h2 class="section-title">Libros</h2>
           <p class="text-base md:text-lg text-gray-800 font-technical font-semibold max-w-2xl mx-auto my-4 uppercase tracking-wider">
             Herramientas para el pensamiento crítico y la acción popular.
           </p>
         </div>
 
-        <div class={`grid gap-5 ${librosYOtros.length <= 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
-          {librosYOtros.map(p => (
+        <div class={`grid gap-6 justify-center mx-auto ${
+          libros.length === 1 ? 'max-w-sm grid-cols-1' :
+          libros.length === 2 ? 'max-w-4xl grid-cols-1 sm:grid-cols-2' :
+          libros.length === 3 ? 'max-w-5xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' :
+          'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+        }`}>
+          {libros.map(p => (
+            <ProductCard
+              id={p.id}
+              name={p.name}
+              slug={p.slug}
+              price={p.price}
+              old_price={p.old_price}
+              image_url={p.image_url}
+              image_back_url={p.image_back_url}
+              stock_s={p.stock_s}
+              stock_m={p.stock_m}
+              stock_l={p.stock_l}
+              stock_xl={p.stock_xl}
+              stock_unico={p.stock_unico}
+              has_sizes={p.has_sizes}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ======== ARITOS Y PINES ======== -->
+  {aritosYPines.length > 0 && (
+    <section id="aritos-y-pines" class="py-24 bg-white scroll-mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="mb-14 text-center">
+          <h2 class="section-title">Aritos y Pines</h2>
+          <p class="text-base md:text-lg text-gray-800 font-technical font-semibold max-w-2xl mx-auto my-4 uppercase tracking-wider">
+            Accesorios con identidad y resistencia.
+          </p>
+        </div>
+
+        <div class={`grid gap-6 justify-center mx-auto ${
+          aritosYPines.length === 1 ? 'max-w-sm grid-cols-1' :
+          aritosYPines.length === 2 ? 'max-w-4xl grid-cols-1 sm:grid-cols-2' :
+          aritosYPines.length === 3 ? 'max-w-5xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' :
+          'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+        }`}>
+          <!-- Custom Oferta Card para Aritos -->
+          <article class="product-card group relative flex flex-col h-full aritos-card" data-product-id="prod-5">
+            <a href="/producto/aritos-alpaca-con-pasador-de-plata" class="block">
+              <!-- Image -->
+              <div class="relative overflow-hidden bg-black border-b-4 border-black aspect-[3/4]">
+                <Picture 
+                  src={aritosImg} 
+                  formats={['avif', 'webp']}
+                  widths={[400, 800]}
+                  sizes="(max-width: 640px) 100vw, 400px"
+                  width={600}
+                  height={800}
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  alt="aritos de alpaca con pasador de plata"
+                  loading="lazy"
+                  quality={80}
+                />
+              </div>
+
+              <!-- Info -->
+              <div class="p-4 text-center">
+                <h3 class="font-semibold text-gray-900 leading-tight mb-1 text-sm">aritos de alpaca con pasador de plata</h3>
+                <div class="flex items-center justify-center gap-3 mt-1">
+                  <span class="text-celeste-600 font-bold text-sm">Par <strong class="text-lg">$23.000</strong></span>
+                  <span class="text-gray-300">|</span>
+                  <span class="text-gray-600 font-bold text-sm">Unit. <strong class="text-lg">$15.000</strong></span>
+                </div>
+              </div>
+            </a>
+            
+            <div class="px-4 pb-4 flex flex-col gap-3 relative z-20 mt-auto">
+              <div class="flex gap-2 mt-2">
+                <button 
+                  class="add-aritos-btn bg-celeste-500 text-white hover:bg-black font-bold py-2.5 px-1 text-center w-full transition-colors text-xs uppercase tracking-wider flex items-center justify-center gap-1 active:scale-95"
+                  data-qty="2"
+                  data-product={JSON.stringify({ id: 'prod-5', name: 'aritos de alpaca con pasador de plata', price: 15000, image_url: aritosCartImage, has_sizes: false })}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                  Par
+                </button>
+                <button 
+                  class="add-aritos-btn bg-black text-white hover:bg-celeste-500 font-bold py-2.5 px-1 text-center w-full transition-colors text-xs uppercase tracking-wider flex items-center justify-center gap-1 active:scale-95"
+                  data-qty="1"
+                  data-product={JSON.stringify({ id: 'prod-5', name: 'aritos de alpaca con pasador de plata', price: 15000, image_url: aritosCartImage, has_sizes: false })}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                  Unidad
+                </button>
+              </div>
+            </div>
+          </article>
+
+          {aritosYPines.filter(p => !p.slug.includes('arito')).map(p => (
             <ProductCard
               id={p.id}
               name={p.name}
@@ -248,11 +351,11 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
   )}
 
   <!-- ======== SELECCIÓN DE CATEGORÍAS ======== -->
-  <section class="py-16 bg-white">
+  <section class="py-16 bg-[#F5F5F3]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Opción Remeras (2/3 del ancho) -->
-        <a href="#remeras-section" class="md:col-span-2 group relative aspect-[16/9] md:aspect-auto md:h-[380px] overflow-hidden rounded-3xl border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
+        <!-- Opción Remeras -->
+        <a href="#remeras-section" class="md:col-span-1 group relative aspect-[16/9] md:aspect-auto md:h-[380px] overflow-hidden rounded-3xl border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
           <Picture 
             src={dedovImg} 
             formats={['avif', 'webp']}
@@ -273,7 +376,7 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
           </div>
         </a>
 
-        <!-- Opción Libros (1/3 del ancho) -->
+        <!-- Opción Libros -->
         <a href="#libros" class="group relative aspect-[16/9] md:aspect-auto md:h-[380px] overflow-hidden rounded-3xl border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
           <Picture 
             src={argHumanaImg} 
@@ -291,6 +394,28 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
             <div class="text-center">
               <h3 class="text-white text-5xl md:text-7xl font-black italic tracking-tighter uppercase">Libros</h3>
               <span class="inline-block mt-4 bg-white text-black px-6 py-2 font-display text-sm uppercase">Cultura y lucha</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Opción Aritos y Pines -->
+        <a href="#aritos-y-pines" class="group relative aspect-[16/9] md:aspect-auto md:h-[380px] overflow-hidden rounded-3xl border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-300">
+          <Picture 
+            src={aritosImg} 
+            formats={['avif', 'webp']}
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 450px"
+            width={500}
+            height={500}
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+            alt="Sección Aritos y Pines"
+            loading="lazy"
+            quality={80}
+          />
+          <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+            <div class="text-center">
+              <h3 class="text-white text-4xl md:text-5xl lg:text-6xl font-black italic tracking-tighter uppercase">Aritos y<br/>Pines</h3>
+              <span class="inline-block mt-4 bg-white text-black px-6 py-2 font-display text-sm uppercase">Accesorios</span>
             </div>
           </div>
         </a>
@@ -344,5 +469,35 @@ const librosYOtros = featuredProducts.filter(p => !p.has_sizes);
       </div>
     </div>
   </section>
+
+
+<script>
+  import { addToCart, openCart } from '../lib/cart';
+
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.add-aritos-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const button = e.currentTarget as HTMLButtonElement;
+        const product = JSON.parse(button.dataset.product || '{}');
+        const qty = parseInt(button.dataset.qty || '1', 10);
+        
+        for (let i = 0; i < qty; i++) {
+          addToCart({
+            productId: product.id,
+            name: product.name,
+            size: 'UNICO' as any,
+            price: product.price,
+            image: product.image_url,
+          });
+        }
+        
+        openCart();
+      });
+    });
+  });
+</script>
 
 </Layout>

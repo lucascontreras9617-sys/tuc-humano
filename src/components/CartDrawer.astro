@@ -283,14 +283,32 @@
       }
 
       items.forEach((item) => {
+        const lineTotal = item.productId === 'prod-5' 
+          ? Math.floor(item.quantity / 2) * 23000 + (item.quantity % 2) * 15000 
+          : item.price * item.quantity;
+
+        const isAritos = item.productId === 'prod-5';
+        const pairs = Math.floor(item.quantity / 2);
+        const singles = item.quantity % 2;
+        let pricingHint = '';
+        if (isAritos && item.quantity > 1) {
+          const parts = [];
+          if (pairs > 0) parts.push(`${pairs} par${pairs > 1 ? 'es' : ''} × $23.000`);
+          if (singles > 0) parts.push(`${singles} unit. × $15.000`);
+          pricingHint = `<p class="text-[10px] text-celeste-500 font-technical mt-0.5">${parts.join(' + ')}</p>`;
+        }
+
+        const talleText = item.size === 'UNICO' ? '' : `<p class="text-celeste-500 text-xs mt-0.5">Talle: <strong>${item.size}</strong></p>`;
+
         const row = document.createElement('div');
         row.className = 'cart-item-row flex gap-4 items-start py-3 border-b border-gray-50';
         row.innerHTML = `
           <img src="${item.image}" alt="${item.name}" class="w-16 h-20 object-cover rounded-lg flex-shrink-0 bg-gray-100" width="64" height="80" loading="lazy" />
           <div class="flex-grow min-w-0">
             <p class="font-semibold text-gray-900 text-sm leading-tight truncate">${item.name}</p>
-            <p class="text-celeste-500 text-xs mt-0.5">Talle: <strong>${item.size}</strong></p>
-            <p class="text-gray-900 font-bold text-sm mt-0.5">${formatPrice(item.price)}</p>
+            ${talleText}
+            <p class="text-gray-900 font-bold text-sm mt-0.5">${formatPrice(lineTotal)}</p>
+            ${pricingHint}
             <div class="flex items-center gap-2 mt-1.5">
               <button data-pid="${item.productId}" data-size="${item.size}" data-action="dec"
                 class="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-celeste-50 hover:text-celeste-600 qty-btn">−</button>
@@ -598,7 +616,10 @@
       
       let productsText = '';
       items.forEach(item => {
-        productsText += `- ${item.quantity}x ${item.name} (Talle: ${item.size}) - ${formatPrice(item.price * item.quantity)}\n`;
+        const lineTotal = item.productId === 'prod-5' 
+          ? Math.floor(item.quantity / 2) * 23000 + (item.quantity % 2) * 15000 
+          : item.price * item.quantity;
+        productsText += `- ${item.quantity}x ${item.name} (Talle: ${item.size}) - ${formatPrice(lineTotal)}\n`;
       });
 
       const subtotal = cartSubtotal.get();

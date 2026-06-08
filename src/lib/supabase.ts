@@ -143,5 +143,17 @@ export const FALLBACK_PRODUCTS: Product[] = [
     image_back_url: null,
     stock_s: 0, stock_m: 0, stock_l: 0, stock_xl: 0, stock_unico: 50,
     has_sizes: false, active: true
+  },
+  {
+    id: 'prod-5',
+    name: 'aritos de alpaca con pasador de plata',
+    slug: 'aritos-alpaca-con-pasador-de-plata',
+    price: 15000.00,
+    old_price: null,
+    description: 'Arito "Pañuelo de la Memoria" – Alpaca y Plata<br/><br/>Una pieza de joyería de autor que trasciende lo estético para convertirse en un símbolo de identidad y lucha. Este arito, moldeado con la emblemática forma del pañuelo de las Abuelas de Plaza de Mayo, fue realizado a mano por Óscar, orfebre tucumano del barrio Ciudadela.<br/><br/>Está confeccionado en alpaca con un delicado acabado artesanal, y cuenta con pasador de plata para garantizar su durabilidad y un uso cómodo (hipoalergénico).<br/><br/>Una pieza para llevar la memoria a flor de piel, hecha con conciencia y orgullo local.',
+    image_url: '/images/aritosplaza.webp',
+    image_back_url: null,
+    stock_s: 0, stock_m: 0, stock_l: 0, stock_xl: 0, stock_unico: 60,
+    has_sizes: false, active: true
   }
 ];

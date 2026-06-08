@@ -44,17 +44,21 @@ const { product } = Astro.props;
 
     <!-- Extra info accordion -->
     <div class="mt-16 border-t border-gray-100 pt-12">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="text-center p-6 bg-gray-50 rounded-2xl">
-          <span class="text-3xl">📏</span>
-          <h3 class="font-bold text-gray-900 mt-3 mb-2">Guía de talles</h3>
-          <p class="text-gray-500 text-sm">Fit oversize. Si dudás entre 2 talles, te recomendamos el más chico para un look más ceñido o el más grande para el look clásico oversize.</p>
-        </div>
-        <div class="text-center p-6 bg-gray-50 rounded-2xl">
-          <span class="text-3xl">🧺</span>
-          <h3 class="font-bold text-gray-900 mt-3 mb-2">Cuidado del producto</h3>
-          <p class="text-gray-500 text-sm">Lavado a máquina a 30°C. No usar secadora. Planchar del revés a temperatura media para preservar el estampado.</p>
-        </div>
+      <div class={`grid grid-cols-1 gap-8 ${product.has_sizes ? 'md:grid-cols-3' : 'max-w-md mx-auto'}`}>
+        {product.has_sizes && (
+          <>
+            <div class="text-center p-6 bg-gray-50 rounded-2xl">
+              <span class="text-3xl">📏</span>
+              <h3 class="font-bold text-gray-900 mt-3 mb-2">Guía de talles</h3>
+              <p class="text-gray-500 text-sm">Fit oversize. Si dudás entre 2 talles, te recomendamos el más chico para un look más ceñido o el más grande para el look clásico oversize.</p>
+            </div>
+            <div class="text-center p-6 bg-gray-50 rounded-2xl">
+              <span class="text-3xl">🧺</span>
+              <h3 class="font-bold text-gray-900 mt-3 mb-2">Cuidado del producto</h3>
+              <p class="text-gray-500 text-sm">Lavado a máquina a 30°C. No usar secadora. Planchar del revés a temperatura media para preservar el estampado.</p>
+            </div>
+          </>
+        )}
         <div class="text-center p-6 bg-gray-50 rounded-2xl">
           <span class="text-3xl">📦</span>
           <h3 class="font-bold text-gray-900 mt-3 mb-2">Envíos</h3>

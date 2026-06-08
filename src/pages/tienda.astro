@@ -2,6 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import { getProducts, FALLBACK_PRODUCTS } from '../lib/supabase';
+import { Picture, getImage } from 'astro:assets';
+import aritosImg from '../assets/images/aritosplaza.webp';
+
+const optimizedAritos = await getImage({ src: aritosImg, width: 400, format: 'webp' });
+const aritosCartImage = optimizedAritos.src;
 
 let products: any[] = [];
 try {
@@ -32,7 +37,79 @@ try {
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {products.map(p => (
+      <!-- 1. T-Shirt First -->
+      {products.filter(p => p.slug.includes('remera')).map(p => (
+        <ProductCard
+          id={p.id}
+          name={p.name}
+          slug={p.slug}
+          price={p.price}
+          old_price={p.old_price}
+          image_url={p.image_url}
+          image_back_url={p.image_back_url}
+          stock_s={p.stock_s}
+          stock_m={p.stock_m}
+          stock_l={p.stock_l}
+          stock_xl={p.stock_xl}
+          stock_unico={p.stock_unico}
+          has_sizes={p.has_sizes}
+        />
+      ))}
+
+      <!-- 2. Custom Oferta Card para Aritos -->
+      <article class="product-card group relative flex flex-col h-full aritos-card" data-product-id="prod-5">
+        <a href="/producto/aritos-alpaca-con-pasador-de-plata" class="block">
+          <!-- Image -->
+          <div class="relative overflow-hidden bg-black border-b-4 border-black aspect-[3/4]">
+            <Picture 
+              src={aritosImg} 
+              formats={['avif', 'webp']}
+              widths={[400, 800]}
+              sizes="(max-width: 640px) 100vw, 400px"
+              width={600}
+              height={800}
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              alt="aritos de alpaca con pasador de plata"
+              loading="lazy"
+              quality={80}
+            />
+          </div>
+
+          <!-- Info -->
+          <div class="p-4 text-center">
+            <h3 class="font-semibold text-gray-900 leading-tight mb-1 text-sm">aritos de alpaca con pasador de plata</h3>
+            <div class="flex items-center justify-center gap-3 mt-1">
+              <span class="text-celeste-600 font-bold text-sm">Par <strong class="text-lg">$23.000</strong></span>
+              <span class="text-gray-300">|</span>
+              <span class="text-gray-600 font-bold text-sm">Unit. <strong class="text-lg">$15.000</strong></span>
+            </div>
+          </div>
+        </a>
+        
+        <div class="px-4 pb-4 flex flex-col gap-3 relative z-20 mt-auto">
+          <div class="flex gap-2 mt-2">
+            <button 
+              class="add-aritos-btn bg-celeste-500 text-white hover:bg-black font-bold py-2.5 px-1 text-center w-full transition-colors text-xs uppercase tracking-wider flex items-center justify-center gap-1 active:scale-95"
+              data-qty="2"
+              data-product={JSON.stringify({ id: 'prod-5', name: 'aritos de alpaca con pasador de plata', price: 15000, image_url: aritosCartImage, has_sizes: false })}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+              Par
+            </button>
+            <button 
+              class="add-aritos-btn bg-black text-white hover:bg-celeste-500 font-bold py-2.5 px-1 text-center w-full transition-colors text-xs uppercase tracking-wider flex items-center justify-center gap-1 active:scale-95"
+              data-qty="1"
+              data-product={JSON.stringify({ id: 'prod-5', name: 'aritos de alpaca con pasador de plata', price: 15000, image_url: aritosCartImage, has_sizes: false })}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+              Unidad
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3. The rest (Libros, Pines, etc) -->
+      {products.filter(p => !p.slug.includes('arito') && !p.slug.includes('remera')).map(p => (
         <ProductCard
           id={p.id}
           name={p.name}
@@ -63,4 +140,34 @@ try {
     )}
 
   </div>
+
+<script>
+  import { addToCart, openCart } from '../lib/cart';
+
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.add-aritos-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const button = e.currentTarget as HTMLButtonElement;
+        const product = JSON.parse(button.dataset.product || '{}');
+        const qty = parseInt(button.dataset.qty || '1', 10);
+        
+        for (let i = 0; i < qty; i++) {
+          addToCart({
+            productId: product.id,
+            name: product.name,
+            size: 'UNICO' as any,
+            price: product.price,
+            image: product.image_url,
+          });
+        }
+        
+        openCart();
+      });
+    });
+  });
+</script>
+
 </Layout>
