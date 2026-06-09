@@ -20,7 +20,7 @@ const slidesData = await Promise.all(
 );
 ---
 
-<section class="relative h-[60dvh] md:h-[calc(100vh-64px)] min-h-[400px] md:min-h-[600px] w-full overflow-hidden bg-white border-b-8 border-black">
+<section class="relative aspect-[3/2] sm:aspect-[16/9] md:aspect-auto md:h-[calc(100vh-64px)] md:min-h-[600px] w-full overflow-hidden bg-black border-b-8 border-black">
   <div id="hero-slider" class="absolute inset-0 h-full w-full">
     {slidesData.map((slide, index) => (
       <div 
@@ -35,7 +35,7 @@ const slidesData = await Promise.all(
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
           width={slide.img.width}
           height={slide.img.height}
-          class="h-full w-full object-cover object-top md:object-center"
+          class="h-full w-full object-cover object-center"
           loading={index === 0 ? "eager" : "lazy"}
           fetchpriority={index === 0 ? "high" : "low"}
           quality={80}
@@ -63,12 +63,17 @@ const slidesData = await Promise.all(
   }
 
   .hero-slide img {
-    transform: scale(1.15);
     transition: transform 10s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   .hero-slide.active img {
     transform: scale(1);
+  }
+
+  @media (min-width: 768px) {
+    .hero-slide img {
+      transform: scale(1.15);
+    }
   }
 
   /* Textura de ruido aplicada al slider */
