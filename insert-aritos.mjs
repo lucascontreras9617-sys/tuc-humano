@@ -6,11 +6,11 @@ const supabase = createClient(
 async function insert() {
   const { data, error } = await supabase.from('products').insert([{
     id: 'prod-5',
-    name: 'aritos de alpaca con pasador de plata',
+    name: 'arito de alpaca con pasador de plata',
     slug: 'aritos-alpaca-con-pasador-de-plata',
     price: 15000.00,
     old_price: null,
-    description: 'arito<br/>Realizados a mano por Óscar, orfebre tucumano del barrio ciudadela.<br/>En material Alpaca con pasador de Plata.',
+    description: 'Arito con forma del pañuelo característico de las Abuelas y Madres de Plaza de Mayo, símbolo de identidad y lucha por la memoria. Elaborados artesanalmente por orfebres tucumanos en metal de alpaca pulido, con pasador de plata.',
     image_url: '/images/aritosplaza.webp',
     image_back_url: null,
     stock_s: 0,

@@ -90,7 +90,7 @@ CREATE POLICY "Service role manages orders"
 -- ============================================
 INSERT INTO products (name, slug, price, old_price, description, image_url, image_back_url, stock_s, stock_m, stock_l, stock_xl, stock_unico, has_sizes) VALUES
 (
-  'Remera oversize de lucha',
+  'Remera oversize de resistencia',
   'remera-oversize-de-lucha',
   30000.00,
   40000.00,
@@ -138,11 +138,11 @@ INSERT INTO products (name, slug, price, old_price, description, image_url, imag
   false
 ),
 (
-  'aritos de alpaca con pasador de plata',
+  'arito de alpaca con pasador de plata',
   'aritos-alpaca-con-pasador-de-plata',
   15000.00,
   NULL,
-  'Arito "Pañuelo de la Memoria" – Alpaca y Plata<br/><br/>Una pieza de joyería de autor que trasciende lo estético para convertirse en un símbolo de identidad y lucha. Este arito, moldeado con la emblemática forma del pañuelo de las Abuelas de Plaza de Mayo, fue realizado a mano por Óscar, orfebre tucumano del barrio Ciudadela.<br/><br/>Está confeccionado en alpaca con un delicado acabado artesanal, y cuenta con pasador de plata para garantizar su durabilidad y un uso cómodo (hipoalergénico).<br/><br/>Una pieza para llevar la memoria a flor de piel, hecha con conciencia y orgullo local.',
+  'Arito con forma del pañuelo característico de las Abuelas y Madres de Plaza de Mayo, símbolo de identidad y lucha por la memoria. Elaborados artesanalmente por orfebres tucumanos en metal de alpaca pulido, con pasador de plata.',
   '/images/aritosplaza.webp',
   NULL,
   0, 0, 0, 0,
