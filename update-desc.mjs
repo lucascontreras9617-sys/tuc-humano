@@ -1,8 +1,9 @@
+import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-  'https://jenbskrxpktziiajrbpt.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplbmJza3J4cGt0emlpYWpyYnB0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzYwODY1NCwiZXhwIjoyMDkzMTg0NjU0fQ.cvqdFqTGQFAF9vpUSjc8wff1CzApjQA2vNwK7eF7LW8'
+  process.env.PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 const desc2 = 'Escrito por Juan Grabois y publicado por Paidós, es una novela que entrelaza la ficción con el ensayo político y teológico. Narra, a ritmo acelerado, una historia de ángeles caídos y demonios instalados en la cultura de consumo y el poder económico de Buenos Aires.';

@@ -16,6 +16,7 @@
     "@nanostores/persistent": "^0.10.2",
     "@supabase/supabase-js": "^2.105.1",
     "astro": "^4.16.0",
+    "dotenv": "^17.4.2",
     "nanostores": "^0.10.3"
   },
   "devDependencies": {
