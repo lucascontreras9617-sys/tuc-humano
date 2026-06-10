@@ -77,11 +77,14 @@
       
       <!-- Datos Personales -->
       <div class="space-y-4">
-        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Tus Datos</h3>
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
+          Tus Datos
+          <span class="text-[10px] text-gray-400 normal-case tracking-normal">( <span class="text-red-500">*</span> Obligatorio )</span>
+        </h3>
         <div class="grid grid-cols-1 gap-4">
-          <input type="text" name="name" required placeholder="Nombre completo" class="form-input" />
-          <input type="email" name="email" required placeholder="Correo electrónico" class="form-input" />
-          <input type="tel" name="phone" required placeholder="Teléfono / WhatsApp" class="form-input" />
+          <input type="text" name="name" required placeholder="Nombre completo *" class="form-input" />
+          <input type="email" name="email" required placeholder="Correo electrónico *" class="form-input" />
+          <input type="tel" name="phone" required placeholder="Teléfono / WhatsApp *" class="form-input" />
         </div>
       </div>
 
@@ -91,7 +94,7 @@
         
         <div class="grid grid-cols-1 gap-4">
           <select name="provincia" id="provincia-select" required class="form-input bg-white cursor-pointer appearance-none">
-            <option value="" disabled selected>Provincia...</option>
+            <option value="" disabled selected>Provincia... *</option>
             <option value="Tucumán">Tucumán</option>
             <option value="Buenos Aires">Buenos Aires</option>
             <option value="Catamarca">Catamarca</option>
@@ -120,16 +123,16 @@
 
           <div class="grid grid-cols-3 gap-4">
             <div class="col-span-2 relative">
-              <input type="text" name="localidad" id="localidad-input" required placeholder="Primero elegí provincia..." class="form-input bg-white cursor-pointer" disabled autocomplete="off" list="localidades-list" />
+              <input type="text" name="localidad" id="localidad-input" required placeholder="Primero elegí provincia... *" class="form-input bg-white cursor-pointer" disabled autocomplete="off" list="localidades-list" />
               <datalist id="localidades-list"></datalist>
             </div>
-            <input type="text" name="cp" id="cp-input" required placeholder="C.P." class="form-input transition-colors duration-200" maxlength="4" pattern="[0-9]{4}" disabled />
+            <input type="text" name="cp" id="cp-input" required placeholder="C.P. *" class="form-input transition-colors duration-200" maxlength="4" pattern="[0-9]{4}" disabled />
             <p id="cp-error" class="text-red-500 text-[10px] col-span-3 hidden font-technical uppercase tracking-wider mt-0.5">⚠️ El C.P. no coincide con la localidad seleccionada</p>
           </div>
 
           <div class="grid grid-cols-3 gap-4">
-            <input type="text" name="calle" required placeholder="Calle" class="form-input col-span-2" />
-            <input type="text" name="numero" required placeholder="Número" class="form-input" />
+            <input type="text" name="calle" required placeholder="Calle *" class="form-input col-span-2" />
+            <input type="text" name="numero" required placeholder="Número *" class="form-input" />
           </div>
 
           <input type="text" name="depto" placeholder="Piso / Depto / Casa (Opcional)" class="form-input" />
@@ -165,7 +168,7 @@
         <span id="cart-total-final">$0</span>
       </div>
       
-      <button id="checkout-btn" class="btn-primary w-full text-base py-4 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed" disabled>
+      <button id="checkout-btn" class="btn-primary w-full text-base py-4 flex items-center justify-center gap-2 opacity-90 transition-all">
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
@@ -587,11 +590,10 @@
 
       const isValid = checkoutForm.checkValidity() && selectedShippingMethod !== '' && cpValido;
       if (isValid) {
-        checkoutBtn.removeAttribute('disabled');
-        checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        checkoutBtn.classList.remove('opacity-90');
+        checkoutError.classList.add('hidden');
       } else {
-        checkoutBtn.setAttribute('disabled', 'true');
-        checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        checkoutBtn.classList.add('opacity-90');
       }
     }
 
@@ -600,6 +602,10 @@
 
       if (!checkoutForm.checkValidity() || !selectedShippingMethod) {
         checkoutForm.reportValidity();
+        if (checkoutForm.checkValidity() && !selectedShippingMethod) {
+          checkoutError.textContent = 'Por favor, calculá el envío con tu C.P. y seleccioná un método.';
+          checkoutError.classList.remove('hidden');
+        }
         return;
       }
 
