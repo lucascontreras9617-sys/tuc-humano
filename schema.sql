@@ -104,8 +104,8 @@ INSERT INTO products (name, slug, price, old_price, description, image_url, imag
 (
   'Los Siete Pecados Argentinos - Juan Grabois',
   'siete-pecados-argentinos-grabois',
-  15000.00,
-  20000.00,
+  28900.00,
+  NULL,
   'Ensayo político donde Juan Grabois analiza las problemáticas estructurales de la Argentina y propone caminos orientados a la justicia social y el bien común.',
   '/images/libro_grabois_pecados.jpg',
   NULL,
@@ -116,8 +116,8 @@ INSERT INTO products (name, slug, price, old_price, description, image_url, imag
 (
   'Argentina Humana - Juan Grabois',
   'argentina-humana-grabois',
-  35000.00,
-  40000.00,
+  44599.00,
+  NULL,
   'Obra fundamental que expone la visión de una Argentina desde la dignidad, con desarrollo humano integral y protagonismo de los movimientos populares.',
   '/images/libro_grabois_argentina.jpg',
   NULL,
