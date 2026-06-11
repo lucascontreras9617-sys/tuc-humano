@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tuc-humano.com/sitemap.xml
+Sitemap: https://tuc-humano.com/sitemap-index.xml
 
 # Bloquear páginas de checkout y API
 Disallow: /checkout/
