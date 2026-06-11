@@ -5,7 +5,7 @@ import vercel from '@astrojs/vercel/serverless';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://tuc-humano.com',
+  site: 'https://tuc-humano.com.ar',
   output: 'hybrid',
   adapter: vercel(),
   integrations: [tailwind(), sitemap()],
