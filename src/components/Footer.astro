@@ -118,12 +118,27 @@ import igImg from '../assets/images/instagram.png';
 
     <!-- Bottom bar -->
     <div
-      class="border-t border-gray-800 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
+      class="border-t border-gray-800 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left"
     >
-      <p class="text-gray-500 text-xs">
-        © {new Date().getFullYear()} TUC-HUMANO. Todos los derechos reservados.
-      </p>
-      <p class="text-gray-600 text-xs">Diseñado con identidad en Tucumán</p>
+      <div class="space-y-2">
+        <p class="text-gray-500 text-xs">
+          © {new Date().getFullYear()} Tuc-Humano. Todos los derechos reservados.
+        </p>
+        <p class="text-gray-600 text-[10px]">
+          Sitio Web Oficial de Tuc-Humano
+        </p>
+      </div>
+      
+      <div class="flex items-center">
+        <a 
+          href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="text-gray-500 hover:text-celeste-400 text-xs transition-colors underline underline-offset-2"
+        >
+          Defensa de las y los consumidores
+        </a>
+      </div>
     </div>
   </div>
 </footer>

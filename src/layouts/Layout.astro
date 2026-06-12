@@ -26,8 +26,13 @@ const {
   noindex = false,
 } = Astro.props;
 
-const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://tuc-humano.com';
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://tuc-humano.com.ar';
 const canonicalURL = new URL(Astro.url.pathname, siteUrl);
+
+const titlePart = title.split('|')[0].trim();
+const pageTitle = title.includes('Indumentaria Peronista') 
+  ? title 
+  : `${titlePart} | Tuc-Humano - Indumentaria Peronista y Estilo Federal desde Tucumán`;
 ---
 
 <!doctype html>
@@ -39,7 +44,7 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl);
     <link rel="canonical" href={canonicalURL} />
 
     <!-- SEO -->
-    <title>{title}</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <ViewTransitions />
@@ -47,7 +52,7 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl);
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={`${siteUrl}${image}`} />
     <meta property="og:site_name" content="TUC-HUMANO" />
@@ -55,7 +60,7 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
+    <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${siteUrl}${image}`} />
 
