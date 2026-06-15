@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS products (
   stock_xl    INT DEFAULT 0 CHECK (stock_xl >= 0),
   stock_unico INT DEFAULT 0 CHECK (stock_unico >= 0),
   has_sizes   BOOLEAN DEFAULT true,
+  color_variants JSONB,
   active      BOOLEAN DEFAULT true,
   created_at  TIMESTAMPTZ DEFAULT NOW(),
   updated_at  TIMESTAMPTZ DEFAULT NOW()
@@ -88,7 +89,7 @@ CREATE POLICY "Service role manages orders"
 -- ============================================
 -- DATOS INICIALES - Productos TUC-HUMANO
 -- ============================================
-INSERT INTO products (name, slug, price, old_price, description, image_url, image_back_url, stock_s, stock_m, stock_l, stock_xl, stock_unico, has_sizes) VALUES
+INSERT INTO products (name, slug, price, old_price, description, image_url, image_back_url, stock_s, stock_m, stock_l, stock_xl, stock_unico, has_sizes, color_variants) VALUES
 (
   'Remera oversize de resistencia',
   'remera-oversize-de-lucha',
@@ -147,7 +148,21 @@ INSERT INTO products (name, slug, price, old_price, description, image_url, imag
   NULL,
   0, 0, 0, 0,
   60,
-  false
+  false,
+  NULL
+),
+(
+  'Remera Oversize Argentina Humana',
+  'remera-argentina-humana',
+  35000.00,
+  NULL,
+  'Remera oversize de algodón pesado premium "Argentina Humana" con la frase "El coraje se contagia". Confeccionada con algodón de alta densidad, garantiza durabilidad y una caída perfecta. IMPORTANTE: El talle oversize es amplio. Esta remera se encuentra en PREVENTA.',
+  '/images/remera-ah-blanca.png',
+  NULL,
+  20, 20, 20, 20,
+  0,
+  true,
+  '[{"name": "Blanco", "image_url": "/images/remera-ah-blanca.png"}, {"name": "Negro", "image_url": "/images/remera-ah-negra.png", "image_back_url": "/images/remera-ah-negra-espalda.png"}]'::jsonb
 );
 
 -- Ver los datos insertados

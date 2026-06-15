@@ -17,6 +17,7 @@ interface Props {
     stock_xl: number;
     stock_unico: number;
     has_sizes: boolean;
+    color_variants?: { name: string, image_url: string, image_back_url?: string }[] | null;
   };
 }
 
@@ -220,6 +221,30 @@ const productForClient = {
           </button>
         </div>
 
+        <!-- Color Selector -->
+        {product.color_variants && product.color_variants.length > 0 && (
+          <div class="mt-8">
+            <div class="flex items-center justify-between mb-3">
+              <p class="font-semibold text-gray-900 text-sm">Elegí tu color</p>
+              <span id="color-error" class="text-red-400 text-xs hidden">Seleccioná un color</span>
+            </div>
+            <div class="flex gap-3">
+              {product.color_variants.map((variant) => (
+                <button
+                  class="color-btn w-10 h-10 rounded-full border-2 border-gray-200 focus:outline-none transition-all flex items-center justify-center relative shadow-sm hover:scale-110"
+                  data-color={variant.name}
+                  data-img={variant.image_url}
+                  data-img-back={variant.image_back_url || ''}
+                  style={`background-color: ${variant.name === 'Blanco' ? '#f8f9fa' : variant.name === 'Negro' ? '#111827' : '#ccc'};`}
+                  title={variant.name}
+                >
+                  <span class="sr-only">{variant.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <!-- Size Selector -->
         {product.has_sizes ? (
           <div class="mt-8">
@@ -301,7 +326,9 @@ const productForClient = {
     if (ctxEl) {
       const product = JSON.parse(ctxEl.dataset.product || '{}');
       const hasSizes = product.has_sizes;
+      const hasColors = product.color_variants && product.color_variants.length > 0;
       let selectedSize: string | null = hasSizes ? null : 'UNICO';
+      let selectedColor: string | null = null;
       let quantity = 1;
       let maxStock = hasSizes ? 0 : product.stock_unico;
 
@@ -327,6 +354,46 @@ const productForClient = {
           target.classList.add('border-black', 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]');
         });
       });
+
+      // Color selection
+      if (hasColors) {
+        document.querySelectorAll('.color-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const b = e.currentTarget as HTMLButtonElement;
+            document.querySelectorAll('.color-btn').forEach(oldBtn => oldBtn.classList.remove('ring-2', 'ring-offset-2', 'ring-black', 'border-transparent'));
+            b.classList.add('ring-2', 'ring-offset-2', 'ring-black', 'border-transparent');
+            
+            selectedColor = b.dataset.color || null;
+            
+            const colorErr = document.getElementById('color-error');
+            if (colorErr) colorErr.classList.add('hidden');
+            
+            const mainImg = document.getElementById('main-product-img') as HTMLImageElement;
+            const imgSrc = b.dataset.img;
+            if (mainImg && imgSrc) mainImg.src = imgSrc;
+            
+            const thumbsContainer = document.querySelector('.thumb-btn')?.parentElement;
+            if (thumbsContainer) {
+              const [btnFrente, btnEspalda] = thumbsContainer.querySelectorAll('.thumb-btn');
+              if (btnFrente) {
+                (btnFrente as HTMLElement).dataset.src = imgSrc;
+                const imgF = btnFrente.querySelector('img');
+                if (imgF) imgF.src = imgSrc;
+              }
+              if (btnEspalda) {
+                if (b.dataset.imgBack) {
+                  (btnEspalda as HTMLElement).style.display = 'block';
+                  (btnEspalda as HTMLElement).dataset.src = b.dataset.imgBack;
+                  const imgE = btnEspalda.querySelector('img');
+                  if (imgE) imgE.src = b.dataset.imgBack;
+                } else {
+                  (btnEspalda as HTMLElement).style.display = 'none';
+                }
+              }
+            }
+          });
+        });
+      }
 
       // Size selection
       if (hasSizes) {
@@ -384,13 +451,22 @@ const productForClient = {
           return;
         }
 
+        if (hasColors && !selectedColor) {
+          const errEl = document.getElementById('color-error');
+          if (errEl) errEl.classList.remove('hidden');
+          return;
+        }
+
         for (let i = 0; i < quantity; i++) {
           addFn({
             productId: product.id,
             name: product.name,
             size: (selectedSize || 'UNICO') as any,
+            color: selectedColor || undefined,
             price: product.price,
-            image: product.image_url || '/images/parte de frente de la remera.webp',
+            image: (hasColors && selectedColor) ? 
+              (product.color_variants.find((c: any) => c.name === selectedColor)?.image_url || product.image_url) : 
+              (product.image_url || '/images/parte de frente de la remera.webp'),
           });
         }
         openCart();

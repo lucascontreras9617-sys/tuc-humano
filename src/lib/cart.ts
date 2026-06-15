@@ -5,6 +5,7 @@ export interface CartItem {
   productId: string;
   name: string;
   size: 'S' | 'M' | 'L' | 'XL' | 'UNICO';
+  color?: string;
   price: number;
   quantity: number;
   image: string;
@@ -47,7 +48,7 @@ export function closeCart() {
 export function addToCart(item: Omit<CartItem, 'quantity'>) {
   const current = cartItems.get();
   const existing = current.findIndex(
-    (i) => i.productId === item.productId && i.size === item.size
+    (i) => i.productId === item.productId && i.size === item.size && i.color === item.color
   );
 
   if (existing >= 0) {
@@ -62,22 +63,22 @@ export function addToCart(item: Omit<CartItem, 'quantity'>) {
   }
 }
 
-export function removeFromCart(productId: string, size: string) {
+export function removeFromCart(productId: string, size: string, color?: string) {
   cartItems.set(
     cartItems.get().filter(
-      (i) => !(i.productId === productId && i.size === size)
+      (i) => !(i.productId === productId && i.size === size && i.color === color)
     )
   );
 }
 
-export function updateQuantity(productId: string, size: string, quantity: number) {
+export function updateQuantity(productId: string, size: string, quantity: number, color?: string) {
   if (quantity <= 0) {
-    removeFromCart(productId, size);
+    removeFromCart(productId, size, color);
     return;
   }
   cartItems.set(
     cartItems.get().map((i) =>
-      i.productId === productId && i.size === size ? { ...i, quantity } : i
+      i.productId === productId && i.size === size && i.color === color ? { ...i, quantity } : i
     )
   );
 }

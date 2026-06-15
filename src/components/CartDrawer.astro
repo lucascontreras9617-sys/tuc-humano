@@ -335,7 +335,10 @@
           pricingHint = `<p class="text-[10px] text-celeste-500 font-technical mt-0.5">${parts.join(' + ')}</p>`;
         }
 
-        const talleText = item.size === 'UNICO' ? '' : `<p class="text-celeste-500 text-xs mt-0.5">Talle: <strong>${item.size}</strong></p>`;
+        let talleText = item.size === 'UNICO' ? '' : `<p class="text-celeste-500 text-xs mt-0.5">Talle: <strong>${item.size}</strong></p>`;
+        if (item.color) {
+          talleText += `<p class="text-gray-500 text-xs mt-0.5">Color: <strong>${item.color}</strong></p>`;
+        }
 
         const row = document.createElement('div');
         row.className = 'cart-item-row flex gap-4 items-start py-3 border-b border-gray-50';
@@ -347,12 +350,12 @@
             <p class="text-gray-900 font-bold text-sm mt-0.5">${formatPrice(lineTotal)}</p>
             ${pricingHint}
             <div class="flex items-center gap-2 mt-1.5">
-              <button data-pid="${item.productId}" data-size="${item.size}" data-action="dec"
+              <button data-pid="${item.productId}" data-size="${item.size}" data-color="${item.color || ''}" data-action="dec"
                 class="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-celeste-50 hover:text-celeste-600 qty-btn">−</button>
               <span class="text-xs font-semibold w-4 text-center">${item.quantity}</span>
-              <button data-pid="${item.productId}" data-size="${item.size}" data-action="inc"
+              <button data-pid="${item.productId}" data-size="${item.size}" data-color="${item.color || ''}" data-action="inc"
                 class="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-celeste-50 hover:text-celeste-600 qty-btn">+</button>
-              <button data-pid="${item.productId}" data-size="${item.size}" data-action="remove"
+              <button data-pid="${item.productId}" data-size="${item.size}" data-color="${item.color || ''}" data-action="remove"
                 class="ml-auto text-gray-300 hover:text-red-400 p-1 remove-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -370,10 +373,11 @@
           const b = e.currentTarget as HTMLButtonElement;
           const pid = b.dataset.pid!;
           const size = b.dataset.size!;
-          const item = cartItems.get().find(i => i.productId === pid && i.size === size);
+          const color = b.dataset.color || undefined;
+          const item = cartItems.get().find(i => i.productId === pid && i.size === size && i.color === color);
           if (!item) return;
-          if (b.dataset.action === 'inc') updateQuantity(pid, size, item.quantity + 1);
-          else if (b.dataset.action === 'dec') updateQuantity(pid, size, item.quantity - 1);
+          if (b.dataset.action === 'inc') updateQuantity(pid, size, item.quantity + 1, color);
+          else if (b.dataset.action === 'dec') updateQuantity(pid, size, item.quantity - 1, color);
           
           if (!step2.classList.contains('hidden')) {
             calculateShipping();
@@ -384,7 +388,7 @@
       itemsContainer.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const b = e.currentTarget as HTMLButtonElement;
-          removeFromCart(b.dataset.pid!, b.dataset.size!);
+          removeFromCart(b.dataset.pid!, b.dataset.size!, b.dataset.color || undefined);
           if (!step2.classList.contains('hidden')) calculateShipping();
         });
       });
@@ -756,7 +760,8 @@
         const lineTotal = item.productId === 'prod-5' 
           ? Math.floor(item.quantity / 2) * 23000 + (item.quantity % 2) * 15000 
           : item.price * item.quantity;
-        productsText += `- ${item.quantity}x ${item.name} (Talle: ${item.size}) - ${formatPrice(lineTotal)}\n`;
+        const colorText = item.color ? ` - Color: ${item.color}` : '';
+        productsText += `- ${item.quantity}x ${item.name} (Talle: ${item.size}${colorText}) - ${formatPrice(lineTotal)}\n`;
       });
 
       const subtotal = cartSubtotal.get();

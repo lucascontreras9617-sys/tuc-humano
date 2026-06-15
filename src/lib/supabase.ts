@@ -28,6 +28,7 @@ export interface Product {
   stock_xl: number;
   stock_unico: number;
   has_sizes: boolean;
+  color_variants?: { name: string, image_url: string, image_back_url?: string }[] | null;
   active: boolean;
 }
 
@@ -50,6 +51,7 @@ export interface CartItem {
   productId: string;
   name: string;
   size: 'S' | 'M' | 'L' | 'XL' | 'UNICO';
+  color?: string;
   price: number;
   quantity: number;
   image: string;
@@ -155,5 +157,21 @@ export const FALLBACK_PRODUCTS: Product[] = [
     image_back_url: null,
     stock_s: 0, stock_m: 0, stock_l: 0, stock_xl: 0, stock_unico: 60,
     has_sizes: false, active: true
+  },
+  {
+    id: 'prod-6',
+    name: 'Remera Oversize Argentina Humana | Tuc-Humano',
+    slug: 'remera-argentina-humana',
+    price: 35000.00,
+    old_price: null,
+    description: 'Remera oversize de algodón pesado premium "Argentina Humana" con la frase "El coraje se contagia". Confeccionada con algodón de alta densidad, garantiza durabilidad y una caída perfecta. IMPORTANTE: El talle oversize es amplio. Esta remera se encuentra en PREVENTA.',
+    image_url: '/images/remera-ah-blanca.png',
+    image_back_url: null,
+    stock_s: 20, stock_m: 20, stock_l: 20, stock_xl: 20, stock_unico: 0,
+    has_sizes: true, active: true,
+    color_variants: [
+      { name: 'Blanco', image_url: '/images/remera-ah-blanca.png' },
+      { name: 'Negro', image_url: '/images/remera-ah-negra.png', image_back_url: '/images/remera-ah-negra-espalda.png' }
+    ]
   }
 ];
