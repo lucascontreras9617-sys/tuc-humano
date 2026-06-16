@@ -152,7 +152,7 @@ const productForClient = {
           </button>
         ))}
       </div>
-    ) : product.image_back_url ? (
+    ) : product.image_back_url && !(product.color_variants && product.color_variants.length > 0) ? (
       <div class="flex gap-3">
         <button
           class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
