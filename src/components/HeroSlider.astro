@@ -37,7 +37,7 @@ const slidesData = await Promise.all(
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
           width={slide.img.width}
           height={slide.img.height}
-          class="h-full w-full object-cover object-center"
+          class={`h-full w-full object-cover ${index === 3 ? 'object-top' : 'object-center'}`}
           loading={index === 0 ? "eager" : "lazy"}
           fetchpriority={index === 0 ? "high" : "low"}
           quality={80}

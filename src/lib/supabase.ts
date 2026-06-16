@@ -184,7 +184,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     slug: 'aritos-alpaca-con-pasador-de-plata',
     price: 15000.00,
     old_price: null,
-    description: 'Arito de alpaca pañuelo de Madres y Abuelas. Símbolo de memoria y auténtico diseño tucumano. Llevá tu identidad con orgullo en Tuc-Humano.',
+    description: 'Aritos "Memoria"\n\nSímbolo de una lucha histórica, estos aritos presentan el emblemático pañuelo de Madres y Abuelas de Plaza de Mayo en alpaca con pasador de plata. Una pieza de diseño con profunda identidad, forjada a mano por el orfebre tucumano Oscar de barrio Ciudadela, que combina destreza técnica con un mensaje de compromiso inquebrantable con la lucha por la memoria e identidad.',
     image_url: '/images/aritosplaza.webp',
     image_back_url: null,
     stock_s: 0, stock_m: 0, stock_l: 0, stock_xl: 0, stock_unico: 60,
@@ -197,12 +197,12 @@ export const FALLBACK_PRODUCTS: Product[] = [
     price: 25000.00,
     old_price: 32000.00,
     description: 'Remera oversize de algodón pesado premium "Argentina Humana" con la frase "El coraje se contagia". Confeccionada con algodón de alta densidad, garantiza durabilidad y una caída perfecta. IMPORTANTE: El talle oversize es amplio. Esta remera se encuentra en PREVENTA.',
-    image_url: '/images/remera-ah-blanca.png',
+    image_url: '/images/remera-argentina-humana-blanca3.png',
     image_back_url: '/images/remera-ah-negra.png',
     stock_s: 20, stock_m: 20, stock_l: 20, stock_xl: 20, stock_unico: 0,
     has_sizes: true, active: true,
     color_variants: [
-      { name: 'Blanco', image_url: '/images/remera-ah-blanca.png' },
+      { name: 'Blanco', image_url: '/images/remera-argentina-humana-blanca3.png' },
       { name: 'Negro', image_url: '/images/remera-ah-negra.png', image_back_url: '/images/remera-ah-negra-espalda.png' }
     ]
   }

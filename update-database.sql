@@ -105,7 +105,7 @@ VALUES
   'aritos-alpaca-con-pasador-de-plata',
   15000.00,
   NULL,
-  'Arito de alpaca pañuelo de Madres y Abuelas. Símbolo de memoria y auténtico diseño tucumano. Llevá tu identidad con orgullo en Tuc-Humano.',
+  'Aritos "Memoria"\n\nSímbolo de una lucha histórica, estos aritos presentan el emblemático pañuelo de Madres y Abuelas de Plaza de Mayo en alpaca con pasador de plata. Una pieza de diseño con profunda identidad, forjada a mano por el orfebre tucumano Oscar de barrio Ciudadela, que combina destreza técnica con un mensaje de compromiso inquebrantable con la lucha por la memoria e identidad.',
   '/images/aritosplaza.webp',
   NULL,
   NULL,
@@ -120,7 +120,7 @@ VALUES
   25000.00,
   NULL,
   'Remera oversize de algodón pesado premium "Argentina Humana" con la frase "El coraje se contagia". Confeccionada con algodón de alta densidad, garantiza durabilidad y una caída perfecta. IMPORTANTE: El talle oversize es amplio. Esta remera se encuentra en PREVENTA.',
-  '/images/remera-ah-blanca.png',
+  '/images/remera-argentina-humana-blanca3.png',
   '/images/remera-ah-negra.png',
   NULL,
   20, 20, 20, 20, 0,
@@ -129,7 +129,7 @@ VALUES
   '[
     {
       "name": "Blanco", 
-      "image_url": "/images/remera-ah-blanca.png"
+      "image_url": "/images/remera-argentina-humana-blanca3.png"
     }, 
     {
       "name": "Negro", 
