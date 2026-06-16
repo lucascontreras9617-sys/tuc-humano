@@ -131,7 +131,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     slug: 'remera-oversize-de-lucha',
     price: 30000.00,
     old_price: 40000.00,
-    description: 'Remera oversize de algodón pesado. Auténtico diseño tucumano de resistencia. Vestí memoria e identidad popular con la calidad de Tuc-Humano.',
+    description: 'Remera oversize con alta densidad de algodon premium. Diseño propio realizado por nuestra militancia, contiene en su espalda referentes e idolos con los que compartimos valores e ideales comunes y asi como el sueño de una argentina más humana, solidaria y justa.',
     image_url: '/images/remera-tuc-humano-frente.jpeg',
     image_back_url: '/images/remera-tuc-humano-espalda.jpeg',
     gallery_images: [
@@ -197,12 +197,12 @@ export const FALLBACK_PRODUCTS: Product[] = [
     price: 25000.00,
     old_price: 32000.00,
     description: 'Remera oversize de algodón pesado premium "Argentina Humana" con la frase "El coraje se contagia". Confeccionada con algodón de alta densidad, garantiza durabilidad y una caída perfecta. IMPORTANTE: El talle oversize es amplio. Esta remera se encuentra en PREVENTA.',
-    image_url: '/images/remera-argentina-humana-blanca3.png',
+    image_url: '/images/portada4.png',
     image_back_url: '/images/remera-ah-negra.png',
     stock_s: 20, stock_m: 20, stock_l: 20, stock_xl: 20, stock_unico: 0,
     has_sizes: true, active: true,
     color_variants: [
-      { name: 'Blanco', image_url: '/images/remera-argentina-humana-blanca3.png' },
+      { name: 'Blanco', image_url: '/images/portada4.png' },
       { name: 'Negro', image_url: '/images/remera-ah-negra.png', image_back_url: '/images/remera-ah-negra-espalda.png' }
     ]
   }

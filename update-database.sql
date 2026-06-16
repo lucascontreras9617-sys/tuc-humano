@@ -44,7 +44,7 @@ VALUES
   'remera-oversize-de-lucha',
   30000.00,
   40000.00,
-  'Remera oversize de algodón pesado. Auténtico diseño tucumano de resistencia. Vestí memoria e identidad popular con la calidad de Tuc-Humano.',
+  'Remera oversize con alta densidad de algodon premium. Diseño propio realizado por nuestra militancia, contiene en su espalda referentes e idolos con los que compartimos valores e ideales comunes y asi como el sueño de una argentina más humana, solidaria y justa.',
   '/images/remera-tuc-humano-frente.jpeg',
   '/images/remera-tuc-humano-espalda.jpeg',
   '[
@@ -120,7 +120,7 @@ VALUES
   25000.00,
   NULL,
   'Remera oversize de algodón pesado premium "Argentina Humana" con la frase "El coraje se contagia". Confeccionada con algodón de alta densidad, garantiza durabilidad y una caída perfecta. IMPORTANTE: El talle oversize es amplio. Esta remera se encuentra en PREVENTA.',
-  '/images/remera-argentina-humana-blanca3.png',
+  '/images/portada4.png',
   '/images/remera-ah-negra.png',
   NULL,
   20, 20, 20, 20, 0,
@@ -129,7 +129,7 @@ VALUES
   '[
     {
       "name": "Blanco", 
-      "image_url": "/images/remera-argentina-humana-blanca3.png"
+      "image_url": "/images/portada4.png"
     }, 
     {
       "name": "Negro", 
