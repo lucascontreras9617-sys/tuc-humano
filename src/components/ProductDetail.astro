@@ -81,30 +81,50 @@ const productForClient = {
           id="main-product-img"
           src={img1}
           alt={product.name}
-          formats={['avif', 'webp']}
-          widths={[400, 800, 1200, 1600]}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          formats={['webp']}
+          widths={[600, 900, 1200, 1600]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 60vw, 800px"
           width={img1.width}
           height={img1.height}
           class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
           loading="eager"
           fetchpriority="high"
-          quality={80}
+          quality={90}
         />
       ) : (
         <Picture
           id="main-product-img"
           src={product.image_url}
           alt={product.name}
-          formats={['avif', 'webp']}
-          widths={[400, 800, 1200, 1600]}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          formats={['webp']}
+          widths={[600, 900, 1200, 1600]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 60vw, 800px"
           width={600}
           height={800}
           class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
           loading="eager"
           fetchpriority="high"
-          quality={80}
+          quality={90}
+        />
+      )}
+      {/* Overlay img for color-swap (uses public/images, not hashed Astro assets) */}
+      {product.color_variants && product.color_variants.length > 0 && (
+        <img
+          id="color-swap-overlay"
+          class="absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-300"
+          src=""
+          alt={product.name}
+          aria-hidden="true"
+        />
+      )}
+      {/* Gallery overlay - for thumbnail clicks when product has gallery_images */}
+      {product.gallery_images && product.gallery_images.length > 0 && (
+        <img
+          id="gallery-swap-overlay"
+          class="absolute inset-0 w-full h-full object-cover object-center opacity-0 transition-opacity duration-300 z-5"
+          src={product.image_url}
+          alt={product.name}
+          aria-hidden="true"
         />
       )}
       {discountPercent > 0 && (
@@ -116,7 +136,23 @@ const productForClient = {
       )}
     </div>
     <!-- Thumbnails -->
-    {product.image_back_url && (
+    {product.gallery_images && product.gallery_images.length > 0 ? (
+      <div class="flex gap-3 mt-4">
+        {product.gallery_images.map((img, idx) => (
+          <button
+            class={`thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-4 ${idx === 0 ? 'border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' : 'border-transparent hover:border-black'} transition-colors`}
+            data-src={img}
+          >
+            <img
+              src={img}
+              alt={`Vista ${idx + 1}`}
+              class="w-full h-full object-cover"
+              loading="eager"
+            />
+          </button>
+        ))}
+      </div>
+    ) : product.image_back_url ? (
       <div class="flex gap-3">
         <button
           class="thumb-btn flex-1 aspect-[3/4] rounded-xl overflow-hidden border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
@@ -183,7 +219,7 @@ const productForClient = {
           )}
         </button>
       </div>
-    )}
+    ) : null}
   </div>
 
   <!-- Info -->
@@ -344,8 +380,36 @@ const productForClient = {
         btn.addEventListener('click', (e) => {
           const target = e.currentTarget as HTMLButtonElement;
           const src = target.dataset.src;
-          const mainImg = document.getElementById('main-product-img') as HTMLImageElement;
-          if (mainImg && src) mainImg.src = src;
+          const galleryOverlay = document.getElementById('gallery-swap-overlay') as HTMLImageElement;
+          const colorOverlay = document.getElementById('color-swap-overlay') as HTMLImageElement;
+          
+          if (src) {
+            const colorOverlay = document.getElementById('color-swap-overlay') as HTMLImageElement;
+            if (galleryOverlay) {
+              // Use gallery overlay for clean src swapping without hash issues
+              // But if color-overlay is active (color was selected), update that instead
+              if (colorOverlay && colorOverlay.style.opacity === '1') {
+                colorOverlay.src = src;
+              } else {
+                galleryOverlay.src = src;
+                galleryOverlay.style.opacity = '1';
+              }
+            } else if (colorOverlay && colorOverlay.style.opacity === '1') {
+              colorOverlay.src = src;
+            } else {
+              const mainImg = document.getElementById('main-product-img');
+              if (mainImg) {
+                if (mainImg.tagName.toUpperCase() === 'PICTURE') {
+                  const img = mainImg.querySelector('img');
+                  const sources = mainImg.querySelectorAll('source');
+                  if (img) img.src = src;
+                  sources.forEach(s => s.srcset = src);
+                } else {
+                  (mainImg as HTMLImageElement).src = src;
+                }
+              }
+            }
+          }
           document.querySelectorAll('.thumb-btn').forEach(b => {
             b.classList.remove('border-black', 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]');
             b.classList.add('border-transparent');
@@ -368,27 +432,33 @@ const productForClient = {
             const colorErr = document.getElementById('color-error');
             if (colorErr) colorErr.classList.add('hidden');
             
-            const mainImg = document.getElementById('main-product-img') as HTMLImageElement;
-            const imgSrc = b.dataset.img;
-            if (mainImg && imgSrc) mainImg.src = imgSrc;
+            // Use overlay img to avoid Astro hash issues with <Picture>
+            const overlay = document.getElementById('color-swap-overlay') as HTMLImageElement;
+            const galleryOverlay = document.getElementById('gallery-swap-overlay') as HTMLImageElement;
+            const imgSrc = b.dataset.img || '';
+            // Hide gallery overlay so color overlay takes full control
+            if (galleryOverlay) galleryOverlay.style.opacity = '0';
+            if (overlay) {
+              overlay.src = imgSrc;
+              overlay.style.opacity = imgSrc ? '1' : '0';
+            }
             
             const thumbsContainer = document.querySelector('.thumb-btn')?.parentElement;
             if (thumbsContainer) {
-              const [btnFrente, btnEspalda] = thumbsContainer.querySelectorAll('.thumb-btn');
-              if (btnFrente) {
-                (btnFrente as HTMLElement).dataset.src = imgSrc;
-                const imgF = btnFrente.querySelector('img');
-                if (imgF) imgF.src = imgSrc;
+              const thumbBtns = thumbsContainer.querySelectorAll('.thumb-btn');
+              if (thumbBtns[0]) {
+                (thumbBtns[0] as HTMLElement).dataset.src = imgSrc;
+                const imgF = thumbBtns[0].querySelector('img, picture img');
+                if (imgF) (imgF as HTMLImageElement).src = imgSrc;
               }
-              if (btnEspalda) {
-                if (b.dataset.imgBack) {
-                  (btnEspalda as HTMLElement).style.display = 'block';
-                  (btnEspalda as HTMLElement).dataset.src = b.dataset.imgBack;
-                  const imgE = btnEspalda.querySelector('img');
-                  if (imgE) imgE.src = b.dataset.imgBack;
-                } else {
-                  (btnEspalda as HTMLElement).style.display = 'none';
-                }
+              if (thumbBtns[1]) {
+                const backSrc = b.dataset.imgBack || '';
+                // Always keep the thumbnail visible — just update its image
+                (thumbBtns[1] as HTMLElement).dataset.src = backSrc || imgSrc;
+                const imgE = thumbBtns[1].querySelector('img, picture img');
+                if (imgE) (imgE as HTMLImageElement).src = backSrc || imgSrc;
+                // Dim the thumbnail if there's no specific back image for this color
+                thumbBtns[1].classList.toggle('opacity-30', !backSrc);
               }
             }
           });

@@ -6,7 +6,9 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/
 const slides = [
   { url: '/src/assets/images/foto_portada_slide_lateral.webp', title: 'RESISTENCIA URBANA' },
   { url: '/src/assets/images/foto 1.webp', title: 'NUESTRA GENTE' },
-  { url: '/src/assets/images/foto 2.webp', title: 'NUESTRO ESTILO' }
+  { url: '/src/assets/images/foto 2.webp', title: 'NUESTRO ESTILO' },
+  { url: '/src/assets/images/portada4.png', title: 'ARGENTINA HUMANA' },
+  { url: '/src/assets/images/portada5.png', title: 'NUEVA COLECCIÓN' }
 ];
 
 const slidesData = await Promise.all(

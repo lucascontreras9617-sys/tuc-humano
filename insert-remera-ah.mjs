@@ -17,7 +17,7 @@ async function insertRemeraAH() {
   const product = {
     name: 'Remera Oversize Argentina Humana',
     slug: 'remera-argentina-humana',
-    price: 35000.00,
+    price: 25000.00,
     old_price: null,
     description: 'Remera oversize de algodón pesado premium "Argentina Humana" con la frase "El coraje se contagia". Confeccionada con algodón de alta densidad, garantiza durabilidad y una caída perfecta. IMPORTANTE: El talle oversize es amplio. Esta remera se encuentra en PREVENTA.',
     image_url: '/images/remera-ah-blanca.png',

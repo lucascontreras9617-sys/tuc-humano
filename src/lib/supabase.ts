@@ -28,8 +28,9 @@ export interface Product {
   stock_xl: number;
   stock_unico: number;
   has_sizes: boolean;
-  color_variants?: { name: string, image_url: string, image_back_url?: string }[] | null;
   active: boolean;
+  color_variants?: { name: string, image_url: string, image_back_url?: string }[] | null;
+  gallery_images?: string[] | null;
 }
 
 export interface Order {
@@ -65,9 +66,29 @@ export async function getProducts(): Promise<Product[]> {
 
   if (error) {
     console.error('Error fetching products:', error);
-    return [];
+    return FALLBACK_PRODUCTS;
   }
-  return data || [];
+  
+  const dbProducts = data || [];
+  
+  // Merge fallback products that are not in the DB to ensure new products show up 
+  // even if the user hasn't successfully updated their database schema yet.
+  const merged = dbProducts.map(dbProd => {
+    const fallback = FALLBACK_PRODUCTS.find(p => p.slug === dbProd.slug);
+    if (fallback) {
+      // Overwrite images with local fallback since DB doesn't have gallery_images column yet
+      return { ...dbProd, image_url: fallback.image_url, image_back_url: fallback.image_back_url, gallery_images: fallback.gallery_images };
+    }
+    return dbProd;
+  });
+  
+  for (const fallbackProd of FALLBACK_PRODUCTS) {
+    if (!merged.find(p => p.slug === fallbackProd.slug)) {
+      merged.push(fallbackProd);
+    }
+  }
+
+  return merged;
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
@@ -80,8 +101,14 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 
   if (error) {
     console.error('Error fetching product:', error);
-    return null;
+    return FALLBACK_PRODUCTS.find(p => p.slug === slug) || null;
   }
+  
+  const fallback = FALLBACK_PRODUCTS.find(p => p.slug === slug);
+  if (fallback) {
+    return { ...data, image_url: fallback.image_url, image_back_url: fallback.image_back_url, gallery_images: fallback.gallery_images };
+  }
+  
   return data;
 }
 
@@ -105,8 +132,13 @@ export const FALLBACK_PRODUCTS: Product[] = [
     price: 30000.00,
     old_price: 40000.00,
     description: 'Remera oversize de algodón pesado. Auténtico diseño tucumano de resistencia. Vestí memoria e identidad popular con la calidad de Tuc-Humano.',
-    image_url: '/images/parte de frente de la remera.webp',
-    image_back_url: '/images/parte de atras de la remeras.webp',
+    image_url: '/images/remera-tuc-humano-frente.jpeg',
+    image_back_url: '/images/remera-tuc-humano-espalda.jpeg',
+    gallery_images: [
+      '/images/remera-tuc-humano-frente.jpeg',
+      '/images/remera-tuc-humano-espalda.jpeg',
+      '/images/etiqueta-remera-tuc-humano.jpeg'
+    ],
     stock_s: 10, stock_m: 15, stock_l: 15, stock_xl: 10, stock_unico: 0,
     has_sizes: true, active: true
   },
@@ -162,11 +194,11 @@ export const FALLBACK_PRODUCTS: Product[] = [
     id: 'prod-6',
     name: 'Remera Oversize Argentina Humana | Tuc-Humano',
     slug: 'remera-argentina-humana',
-    price: 35000.00,
-    old_price: null,
+    price: 25000.00,
+    old_price: 32000.00,
     description: 'Remera oversize de algodón pesado premium "Argentina Humana" con la frase "El coraje se contagia". Confeccionada con algodón de alta densidad, garantiza durabilidad y una caída perfecta. IMPORTANTE: El talle oversize es amplio. Esta remera se encuentra en PREVENTA.',
     image_url: '/images/remera-ah-blanca.png',
-    image_back_url: null,
+    image_back_url: '/images/remera-ah-negra.png',
     stock_s: 20, stock_m: 20, stock_l: 20, stock_xl: 20, stock_unico: 0,
     has_sizes: true, active: true,
     color_variants: [

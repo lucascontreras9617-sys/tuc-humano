@@ -17,9 +17,10 @@ interface Props {
   stock_unico?: number;
   has_sizes?: boolean;
   is_featured?: boolean;
+  color_variants?: { name: string, image_url: string, image_back_url?: string }[] | null;
 }
 
-const { id, name, slug, price, old_price, image_url, image_back_url, stock_s = 0, stock_m = 0, stock_l = 0, stock_xl = 0, stock_unico = 0, has_sizes = true, is_featured = false } = Astro.props;
+const { id, name, slug, price, old_price, image_url, image_back_url, stock_s = 0, stock_m = 0, stock_l = 0, stock_xl = 0, stock_unico = 0, has_sizes = true, is_featured = false, color_variants = null } = Astro.props;
 const hasStock = has_sizes ? (stock_s > 0 || stock_m > 0 || stock_l > 0 || stock_xl > 0) : stock_unico > 0;
 
 const formatPrice = (p: number) => new Intl.NumberFormat('es-AR', {
@@ -48,7 +49,7 @@ if (imagesGlob[imagePath1]) {
 <article class={`product-card group relative ${is_featured ? 'shadow-[0_20px_50px_rgba(0,174,239,0.3)] border-4 border-celeste-500 rounded-2xl overflow-hidden bg-white z-20' : ''}`} data-product-id={id}>
   <a href={`/producto/${slug}`} class="block">
     <!-- Image -->
-    <div class={`relative overflow-hidden bg-black border-b-4 border-black ${is_featured ? 'aspect-[2/3]' : 'aspect-[3/4]'}`}>
+    <div class={`relative overflow-hidden bg-white border-b-4 border-black ${is_featured ? 'aspect-[2/3]' : 'aspect-[3/4]'}`}>
       <!-- Foto Principal -->
       {img1 ? (
         <Picture
@@ -106,14 +107,24 @@ if (imagesGlob[imagePath1]) {
           quality={80}
         />
       ) : null}
+      <!-- Overlay img for color-swap (uses public/images paths, no Astro hash) -->
+      {color_variants && color_variants.length > 0 && (
+        <img
+          class="card-color-overlay absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 z-10 bg-white"
+          src=""
+          alt={name}
+          aria-hidden="true"
+        />
+      )}
+
       {!hasStock && (
-        <div class="absolute inset-0 bg-white/70 flex items-center justify-center">
+        <div class="absolute inset-0 bg-white/70 flex items-center justify-center z-20">
           <span class="bg-gray-900 text-white text-xs font-semibold px-4 py-2 rounded-full">Sin stock</span>
         </div>
       )}
       
       <!-- Badges -->
-      <div class="absolute top-3 left-3 flex flex-col gap-2">
+      <div class="absolute top-3 left-3 flex flex-col gap-2 z-20">
         {has_sizes && (
           <span class="bg-celeste-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
             OVERSIZE
@@ -142,6 +153,21 @@ if (imagesGlob[imagePath1]) {
   <!-- Quick Add (shows on hover) -->
   {hasStock && (
     <div class={`px-4 pb-4 flex flex-col relative z-20 ${is_featured ? 'gap-2' : 'gap-3'}`} onclick="event.preventDefault();">
+      {color_variants && color_variants.length > 0 && (
+        <div class="flex gap-2 justify-center mb-1">
+          {color_variants.map((variant) => (
+            <button
+              class="card-color-btn w-6 h-6 rounded-full border-2 border-gray-200 focus:outline-none transition-all relative hover:scale-110"
+              data-color={variant.name}
+              data-img={variant.image_url}
+              style={`background-color: ${variant.name === 'Blanco' ? '#f8f9fa' : variant.name === 'Negro' ? '#111827' : '#ccc'};`}
+              title={variant.name}
+            >
+              <span class="sr-only">{variant.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
       {has_sizes && (
         <>
           <select class={`quick-add-size w-full border border-gray-200 rounded-lg py-2 px-3 focus:ring-celeste-500 focus:border-celeste-500 bg-white text-gray-900 cursor-pointer ${is_featured ? 'text-sm font-bold' : 'text-sm'}`}>
@@ -170,6 +196,7 @@ if (imagesGlob[imagePath1]) {
           Comprar
         </button>
       </div>
+      <p class="quick-add-color-error text-red-500 text-xs hidden text-center mt-1">⚠️ Seleccioná un color</p>
       <p class="quick-add-error text-red-500 text-xs hidden text-center mt-1">⚠️ Seleccioná un talle</p>
     </div>
   )}
@@ -206,6 +233,36 @@ if (imagesGlob[imagePath1]) {
       });
     });
 
+    document.querySelectorAll('.card-color-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const b = e.currentTarget as HTMLButtonElement;
+        const card = b.closest('.product-card');
+        if (!card) return;
+        
+        card.querySelectorAll('.card-color-btn').forEach(oldBtn => oldBtn.classList.remove('ring-2', 'ring-offset-1', 'ring-black', 'border-transparent'));
+        b.classList.add('ring-2', 'ring-offset-1', 'ring-black', 'border-transparent');
+        
+        // Use the overlay img (served from /public) to swap images without Astro hash issues
+        const overlay = card.querySelector('.card-color-overlay') as HTMLImageElement;
+        if (overlay) {
+          const newSrc = b.dataset.img || '';
+          overlay.src = newSrc;
+          overlay.style.opacity = newSrc ? '1' : '0';
+        }
+        
+        const addBtn = card.querySelector('.add-to-cart-quick') as HTMLButtonElement;
+        if (addBtn) {
+            addBtn.dataset.selectedColor = b.dataset.color;
+            addBtn.dataset.selectedImg = b.dataset.img;
+        }
+        
+        const err = card.querySelector('.quick-add-color-error');
+        if (err) err.classList.add('hidden');
+      });
+    });
+
     document.querySelectorAll('.add-to-cart-quick').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -217,6 +274,15 @@ if (imagesGlob[imagePath1]) {
 
         const product = JSON.parse(button.dataset.product || '{}');
         let size = 'UNICO';
+        
+        const colorBtns = card.querySelectorAll('.card-color-btn');
+        let color = button.dataset.selectedColor;
+        
+        if (colorBtns.length > 0 && !color) {
+            const err = card.querySelector('.quick-add-color-error');
+            if (err) err.classList.remove('hidden');
+            return;
+        }
 
         if (product.has_sizes) {
            const select = card.querySelector('.quick-add-size') as HTMLSelectElement;
@@ -232,12 +298,15 @@ if (imagesGlob[imagePath1]) {
           productId: product.id,
           name: product.name,
           size: size as any,
+          color: color || undefined,
           price: product.price,
-          image: product.image_url || '/images/parte de frente de la remera.webp',
+          image: button.dataset.selectedImg || product.image_url || '/images/parte de frente de la remera.webp',
         });
         
         const err = card.querySelector('.quick-add-error');
         if (err) err.classList.add('hidden');
+        const colorErr = card.querySelector('.quick-add-color-error');
+        if (colorErr) colorErr.classList.add('hidden');
         
         openCart();
       });
