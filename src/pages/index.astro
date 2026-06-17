@@ -14,6 +14,8 @@ import atrasImg from '../assets/images/parte de atras de la remeras.webp';
 import foto1Img from '../assets/images/foto 1.webp';
 import lateral1Img from '../assets/images/lateral 1.webp';
 import lateral2Img from '../assets/images/lateral2.webp';
+import ofertaOversizeImg from '../assets/images/remera-tuc-humano-oferta-remera-oversize.png';
+import parejaImg from '../assets/images/remera-tuc-humano-pareja.png';
 import enviadoImg from '../assets/images/enviado.png';
 import mpImg from '../assets/images/Mercado_Pago.svg.png';
 import waImg from '../assets/images/whatsapp.png';
@@ -96,7 +98,7 @@ const aritosYPines = featuredProducts.filter(p => !p.has_sizes && !p.slug.includ
               <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 items-center mt-10">
                 <!-- Banner Izquierdo -->
                 <a href="/producto/remera-oversize-de-lucha" class="hidden lg:block aspect-[2/3] border-4 border-black bg-black relative group overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,174,239,1)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all duration-300">
-                  <Picture src={lateral1Img} formats={['avif', 'webp']} widths={[400, 800, 1200]} sizes="(max-width: 1024px) 0px, 33vw" width={lateral1Img.width} height={lateral1Img.height} class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Lateral 1" loading="lazy" quality={80} />
+                  <Picture src={ofertaOversizeImg} formats={['avif', 'webp']} widths={[400, 800, 1200]} sizes="(max-width: 1024px) 0px, 33vw" width={ofertaOversizeImg.width} height={ofertaOversizeImg.height} class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Remera Oversize de Resistencia - Oferta" loading="lazy" quality={80} />
                   <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   <div class="absolute bottom-4 left-4 bg-celeste-500 text-white px-3 py-1 font-display text-[10px] uppercase -rotate-2 transform translate-y-10 group-hover:translate-y-0 transition-transform">Identidad</div>
                 </a>
@@ -119,6 +121,7 @@ const aritosYPines = featuredProducts.filter(p => !p.has_sizes && !p.slug.includ
                       stock_unico={p.stock_unico}
                       has_sizes={p.has_sizes}
                       color_variants={p.color_variants}
+                      gallery_images={p.gallery_images}
                       is_featured={true}
                     />
                   ))}
@@ -126,7 +129,7 @@ const aritosYPines = featuredProducts.filter(p => !p.has_sizes && !p.slug.includ
 
                 <!-- Banner Derecho -->
                 <a href="/producto/remera-oversize-de-lucha" class="hidden lg:block aspect-[2/3] border-4 border-black bg-black relative group overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all duration-300">
-                  <Picture src={atrasImg} formats={['avif', 'webp']} widths={[400, 800, 1200]} sizes="(max-width: 1024px) 0px, 33vw" width={atrasImg.width} height={atrasImg.height} class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Hombre de espalda" loading="lazy" quality={80} />
+                  <Picture src={parejaImg} formats={['avif', 'webp']} widths={[400, 800, 1200]} sizes="(max-width: 1024px) 0px, 33vw" width={parejaImg.width} height={parejaImg.height} class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Remera Oversize de Resistencia - Pareja" loading="lazy" quality={80} />
                   <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   <div class="absolute bottom-4 right-4 bg-celeste-500 text-white px-3 py-1 font-display text-[10px] uppercase rotate-2 transform translate-y-10 group-hover:translate-y-0 transition-transform">Resistencia</div>
                 </a>
@@ -156,6 +159,7 @@ const aritosYPines = featuredProducts.filter(p => !p.has_sizes && !p.slug.includ
                     stock_unico={p.stock_unico}
                     has_sizes={p.has_sizes}
                     color_variants={p.color_variants}
+                    gallery_images={p.gallery_images}
                   />
                 ))}
               </div>

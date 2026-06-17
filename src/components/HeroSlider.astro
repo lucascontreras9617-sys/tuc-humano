@@ -5,8 +5,9 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/
 
 const slides = [
   { url: '/src/assets/images/foto_portada_slide_lateral.webp', title: 'RESISTENCIA URBANA' },
-  { url: '/src/assets/images/foto 1.webp', title: 'NUESTRA GENTE' },
+  { url: '/src/assets/images/fotoportadanumero2.png', title: 'NUESTRA GENTE' },
   { url: '/src/assets/images/foto 2.webp', title: 'NUESTRO ESTILO' },
+  { url: '/src/assets/images/fotoportadanumero4.png', title: 'NUESTRA IDENTIDAD' },
   { url: '/src/assets/images/portada4.png', title: 'ARGENTINA HUMANA' },
   { url: '/src/assets/images/portada5.png', title: 'NUEVA COLECCIÓN' }
 ];
@@ -37,7 +38,7 @@ const slidesData = await Promise.all(
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
           width={slide.img.width}
           height={slide.img.height}
-          class={`h-full w-full object-cover ${index === 3 ? 'object-top' : 'object-center'}`}
+          class={`h-full w-full object-cover ${index === 4 ? 'object-top' : 'object-center'}`}
           loading={index === 0 ? "eager" : "lazy"}
           fetchpriority={index === 0 ? "high" : "low"}
           quality={80}
@@ -74,7 +75,7 @@ const slidesData = await Promise.all(
 
   @media (min-width: 768px) {
     .hero-slide img {
-      transform: scale(1.15);
+      transform: scale(1.03);
     }
   }
 

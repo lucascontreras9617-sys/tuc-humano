@@ -131,13 +131,14 @@ export const FALLBACK_PRODUCTS: Product[] = [
     slug: 'remera-oversize-de-lucha',
     price: 30000.00,
     old_price: 40000.00,
-    description: 'Remera oversize con alta densidad de algodon premium. Diseño propio realizado por nuestra militancia, contiene en su espalda referentes e idolos con los que compartimos valores e ideales comunes y asi como el sueño de una argentina más humana, solidaria y justa.',
+    description: 'Remera diseñada por la militancia de Patria Grande Tucumán. Su estampa reúne figuras, símbolos e hitos que forman parte de la memoria colectiva y de las luchas populares de nuestro pueblo. Cada elemento del diseño representa valores e ideales vinculados a la justicia social, la solidaridad, la organización comunitaria y la construcción de una Argentina más humana e inclusiva.<br/><br/>Una prenda que expresa identidad, compromiso y la convicción de que otro país es posible.',
     image_url: '/images/remera-tuc-humano-frente.jpeg',
     image_back_url: '/images/remera-tuc-humano-espalda.jpeg',
     gallery_images: [
       '/images/remera-tuc-humano-frente.jpeg',
       '/images/remera-tuc-humano-espalda.jpeg',
-      '/images/etiqueta-remera-tuc-humano.jpeg'
+      '/images/remera-tuc-humano-oferta-remera-oversize.png',
+      '/images/remera-tuc-humano-pareja.png'
     ],
     stock_s: 10, stock_m: 15, stock_l: 15, stock_xl: 10, stock_unico: 0,
     has_sizes: true, active: true

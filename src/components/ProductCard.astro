@@ -18,10 +18,12 @@ interface Props {
   has_sizes?: boolean;
   is_featured?: boolean;
   color_variants?: { name: string, image_url: string, image_back_url?: string }[] | null;
+  gallery_images?: string[] | null;
 }
 
-const { id, name, slug, price, old_price, image_url, image_back_url, stock_s = 0, stock_m = 0, stock_l = 0, stock_xl = 0, stock_unico = 0, has_sizes = true, is_featured = false, color_variants = null } = Astro.props;
+const { id, name, slug, price, old_price, image_url, image_back_url, stock_s = 0, stock_m = 0, stock_l = 0, stock_xl = 0, stock_unico = 0, has_sizes = true, is_featured = false, color_variants = null, gallery_images = null } = Astro.props;
 const hasStock = has_sizes ? (stock_s > 0 || stock_m > 0 || stock_l > 0 || stock_xl > 0) : stock_unico > 0;
+const useGallerySlideshow = gallery_images && gallery_images.length > 2;
 
 const formatPrice = (p: number) => new Intl.NumberFormat('es-AR', {
   style: 'currency',
@@ -51,62 +53,77 @@ if (imagesGlob[imagePath1]) {
     <!-- Image -->
     <div class={`relative overflow-hidden bg-white border-b-4 border-black ${is_featured ? 'aspect-[2/3]' : 'aspect-[3/4]'}`}>
       <!-- Foto Principal -->
-      {img1 ? (
-        <Picture
-          src={img1}
-          alt={name}
-          formats={['avif', 'webp']}
-          widths={[400, 800, 1200, 1600]}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
-          width={img1.width}
-          height={img1.height}
-          class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
-          loading="lazy"
-          quality={80}
-        />
+      {useGallerySlideshow ? (
+        /* Multi-image gallery slideshow */
+        gallery_images.map((imgSrc, idx) => (
+          <img
+            src={imgSrc}
+            alt={`${name} - Vista ${idx + 1}`}
+            class={`gallery-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${idx === 0 ? 'opacity-100' : 'opacity-0'}`}
+            data-slide-index={idx}
+            loading={idx === 0 ? 'eager' : 'lazy'}
+          />
+        ))
       ) : (
-        <Picture
-          src={image_url}
-          alt={name}
-          formats={['avif', 'webp']}
-          widths={[400, 800, 1200, 1600]}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
-          width={600}
-          height={800}
-          class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
-          loading="lazy"
-          quality={80}
-        />
+        <>
+          {img1 ? (
+            <Picture
+              src={img1}
+              alt={name}
+              formats={['avif', 'webp']}
+              widths={[400, 800, 1200, 1600]}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+              width={img1.width}
+              height={img1.height}
+              class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
+              loading="lazy"
+              quality={80}
+            />
+          ) : (
+            <Picture
+              src={image_url}
+              alt={name}
+              formats={['avif', 'webp']}
+              widths={[400, 800, 1200, 1600]}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+              width={600}
+              height={800}
+              class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${image_back_url ? 'auto-fade-out' : ''}`}
+              loading="lazy"
+              quality={80}
+            />
+          )}
+          
+          {/* Foto Secundaria (Solo si existe) */}
+          {img2 ? (
+            <Picture
+              src={img2}
+              alt={`${name} - Vista alternativa`}
+              formats={['avif', 'webp']}
+              widths={[400, 800, 1200, 1600]}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+              width={img2.width}
+              height={img2.height}
+              class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000 auto-fade-in"
+              loading="lazy"
+              quality={80}
+            />
+          ) : image_back_url ? (
+            <Picture
+              src={image_back_url}
+              alt={`${name} - Vista alternativa`}
+              formats={['avif', 'webp']}
+              widths={[400, 800, 1200, 1600]}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+              width={600}
+              height={800}
+              class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000 auto-fade-in"
+              loading="lazy"
+              quality={80}
+            />
+          ) : null}
+        </>
       )}
-      
-      <!-- Foto Secundaria (Solo si existe) -->
-      {img2 ? (
-        <Picture
-          src={img2}
-          alt={`${name} - Vista alternativa`}
-          formats={['avif', 'webp']}
-          widths={[400, 800, 1200, 1600]}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
-          width={img2.width}
-          height={img2.height}
-          class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000 auto-fade-in"
-          loading="lazy"
-          quality={80}
-        />
-      ) : image_back_url ? (
-        <Picture
-          src={image_back_url}
-          alt={`${name} - Vista alternativa`}
-          formats={['avif', 'webp']}
-          widths={[400, 800, 1200, 1600]}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
-          width={600}
-          height={800}
-          class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000 auto-fade-in"
-          loading="lazy"
-          quality={80}
-        />
-      ) : null}
       <!-- Overlay img for color-swap (uses public/images paths, no Astro hash) -->
       {color_variants && color_variants.length > 0 && (
         <img
@@ -216,6 +233,22 @@ if (imagesGlob[imagePath1]) {
   import { addToCart as addFn, openCart } from '../lib/cart';
 
   document.addEventListener('astro:page-load', () => {
+    // Gallery slideshow for cards with multiple images
+    document.querySelectorAll('.product-card').forEach(card => {
+      const slides = card.querySelectorAll('.gallery-slide');
+      if (slides.length < 2) return;
+      let current = 0;
+      const interval = setInterval(() => {
+        slides[current].classList.remove('opacity-100');
+        slides[current].classList.add('opacity-0');
+        current = (current + 1) % slides.length;
+        slides[current].classList.remove('opacity-0');
+        slides[current].classList.add('opacity-100');
+      }, 4000);
+      // Cleanup on page swap
+      document.addEventListener('astro:before-preparation', () => clearInterval(interval), { once: true });
+    });
+
     // Escuchar el cambio en el selector de talles rápido para mostrar/ocultar el disclaimer
     document.querySelectorAll('.quick-add-size').forEach(select => {
       select.addEventListener('change', (e) => {
