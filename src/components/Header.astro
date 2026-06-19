@@ -8,7 +8,7 @@ const isHome = pathname === '/' || pathname === '';
 const isTienda = pathname.startsWith('/tienda');
 ---
 
-<header id="main-header" class="sticky top-0 z-50 bg-white transition-all duration-300 border-b border-gray-100 shadow-sm">
+<header id="main-header" class="sticky top-0 z-50 transition-all duration-300 border-b border-white/20" style="background: rgba(255,255,255,0.55); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
 
@@ -119,11 +119,19 @@ const isTienda = pathname.startsWith('/tienda');
       });
     });
 
-    // Shadow on scroll
+    // Efecto translúcido en scroll
     window.addEventListener('scroll', () => {
       const header = document.getElementById('main-header');
       if (header) {
-        header.classList.toggle('shadow-md', window.scrollY > 10);
+        if (window.scrollY > 10) {
+          header.style.background = 'rgba(255,255,255,0.75)';
+          header.style.boxShadow = '0 4px 24px rgba(0,0,0,0.08)';
+          header.style.borderBottomColor = 'rgba(255,255,255,0.3)';
+        } else {
+          header.style.background = 'rgba(255,255,255,0.55)';
+          header.style.boxShadow = 'none';
+          header.style.borderBottomColor = 'rgba(255,255,255,0.2)';
+        }
       }
     });
 

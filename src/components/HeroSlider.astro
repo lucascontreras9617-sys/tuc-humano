@@ -23,7 +23,7 @@ const slidesData = await Promise.all(
 );
 ---
 
-<section class="relative aspect-[3/2] sm:aspect-[16/9] md:aspect-auto md:h-[calc(100vh-64px)] md:min-h-[600px] w-full overflow-hidden bg-black border-b-8 border-black">
+<section class="relative aspect-[3/2] sm:aspect-[16/9] md:aspect-[3/2] w-full overflow-hidden bg-black border-b-8 border-black">
   <div id="hero-slider" class="absolute inset-0 h-full w-full">
     {slidesData.map((slide, index) => (
       <div 
